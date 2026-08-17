@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="es-BO">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Proyectos · Group Quimera · No son promesas, están funcionando</title>
+<meta name="description" content="Sistemas de Group Quimera en línea hoy: sitios en producción, agentes de IA atendiendo por empresas reales, marcas construidas desde cero, contenido y campañas al aire.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Instrument+Serif:ital@0;1&family=Manrope:wght@200;300;400;500;600;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/quimera.css?v=20260731a">
+<style>
+/* ══════════════════════════════════════════════════════════════════
+   PROPUESTA B · «índice y escenario»
+
+   El problema de la versión anterior no era el CSS, era el formato:
+   doce capturas de 1200px metidas en tarjetas de ~350 y recortadas a
+   2.2:1 para que la grilla cerrara. Doce tarjetas iguales se leen como
+   una sola mancha y ninguna captura se ve.
+
+   Acá el material manda: UNA pieza grande a la vez, y una lista que la
+   maneja. La lista entra casi entera en una pantalla —se percibe el
+   volumen del trabajo de un vistazo— y la captura se ve a ~900px, sin
+   recortar. Mismo gesto en las cinco secciones, así la página se lee
+   como un instrumento y no como cinco grillas apiladas.
+   ══════════════════════════════════════════════════════════════════ */
+
+section[id]{scroll-margin-top:118px}
+
+/* ---------- barra de índice del hero ---------- */
+.ixbar{display:flex;flex-wrap:wrap;gap:0 clamp(1.1rem,2.4vw,2.2rem);margin-top:2.2rem;padding-top:1.3rem;border-top:1px solid var(--hair)}
+.ixbar a{
+  font:600 .62rem/1 var(--sans);letter-spacing:.2em;text-transform:uppercase;
+  color:var(--muted-2);padding:.45rem 0;transition:color .25s;
+}
+.ixbar a:hover{color:var(--lime)}
+
+/* ══════ ÍNDICE + ESCENARIO ══════
+   La lista a la izquierda maneja la captura de la derecha. El escenario
+   es sticky: la imagen se queda quieta mientras el ojo baja por los
+   nombres. Cada fila es un enlace real al sitio en vivo, así que hover
+   = mirar, click = entrar. */
+.ix{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.04fr);gap:clamp(2rem,4.4vw,4.4rem);align-items:start}
+.ix-list{border-top:1px solid var(--hair)}
+.ix-row{
+  display:grid;grid-template-columns:2.9rem minmax(0,1fr) 9.6rem 3.4rem;
+  align-items:center;gap:0 1rem;
+  padding:1.02rem .5rem 1.02rem 0;border-bottom:1px solid var(--hair);
+  transition:padding-left .45s var(--ease),background .35s;
+}
+.ix-n{
+  font-family:var(--display);font-size:1.06rem;letter-spacing:.07em;
+  color:transparent;-webkit-text-stroke:1px rgba(129,222,0,.45);transition:color .3s,-webkit-text-stroke-color .3s;
+}
+.ix-name{font-size:1.05rem;font-weight:400;letter-spacing:-.015em;color:#dde5d6;transition:color .3s}
+.ix-tag{font:600 .57rem/1.3 var(--sans);letter-spacing:.15em;text-transform:uppercase;color:var(--muted-2)}
+.ix-y{font-family:var(--display);font-size:1rem;letter-spacing:.08em;color:var(--muted-2);text-align:right}
+.ix-note{display:none}
+.ix-shot{display:none}
+.ix-row:hover,.ix-row.on{padding-left:15px;background:linear-gradient(90deg,rgba(129,222,0,.07),transparent 62%)}
+.ix-row.on .ix-n{color:var(--lime);-webkit-text-stroke-color:transparent}
+.ix-row.on .ix-name{color:#fff}
+.ix-row.on .ix-y{color:var(--lime-2)}
+
+/* El escenario. aspect-ratio fijo con object-fit:contain = la captura
+   entra completa siempre; las dos que vienen a 16:9 en vez de 2.21:1
+   dejan un filo oscuro al costado en vez de perder los bordes. */
+.ix-stage{position:sticky;top:clamp(100px,13vh,132px)}
+.ix-frame{
+  position:relative;aspect-ratio:2.21/1;border-radius:16px;overflow:hidden;
+  background:#070a05;border:1px solid var(--hair);
+  box-shadow:0 40px 90px -34px rgba(0,0,0,.95);
+}
+.ix-frame::after{content:'';position:absolute;inset:-10%;z-index:-1;background:radial-gradient(circle,rgba(129,222,0,.16),transparent 62%);filter:blur(40px)}
+.ix-frame img{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:contain;
+  opacity:0;transition:opacity .45s var(--ease);
+}
+.ix-frame img.on{opacity:1}
+.ix-cap{display:flex;flex-direction:column;gap:.55rem;padding-top:1.5rem}
+.ix-cap h3{font-weight:400;font-size:clamp(1.3rem,2vw,1.75rem);letter-spacing:-.02em}
+.ix-cap p{font-size:.95rem;color:#b4bfaa;line-height:1.62;max-width:52ch;min-height:3.2em}
+.ix-cap a{align-self:flex-start;font-size:.83rem;color:var(--lime-2);border-bottom:1px solid var(--hair-lime);padding-bottom:2px}
+.ix-cap a:hover{color:var(--lime)}
+
+@media(max-width:1180px){
+  .ix-row{grid-template-columns:2.6rem minmax(0,1fr) 3.2rem}
+  .ix-tag{display:none}
+}
+@media(max-width:1000px){
+  /* Sin escenario: cada fila carga su propia captura, entera y ancha.
+     Es la misma imagen que usaría el escenario, así que no baja nada de más. */
+  .ix{grid-template-columns:1fr}
+  .ix-stage{display:none}
+  .ix-list{border-top:0}
+  .ix-row{
+    grid-template-columns:2.4rem minmax(0,1fr) 3.2rem;
+    grid-template-areas:"n nm y" "nt nt nt" "sh sh sh";
+    row-gap:.75rem;padding:1.5rem 0 1.9rem;border-bottom:1px solid var(--hair);
+  }
+  .ix-row:hover,.ix-row.on{padding-left:0;background:none}
+  .ix-n{grid-area:n;color:var(--lime);-webkit-text-stroke-color:transparent}
+  .ix-name{grid-area:nm;color:#fff}
+  .ix-y{grid-area:y}
+  .ix-note{grid-area:nt;display:block;font-size:.9rem;color:var(--muted);line-height:1.6}
+  .ix-shot{grid-area:sh;display:block;width:100%;border-radius:12px;margin-top:.4rem}
+}
+
+/* ══════ AGENTES · la conversación, legible ══════
+   Los seis mockups son la MISMA foto de un teléfono sobre fondo blanco:
+   en la página son seis rectángulos blancos indistinguibles, por eso
+   antes vivían escondidos detrás de un botón. Lo que distingue a cada
+   agente es lo que DICE. Así que el diálogo real se transcribe y se
+   compone con la tipografía del sitio —se lee a cualquier tamaño— y la
+   captura original queda a un clic para verificar.
+
+   El escenario va a la IZQUIERDA acá, al revés que en Sitios, para que
+   las dos secciones no se lean como la misma plantilla repetida. */
+.ag{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.78fr);gap:clamp(2rem,4.4vw,4.4rem);align-items:start}
+.ag-list{border-top:1px solid var(--hair)}
+.ag-row{
+  display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:.95rem;align-items:start;text-align:left;
+  width:100%;background:none;border:0;border-bottom:1px solid var(--hair);cursor:pointer;
+  padding:1.15rem .4rem 1.15rem 0;font-family:var(--sans);
+  transition:padding-left .45s var(--ease),background .35s;
+}
+.ag-row .dot{width:8px;height:8px;border-radius:50%;background:var(--lime);box-shadow:0 0 10px var(--lime);margin-top:.5rem;flex:none;animation:pulse 2.6s ease-in-out infinite}
+.ag-row .dot.wip{background:var(--pend);box-shadow:0 0 10px var(--pend);animation:none}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+@media (prefers-reduced-motion:reduce){.ag-row .dot{animation:none}}
+.ag-row b{display:block;font-size:1rem;font-weight:400;letter-spacing:-.015em;color:#dde5d6;transition:color .3s}
+.ag-row span{display:block;font-size:.83rem;color:var(--muted-2);line-height:1.5;margin-top:.2rem}
+/* la flecha es la única señal de que la fila se toca: sin ella la lista
+   se lee como texto muerto y nadie descubre que cambia el panel */
+.ag-row::after{content:'›';font:300 1.25rem/1 var(--sans);color:var(--muted-2);align-self:center;transition:color .3s,transform .35s var(--ease)}
+.ag-row:hover,.ag-row.on{padding-left:15px;background:linear-gradient(90deg,rgba(129,222,0,.07),transparent 62%)}
+.ag-row:hover::after,.ag-row.on::after{color:var(--lime);transform:translateX(3px)}
+.ag-row.on b{color:#fff}
+.ag-row.on span{color:var(--muted)}
+
+.ag-stage{position:sticky;top:clamp(100px,13vh,132px)}
+.ag-panel{display:none}
+.ag-panel.on{display:block}
+
+/* La transcripción. No imita a WhatsApp a propósito: si imitara la
+   interfaz se leería como una captura falsa. Es una transcripción
+   —tipografía del sitio, el cliente a la derecha en gris, el agente a
+   la izquierda con el filo verde— y arriba dice de dónde salió. */
+.tr{
+  border:1px solid var(--hair);border-radius:16px;
+  background:linear-gradient(150deg,rgba(255,255,255,.045),rgba(255,255,255,.008));
+  padding:clamp(1.2rem,2.1vw,1.8rem);
+}
+.tr-h{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;padding-bottom:1rem;border-bottom:1px solid var(--hair);margin-bottom:1.4rem}
+.tr-h b{font:600 .58rem/1 var(--sans);letter-spacing:.17em;text-transform:uppercase;color:var(--lime-2)}
+.tr-h button{
+  background:none;border:0;padding:0;cursor:pointer;white-space:nowrap;
+  font:600 .74rem/1.4 var(--sans);color:var(--muted);border-bottom:1px solid var(--hair);
+  transition:color .25s,border-color .25s;
+}
+.tr-h button:hover{color:var(--lime);border-color:var(--hair-lime)}
+.msg{margin-bottom:.95rem;font-size:.94rem;line-height:1.62;max-width:92%}
+.msg:last-child{margin-bottom:0}
+.msg.u{margin-left:auto;text-align:right;color:var(--muted);font-size:.89rem;padding-right:.95rem;border-right:2px solid var(--hair)}
+.msg.a{color:#dde5d5;padding-left:1.05rem;border-left:2px solid var(--lime)}
+.msg.a+.msg.a{margin-top:-.35rem}
+.msg strong{font-weight:600;color:#fff}
+.msg ol,.msg ul{margin:.55rem 0 .1rem 0;list-style:none;display:flex;flex-direction:column;gap:.28rem}
+.msg li{font-size:.89rem;color:#c3ccbb;padding-left:1.5rem;position:relative}
+.msg ol{counter-reset:o}
+.msg ol li{counter-increment:o}
+.msg ol li::before{content:counter(o) ".";position:absolute;left:0;color:var(--lime-2);font-size:.78rem;top:.12em}
+.msg ul li::before{content:'';position:absolute;left:.35rem;top:.62em;width:4px;height:4px;border-radius:50%;background:var(--lime-2)}
+.tr-f{margin-top:1.4rem;padding-top:1.1rem;border-top:1px solid var(--hair);display:flex;gap:.45rem;flex-wrap:wrap}
+.tr-f i{
+  font-style:normal;font:600 .64rem/1 var(--sans);letter-spacing:.02em;color:#cfd8c6;
+  background:rgba(255,255,255,.035);border:1px solid var(--hair);padding:.4rem .7rem;border-radius:7px;
+}
+@media(max-width:1000px){
+  .ag{grid-template-columns:1fr;gap:2.4rem}
+  .ag-stage{position:static;order:2}
+  .ag-list{order:1}
+}
+
+/* ══════ TIRAS A ALTO FIJO ══════
+   Los manuales son siete veces el mismo mockup de libro sobre fondo
+   claro y las piezas de campaña vienen en tres proporciones mezcladas
+   (4:5, cuadradas y banners 2.8:1). Ninguna grilla alinea con eso: por
+   eso el mosaico se veía apilado. Una tira a ALTO fijo sí — cada pieza
+   toma el ancho que le toca y la fila queda pareja igual. Además nada
+   se recorta: la proporción original se respeta entera. */
+.strip{
+  overflow:hidden;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);
+          mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);
+}
+/* La duración la calcula el script a partir del ancho real (px/segundo),
+   no va fija: al repetir el set para llenar la pantalla el recorrido
+   cambia, y con una duración fija la tira aceleraría. */
+.strip-t{
+  display:flex;align-items:center;gap:var(--sg);padding-right:var(--sg);
+  width:max-content;animation:strip-slide 60s linear infinite;will-change:transform;
+}
+.strip.rev .strip-t{animation-direction:reverse}
+.strip:hover .strip-t{animation-play-state:paused}
+@keyframes strip-slide{from{transform:translate3d(0,0,0)}to{transform:translate3d(-50%,0,0)}}
+.strip img{
+  height:var(--sh);width:auto;flex:none;display:block;border-radius:10px;cursor:zoom-in;
+  opacity:.92;transition:opacity .3s,transform .45s var(--ease);
+}
+.strip img:hover{opacity:1;transform:translateY(-5px)}
+@media (prefers-reduced-motion:reduce){
+  .strip{overflow-x:auto;-webkit-mask-image:none;mask-image:none}
+  .strip-t{animation:none}
+}
+/* muro de campañas: a sangre, fuera de la columna */
+.wall{width:100vw;margin-left:calc(50% - 50vw)}
+.wall .strip+.strip{margin-top:var(--sg)}
+
+/* tira de reels: se navega con el dedo/scroll, no a la deriva —
+   son botones y un botón que se mueve no se puede tocar */
+.film{display:flex;gap:clamp(10px,1.4vw,18px);overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:.8rem}
+.film>figure{flex:1 0 clamp(148px,15vw,215px);scroll-snap-align:start}
+.film::-webkit-scrollbar{height:3px}
+.film::-webkit-scrollbar-thumb{background:var(--hair-lime);border-radius:3px}
+.film::-webkit-scrollbar-track{background:var(--hair)}
+
+/* ══════ bajo acuerdo ══════ */
+.live{display:grid;grid-template-columns:1fr 1fr;gap:0 clamp(2rem,5vw,4rem)}
+.live-row{display:grid;grid-template-columns:auto 1fr;gap:1rem;align-items:start;padding:1.4rem 0;border-top:1px solid var(--hair)}
+.live-row .dot{width:8px;height:8px;border-radius:50%;background:var(--lime);box-shadow:0 0 10px var(--lime);margin-top:.55rem;flex:none;animation:pulse 2.6s ease-in-out infinite}
+.live-row b{display:block;font-size:1.02rem;font-weight:500;letter-spacing:-.01em;margin-bottom:.25rem}
+.live-row span{display:block;font-size:.87rem;color:var(--muted)}
+.live-row em{font-family:var(--serif);font-style:italic;color:var(--lime-2);font-size:.94rem}
+@media(max-width:860px){.live{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="brand" href="index.html"><img src="assets/logo-lockup.png" alt="Group Quimera · Marketing y Tech"></a>
+  <nav class="navpill">
+    <a href="servicios.html">Servicios</a>
+    <a href="tecnologia.html">Tecnología</a>
+    <a href="proyectos2.html" aria-current="page">Proyectos</a>
+    <a href="nosotros.html">Nosotros</a>
+  </nav>
+  <a href="contacto.html" class="btn btn-p">Conversemos</a>
+</div>
+
+<!-- ══════════ HERO ══════════ -->
+<header class="phero">
+  <div class="phero-bg" style="background-image:url('assets/bg-bokeh-2.webp');opacity:.4"></div>
+  <div class="phero-veil"></div>
+  <p class="crumb"><a href="index.html">Inicio</a><i>›</i>Proyectos</p>
+  <span class="kicker rv">Prueba real · en línea hoy</span>
+  <h1 class="t-hero rv" style="margin-top:1.3rem">No son <span class="it lime">promesas</span>.<br>Están funcionando.</h1>
+  <p class="body-l rv">
+    Estos sistemas están corriendo ahora mismo, con clientes usándolos todos los
+    días. Podemos mostrarte cualquiera en vivo durante la reunión.
+  </p>
+  <nav class="ixbar rv">
+    <a href="#sitios">Sitios en producción</a>
+    <a href="#agentes">Agentes de IA</a>
+    <a href="#marca">Marca</a>
+    <a href="#contenido">Contenido</a>
+    <a href="#campanas">Campañas</a>
+    <a href="#acuerdo">Bajo acuerdo</a>
+  </nav>
+</header>
+
+<!-- ══════════ SITIOS ══════════
+     Un índice, no doce tarjetas. Cada fila es un <a> al sitio real y
+     lleva su captura y su nota en data-*: el número, la imagen del
+     escenario y la miniatura de móvil se generan solos desde ahí, así
+     que sumar un proyecto es sumar UNA fila. -->
+<section class="wrap" id="sitios" style="border-top:1px solid var(--hair)">
+  <div class="head">
+    <span class="kicker rv">Sitios en producción</span>
+    <h2 class="t-sec rv">Sitios que podés <span class="it lime">abrir ahora</span>.</h2>
+    <p class="body-l rv">
+      Cada uno está en línea. Pasá por la lista para verlos; tocá el nombre y entrás al sitio real.
+    </div>
+  </div>
+
+  <div class="ix">
+    <div class="ix-list rv" id="ixList">
+      <a class="ix-row" href="https://camebolscz.com/" target="_blank" rel="noopener"
+         data-shot="assets/proyectos/camebol.webp"
+         data-note="La filial cruceña de la Cámara de Mujeres Empresarias de Bolivia — la misma que invitó a Johnny como speaker del Foro FEM."
+         data-url="camebolscz.com">
+        <span class="ix-name">CAMEBOL Santa Cruz</span><span class="ix-tag">Institucional</span><span class="ix-y">2026</span>
+      </a>
+      <a class="ix-row" href="https://peredo.ai/" target="_blank" rel="noopener"
+         data-shot="assets/proyectos/peredo.webp"
+         data-note="Sitio del Dr. Marcelo Peredo, Global CISO y AI Risk Strategist. Una web que tiene que transmitir autoridad y nada más."
+         data-url="peredo.ai">
+        <span class="ix-name">Peredo.ai</span><span class="ix-tag">Autoridad personal</span><span class="ix-y">2026</span>
+      </a>
+      <a class="ix-row" href="https://victlan.com/" target="_blank" rel="noopener"
+         data-shot="assets/proyectos/victlan.webp"
+         data-note="Desarrolladora con modelo vertical: constructora, desarrolladora e inmobiliaria en un mismo proceso. Estética arquitectónica y editorial."
+         data-url="victlan.com">
+        <span class="ix-name">Victlan</span><span class="ix-tag">Inmobiliaria</span><span class="ix-y">2026</span>
+      </a>
+      <a class="ix-row" href="https://grupogivera.com/" target="_blank" rel="noopener"
+         data-shot="assets/proyectos/givera.webp"
+         data-note="Más de 35 años en nutrición vegetal y maquinaria agrícola. La web tenía que transmitir respaldo científico sin volverse ilegible."
+         data-url="grupogivera.com">
+        <span class="ix-name">Grupo Givera</span><span class="ix-tag">Agroindustria</span><span class="ix-y">2026</span>
+      </a>
+      <a class="ix-row" href="https://sapien9.com/" target="_blank" rel="noopener"
+         data-shot="assets/proyectos/sapien9.webp"
+         data-note="Plataforma de ciberseguridad empresarial. Visual premium, narrativa clara y código optimizado para velocidad."
+         data-url="sapien9.com">
+        <span class="ix-name">Sapien9</span><span class="ix-tag">Ciberseguridad</span><span class="ix-y">2024</span>
+      </a>
+      <a class="ix-row" href="https://bolecuarg.com/" target="_blank" rel="noopener"
+         data-shot="assets/proyectos/bolecuarg.webp"
+         data-note="Empresa agrícola fundada en 1989. Tono cercano y técnico — «la tierra habla, nosotros escuchamos»."
+         data-url="bolecuarg.com">
+        <span class="ix-name">Bolecuarg</span><span class="ix-tag">Agroindustria</span><span class="ix-y">2026</span>
+      </a>
+      <a class="ix-row" href="https://talentoyempleabilidadhub.com/" target="_blank" rel="noopener"
+         data-shot="assets/proyectos/talento.webp"
+         data-note="Consultora de gestión de talento humano. Tiene que hablarle a dos públicos a la vez: profesionales y empresas."
+         data-url="talentoyempleabilidadhub.com">
+        <span class="ix-name">Talento y Empleabilidad Hub</span><span class="ix-tag">Consultoría</span><span class="ix-y">2026</span>
+      </a>
+      <a class="ix-row" href="https://ika.com.bo/" target="_blank" rel="noopener"
+         data-shot="assets/proyectos/shiba.webp"
+         data-note="Distribuidor de climatización. Dos identidades distintas sobre una misma base técnica, optimizadas para conversión por WhatsApp."
+         data-url="ika.com.bo">
+        <span class="ix-name">Shiba · IKA y LTR</span><span class="ix-tag">Dos marcas</span><span class="ix-y">2025</span>
+      </a>
+      <a class="ix-row" href="https://natukira.com/" target="_blank" rel="noopener"
+         data-shot="assets/proyectos/natukira.webp"
+         data-note="Desodorantes naturales para niños y adolescentes. Web cálida y dermo-consciente, dirigida a padres."
+         data-url="natukira.com">
+        <span class="ix-name">Natukira</span><span class="ix-tag">Producto</span><span class="ix-y">2026</span>
+      </a>
+      <a class="ix-row" href="https://www.juanwagner.com/" target="_blank" rel="noopener"
+         data-shot="assets/proyectos/juanwagner.webp"
+         data-note="Creador de contenido, entrenador en línea y actor, con más de 3 millones de seguidores. Planes, alianzas y sponsors en un solo lugar."
+         data-url="juanwagner.com">
+        <span class="ix-name">Juan Wagner</span><span class="ix-tag">Marca personal</span><span class="ix-y pend" title="Confirmar el año">año</span>
+      </a>
+      <a class="ix-row" href="https://ghtractor.com/" target="_blank" rel="noopener"
+         data-shot="assets/proyectos/ghtractor.webp"
+         data-note="Repuestos alternativos para maquinaria pesada: más de 13.000 ítems, catálogo buscable y cotización directa por WhatsApp."
+         data-url="ghtractor.com">
+        <span class="ix-name">GH Tractor</span><span class="ix-tag">Maquinaria pesada</span><span class="ix-y pend" title="Confirmar el año">año</span>
+      </a>
+      <a class="ix-row" href="https://quimerahosting.com/" target="_blank" rel="noopener"
+         data-shot="assets/proyectos/quimerahosting.webp"
+         data-note="Nuestra propia plataforma de hosting: búsqueda y transferencia de dominios, planes claros y contratación sin fricción."
+         data-url="quimerahosting.com">
+        <span class="ix-name">Quimera Hosting</span><span class="ix-tag">Casa propia</span><span class="ix-y">2026</span>
+      </a>
+    </div>
+
+    <div class="ix-stage rv">
+      <div class="ix-frame" id="ixFrame"></div>
+      <div class="ix-cap">
+        <h3 id="ixName"></h3>
+        <p id="ixNote"></p>
+        <a id="ixUrl" href="#" target="_blank" rel="noopener"></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ AGENTES ══════════
+     Las transcripciones son textuales de las capturas reales; la captura
+     original se abre con el botón «Ver la captura». -->
+<section class="wrap" id="agentes" style="border-top:1px solid var(--hair)">
+  <div class="head">
+    <span class="kicker rv">Automatización con IA</span>
+    <h2 class="t-sec rv">Agentes <span class="it lime">atendiendo</span><br>por empresas reales.</h2>
+    <p class="body-l rv">
+      No son demos. Elegí uno y leé la conversación tal como ocurrió — el equipo
+      del cliente la ve en su panel e interviene cuando hace falta.
+    </div>
+  </div>
+
+  <div class="ag">
+    <div class="ag-stage rv" id="agStage">
+
+      <div class="ag-panel on" data-ag="bf">
+        <div class="tr">
+          <div class="tr-h">
+            <b>Bolivia Fitness · WhatsApp</b>
+            <button data-lb="img" data-src="assets/proyectos/boliviafitness.webp" data-alt="Captura real de la conversación del agente de Bolivia Fitness">Ver la captura ↗</button>
+          </div>
+          <div class="msg u">Hola, buenos días</div>
+          <div class="msg a">¡Bienvenido a Bolivia Fitness! 🦁 Te escribe Edgar, tu asesor de ventas.<br>¿En qué te ayudo? En Bolivia Fitness manejamos Proteínas, Creatinas y Combo. ¿Cuál te interesa?</div>
+          <div class="msg u">¿En dónde están? Quiero saber las sucursales que tienen</div>
+          <div class="msg a">Claro Rodry, ¿en qué ciudad estás? Así te paso las sucursales que tenemos.</div>
+          <div class="msg u">Quiero saber en qué ciudades están</div>
+          <div class="msg a">Rodry, tenemos tiendas en: <strong>Santa Cruz, La Paz, Cochabamba, Oruro y Sucre.</strong> En Tarija abrimos pronto. ¿Cuál te gustaría?</div>
+          <div class="tr-f"><i>Catálogo por categoría</i><i>Pedido con recojo o envío</i><i>Registro en base de datos</i><i>Panel para intervenir</i></div>
+        </div>
+        <p style="margin-top:1.1rem;font-size:.85rem"><span class="pend" title="Consultas atendidas por mes, pedidos cerrados sin intervención humana y horas liberadas al equipo. Es el dato que más convierte de toda la web.">Faltan los tres números del cliente</span></div>
+      </div>
+
+      <div class="ag-panel" data-ag="da">
+        <div class="tr">
+          <div class="tr-h">
+            <b>Academia Diamond Art · WhatsApp</b>
+            <button data-lb="img" data-src="assets/proyectos/diamondart.webp" data-alt="Captura real de la conversación del agente de Academia Diamond Art">Ver la captura ↗</button>
+          </div>
+          <div class="msg u">Hola, buenos días</div>
+          <div class="msg a">Hola, somos Diamond Art, academia de Gimnasia y danza 💎<br>Por favor seleccioná la dirección de tu preferencia:
+            <ol><li>📍 Sucursal Norte: Av. Beni (entre 7mo y 8vo anillo, #1735)</li><li>📍 Sucursal Centro: Calle Aroma 574 (YMCA)</li></ol>
+          </div>
+          <div class="msg u">1</div>
+          <div class="msg a">Perfecto 😊 Seleccioná una opción:
+            <ol><li>Deseo agendar una clase de prueba</li><li>Información sobre costos, horarios y ubicación</li></ol>
+          </div>
+          <div class="msg a">📍 <em style="font-style:normal;color:var(--muted)">[ubicación en Google Maps de la sucursal elegida]</em></div>
+          <div class="tr-f"><i>Dos sucursales</i><i>Ubicación en Maps</i><i>Horarios por disciplina</i><i>Seguimiento de clase de prueba</i></div>
+        </div>
+      </div>
+
+      <div class="ag-panel" data-ag="mm">
+        <div class="tr">
+          <div class="tr-h">
+            <b>Meta Miami Investment Forum · WhatsApp</b>
+            <button data-lb="img" data-src="assets/proyectos/metamiami.webp" data-alt="Captura real de la conversación del agente de Meta Miami Investment Forum">Ver la captura ↗</button>
+          </div>
+          <div class="msg u">Hola, buenos días</div>
+          <div class="msg a">¡Hola, buen día! 👋 Te cuento que el evento que organizamos para inversión inmobiliaria en Miami es totalmente gratuito y sin compromiso. Para empezar, ¿qué te llamó más la atención de invertir en Miami? 📈🇺🇸
+            <ol><li>Generar ingresos en dólares</li><li>Proteger mi dinero</li><li>Inversiones fuera del país</li><li>Uso personal o vacacional</li><li>Solo informarme</li><li>Tramitar estatus migratorio en EE.UU.</li></ol>
+          </div>
+          <div class="msg u">3</div>
+          <div class="msg u">5</div>
+          <div class="msg a">¡Perfecto, Rodry! Invertir fuera del país es una excelente idea para diversificar y proteger…</div>
+          <div class="tr-f"><i>Califica el interés</i><i>Asigna asesor</i><i>Operado desde GoHighLevel</i><i>Cada interacción registrada</i></div>
+        </div>
+      </div>
+
+      <div class="ag-panel" data-ag="xm">
+        <div class="tr">
+          <div class="tr-h">
+            <b>Xiaomi Bolivia · WhatsApp</b>
+            <button data-lb="img" data-src="assets/proyectos/xiaomi.webp" data-alt="Captura real de la conversación del agente de Xiaomi">Ver la captura ↗</button>
+          </div>
+          <div class="msg u">Hola, quiero participar en el sorteo 🎁 ¿Qué debo hacer?</div>
+          <div class="msg a">¡Hola! 👋 Te damos la bienvenida al sorteo de Xiaomi Bolivia: <strong>Para nuestra indispensable, mamá.</strong></div>
+          <div class="msg a">Para participar necesitamos algunos datos. Vamos a pedírtelos uno por uno.</div>
+          <div class="msg a">📋 <strong>Importante:</strong> tus datos serán usados únicamente para este sorteo, conforme a la normativa de la Autoridad de Fiscalización del Juego.<br>Seleccioná «Continuar» para empezar.</div>
+          <div class="tr-f"><i>Registro guiado</i><i>Validación de datos</i><i>Aviso legal en el flujo</i><i>Todo auditable</i></div>
+        </div>
+      </div>
+
+      <div class="ag-panel" data-ag="qa">
+        <div class="tr">
+          <div class="tr-h">
+            <b>Quimera AI · WhatsApp</b>
+            <button data-lb="img" data-src="assets/proyectos/quimeraai.webp" data-alt="Captura real de la conversación del agente de Quimera AI">Ver la captura ↗</button>
+          </div>
+          <div class="msg u">Hola, buenas tardes. Me gustaría saber lo que pueden hacer</div>
+          <div class="msg a">¡Hola! Soy Alexandra, asistente de Quimera Group 😊<br>Nos especializamos en manejo de redes sociales, desarrollo web, campañas publicitarias, chatbots con IA y automatizaciones. ¿Hay algún servicio que le interese para contarle más detalles?</div>
+          <div class="msg u">Me interesa el chatbot y automatizaciones</div>
+          <div class="msg a">Perfecto, gracias por indicarlo 🙌 Para conocer mejor su caso, ¿a qué rubro se dedica y qué proceso le gustaría automatizar?</div>
+          <div class="tr-f"><i>Atiende la consulta inicial</i><i>Califica el lead</i><i>Deriva al equipo</i><i>El agente de la propia casa</i></div>
+        </div>
+      </div>
+
+      <div class="ag-panel" data-ag="sh">
+        <div class="tr">
+          <div class="tr-h">
+            <b>Shiba Hogar · WhatsApp <span class="pend" style="font-size:.62rem;letter-spacing:0;text-transform:none">en desarrollo</span></b>
+            <button data-lb="img" data-src="assets/proyectos/shibahogar.webp" data-alt="Captura real de la conversación del agente de Shiba Hogar">Ver la captura ↗</button>
+          </div>
+          <div class="msg u">Quiero ver los tipos de productos que tienen</div>
+          <div class="msg a">Tenemos dos marcas excelentes: <strong>IKA y LTR</strong>. ¿Cuál te gustaría conocer?</div>
+          <div class="msg u">IKA</div>
+          <div class="msg a">En IKA tenemos:
+            <ul>
+              <li><strong>Serie FH</strong> — On/Off, ideal para presupuesto accesible (12k, 18k, 24k BTU)</li>
+              <li><strong>Serie FJ</strong> — On/Off premium para espacios grandes (36k BTU)</li>
+              <li><strong>Serie AA-32</strong> — Inverter, hasta 71% de ahorro (9k, 12k, 18k, 24k BTU)</li>
+            </ul>
+            ¿Cuál te interesa o para qué espacio lo necesitás?
+          </div>
+          <div class="msg u">Me interesan la FH 12k y la FJ 46k</div>
+          <div class="tr-f"><i>Asesora por BTU</i><i>Cierra la venta</i><i>Avisa al encargado del depósito</i><i>Envía ubicación</i></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="ag-list rv" id="agList">
+      <button class="ag-row on" data-ag="bf"><span class="dot"></span><span><b>Bolivia Fitness</b><span>Catálogo, dudas y pedido con recojo o envío</span></span></button>
+      <button class="ag-row" data-ag="da"><span class="dot"></span><span><b>Academia Diamond Art</b><span>Inscripciones, sucursales y clases de prueba</span></span></button>
+      <button class="ag-row" data-ag="mm"><span class="dot"></span><span><b>Meta Miami Investment Forum</b><span>Califica y asigna al asesor que sigue la cita</span></span></button>
+      <button class="ag-row" data-ag="xm"><span class="dot"></span><span><b>Xiaomi</b><span>Registro de promoción con validación de datos</span></span></button>
+      <button class="ag-row" data-ag="qa"><span class="dot"></span><span><b>Quimera AI</b><span>El agente de la propia casa</span></span></button>
+      <button class="ag-row" data-ag="sh"><span class="dot wip"></span><span><b>Shiba Hogar</b><span>Venta y asesoría en climatización · en desarrollo</span></span></button>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ MARCA ══════════
+     Siete veces el mismo mockup de libro sobre fondo claro. En grilla
+     son siete bloques blancos idénticos; en tira, a un alto parejo, se
+     leen por lo que son y cada tapa se distingue sola. -->
+<section class="wrap" id="marca" style="border-top:1px solid var(--hair)">
+  <div class="head">
+    <span class="kicker rv">Identidad</span>
+    <h2 class="t-sec rv">Marcas construidas<br><span class="it lime">desde cero</span>.</h2>
+    <p class="body-l rv">Cada una con su manual: logotipo, paleta, tipografías y usos. Tocá una tapa para verla grande.</div>
+  </div>
+  <div class="strip rv" style="--sh:clamp(140px,16vw,205px);--sg:clamp(12px,1.6vw,22px)">
+    <div class="strip-t" data-dup="26">
+      <img src="assets/proyectos/br-dudu.webp" width="900" height="676" alt="Manual de marca de Dudu Service" data-lb="img" data-src="assets/proyectos/br-dudu.webp" data-alt="Manual de marca de Dudu Service">
+      <img src="assets/proyectos/br-welding.webp" width="900" height="676" alt="Manual de marca de Welding Solutions" data-lb="img" data-src="assets/proyectos/br-welding.webp" data-alt="Manual de marca de Welding Solutions">
+      <img src="assets/proyectos/br-seremar.webp" width="900" height="676" alt="Manual de marca de Seremar" data-lb="img" data-src="assets/proyectos/br-seremar.webp" data-alt="Manual de marca de Seremar">
+      <img src="assets/proyectos/br-fisiospa.webp" width="900" height="676" alt="Manual de marca de Fisio &amp; Spa" data-lb="img" data-src="assets/proyectos/br-fisiospa.webp" data-alt="Manual de marca de Fisio &amp; Spa">
+      <img src="assets/proyectos/br-shiva.webp" width="900" height="676" alt="Manual de marca de Shiba Hogar" data-lb="img" data-src="assets/proyectos/br-shiva.webp" data-alt="Manual de marca de Shiba Hogar">
+      <img src="assets/proyectos/br-tecnotel.webp" width="900" height="676" alt="Manual de marca de Tecnotel" data-lb="img" data-src="assets/proyectos/br-tecnotel.webp" data-alt="Manual de marca de Tecnotel">
+      <img src="assets/proyectos/br-tuestilofavorito.webp" width="900" height="676" alt="Manual de marca de Tu Estilo Favorito" data-lb="img" data-src="assets/proyectos/br-tuestilofavorito.webp" data-alt="Manual de marca de Tu Estilo Favorito">
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ CONTENIDO ══════════ -->
+<section class="wrap" id="contenido" style="border-top:1px solid var(--hair)">
+  <div class="head">
+    <span class="kicker rv">Producción audiovisual</span>
+    <h2 class="t-sec rv">Y el contenido que<br>las <span class="it lime">pone a andar</span>.</h2>
+    <p class="body-l rv">Piezas para redes, rodadas y editadas por el equipo. Tocá para reproducir con sonido.</div>
+  </div>
+  <div class="film rv">
+    <figure class="reel sm">
+      <img class="reel-poster" src="assets/proyectos/ct-tuestilo.webp" alt="Pieza de contenido para Tu Estilo Favorito" loading="lazy">
+      <button class="reel-play" data-lb="video" data-src="assets/proyectos/ct-tuestilo.mp4" aria-label="Reproducir el reel de Tu Estilo Favorito">▶</button>
+      <figcaption><b>Tu Estilo Favorito</b></figcaption>
+    </figure>
+    <figure class="reel sm">
+      <img class="reel-poster" src="assets/proyectos/ct-shibacont.webp" alt="Pieza de contenido para Shiba Hogar" loading="lazy">
+      <button class="reel-play" data-lb="video" data-src="assets/proyectos/ct-shibacont.mp4" aria-label="Reproducir el reel de Shiba Hogar">▶</button>
+      <figcaption><b>Shiba Hogar</b></figcaption>
+    </figure>
+    <figure class="reel sm">
+      <img class="reel-poster" src="assets/proyectos/ct-servicentro.webp" alt="Pieza de contenido para Servicentro" loading="lazy">
+      <button class="reel-play" data-lb="video" data-src="assets/proyectos/ct-servicentro.mp4" aria-label="Reproducir el reel de Servicentro">▶</button>
+      <figcaption><b>Servicentro</b></figcaption>
+    </figure>
+    <figure class="reel sm">
+      <img class="reel-poster" src="assets/proyectos/ct-metalforte.webp" alt="Pieza de contenido para Metal Forte" loading="lazy">
+      <button class="reel-play" data-lb="video" data-src="assets/proyectos/ct-metalforte.mp4" aria-label="Reproducir el reel de Metal Forte">▶</button>
+      <figcaption><b>Metal Forte</b></figcaption>
+    </figure>
+    <figure class="reel sm">
+      <img class="reel-poster" src="assets/proyectos/ct-rekids.webp" alt="Pieza de contenido para Rekids" loading="lazy">
+      <button class="reel-play" data-lb="video" data-src="assets/proyectos/ct-rekids.mp4" aria-label="Reproducir el reel de Rekids">▶</button>
+      <figcaption><b>Rekids</b></figcaption>
+    </figure>
+    <figure class="reel sm">
+      <img class="reel-poster" src="assets/proyectos/ct-patiobelen.webp" alt="Pieza de contenido para Patio Belén" loading="lazy">
+      <button class="reel-play" data-lb="video" data-src="assets/proyectos/ct-patiobelen.mp4" aria-label="Reproducir el reel de Patio Belén">▶</button>
+      <figcaption><b>Patio Belén</b></figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ══════════ CAMPAÑAS ══════════
+     A sangre y en dos tiras contrarias: es un muro de trabajo, no una
+     grilla. Al ir a alto fijo acepta las tres proporciones del material
+     (4:5, cuadrada y banner) sin recortar ninguna. -->
+<section id="campanas" style="border-top:1px solid var(--hair);padding-block:clamp(72px,10vh,140px)">
+  <!-- el encabezado va en su propia columna .wrap: si le pusiera el
+       padding lateral al .head, con box-sizing:border-box ese padding
+       se descuenta del max-width:66ch y el título se estrangula -->
+  <div class="wrap" style="padding-block:0">
+    <div class="head" style="margin-bottom:clamp(2.3rem,5vw,3.8rem)">
+      <span class="kicker rv">Campañas</span>
+      <h2 class="t-sec rv">Campañas que<br><span class="it lime">salieron al aire</span>.</h2>
+      <p class="body-l rv">Una selección de piezas, para marcas de rubros muy distintos. Hay muchas más — tocá cualquiera para verla completa.</div>
+    </div>
+  </div>
+  <!-- Fila 1: las doce piezas 4:5 ya elegidas. Fila 2: material que en la
+       versión anterior NO se podía mostrar — cinco cuadradas y cuatro
+       banners de 2.8:1 — porque ninguna grilla alinea tres proporciones
+       distintas. A alto fijo conviven sin recortar ni una, y de paso el
+       ancho desparejo es lo que hace que el muro no se lea como grilla.
+       Quedan fuera a la vista las de texto denso (a02 mapa+QR, a18/a19/a29
+       listas de spa, a26 checklist), que a este tamaño son ruido. -->
+  <div class="wall rv" style="--sh:clamp(190px,23vw,290px);--sg:clamp(10px,1.2vw,16px)">
+    <div class="strip">
+      <div class="strip-t" data-dup="34">
+        <img src="assets/proyectos/anuncios/a01.webp" width="520" height="650" loading="lazy" alt="Pieza de campaña" data-lb="img" data-src="assets/proyectos/anuncios/a01.webp">
+        <img src="assets/proyectos/anuncios/a03.webp" width="520" height="650" loading="lazy" alt="Pieza de campaña" data-lb="img" data-src="assets/proyectos/anuncios/a03.webp">
+        <img src="assets/proyectos/anuncios/a05.webp" width="520" height="650" loading="lazy" alt="Pieza de campaña" data-lb="img" data-src="assets/proyectos/anuncios/a05.webp">
+        <img src="assets/proyectos/anuncios/a06.webp" width="520" height="650" loading="lazy" alt="Pieza de campaña" data-lb="img" data-src="assets/proyectos/anuncios/a06.webp">
+        <img src="assets/proyectos/anuncios/a08.webp" width="520" height="650" loading="lazy" alt="Pieza de campaña" data-lb="img" data-src="assets/proyectos/anuncios/a08.webp">
+        <img src="assets/proyectos/anuncios/a14.webp" width="520" height="650" loading="lazy" alt="Pieza de campaña" data-lb="img" data-src="assets/proyectos/anuncios/a14.webp">
+        <img src="assets/proyectos/anuncios/a20.webp" width="520" height="650" loading="lazy" alt="Pieza de campaña" data-lb="img" data-src="assets/proyectos/anuncios/a20.webp">
+        <img src="assets/proyectos/anuncios/a21.webp" width="520" height="650" loading="lazy" alt="Pieza de campaña" data-lb="img" data-src="assets/proyectos/anuncios/a21.webp">
+        <img src="assets/proyectos/anuncios/a23.webp" width="520" height="650" loading="lazy" alt="Pieza de campaña" data-lb="img" data-src="assets/proyectos/anuncios/a23.webp">
+        <img src="assets/proyectos/anuncios/a24.webp" width="520" height="650" loading="lazy" alt="Pieza de campaña" data-lb="img" data-src="assets/proyectos/anuncios/a24.webp">
+        <img src="assets/proyectos/anuncios/a30.webp" width="520" height="650" loading="lazy" alt="Pieza de campaña" data-lb="img" data-src="assets/proyectos/anuncios/a30.webp">
+        <img src="assets/proyectos/anuncios/a31.webp" width="520" height="650" loading="lazy" alt="Pieza de campaña" data-lb="img" data-src="assets/proyectos/anuncios/a31.webp">
+      </div>
+    </div>
+    <div class="strip rev">
+      <div class="strip-t" data-dup="34">
+        <img src="assets/proyectos/anuncios/a16.webp" width="520" height="520" loading="lazy" alt="Pieza de campaña" data-lb="img" data-src="assets/proyectos/anuncios/a16.webp">
+        <img src="assets/proyectos/anuncios/a04.webp" width="520" height="200" loading="lazy" alt="Pieza de campaña" data-lb="img" data-src="assets/proyectos/anuncios/a04.webp">
+        <img src="assets/proyectos/anuncios/a12.webp" width="520" height="520" loading="lazy" alt="Pieza de campaña" data-lb="img" data-src="assets/proyectos/anuncios/a12.webp">
+        <img src="assets/proyectos/anuncios/a25.webp" width="520" height="650" loading="lazy" alt="Pieza de campaña" data-lb="img" data-src="assets/proyectos/anuncios/a25.webp">
+        <img src="assets/proyectos/anuncios/a22.webp" width="520" height="194" loading="lazy" alt="Pieza de campaña" data-lb="img" data-src="assets/proyectos/anuncios/a22.webp">
+        <img src="assets/proyectos/anuncios/a13.webp" width="520" height="520" loading="lazy" alt="Pieza de campaña" data-lb="img" data-src="assets/proyectos/anuncios/a13.webp">
+        <img src="assets/proyectos/anuncios/a17.webp" width="520" height="520" loading="lazy" alt="Pieza de campaña" data-lb="img" data-src="assets/proyectos/anuncios/a17.webp">
+        <img src="assets/proyectos/anuncios/a27.webp" width="520" height="186" loading="lazy" alt="Pieza de campaña" data-lb="img" data-src="assets/proyectos/anuncios/a27.webp">
+        <img src="assets/proyectos/anuncios/a11.webp" width="520" height="634" loading="lazy" alt="Pieza de campaña" data-lb="img" data-src="assets/proyectos/anuncios/a11.webp">
+        <img src="assets/proyectos/anuncios/a15.webp" width="520" height="520" loading="lazy" alt="Pieza de campaña" data-lb="img" data-src="assets/proyectos/anuncios/a15.webp">
+        <img src="assets/proyectos/anuncios/a28.webp" width="520" height="186" loading="lazy" alt="Pieza de campaña" data-lb="img" data-src="assets/proyectos/anuncios/a28.webp">
+        <img src="assets/proyectos/anuncios/a09.webp" width="520" height="650" loading="lazy" alt="Pieza de campaña" data-lb="img" data-src="assets/proyectos/anuncios/a09.webp">
+        <img src="assets/proyectos/anuncios/a10.webp" width="520" height="650" loading="lazy" alt="Pieza de campaña" data-lb="img" data-src="assets/proyectos/anuncios/a10.webp">
+        <img src="assets/proyectos/anuncios/a07.webp" width="520" height="648" loading="lazy" alt="Pieza de campaña" data-lb="img" data-src="assets/proyectos/anuncios/a07.webp">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ LOS QUE NO SE PUEDEN NOMBRAR ══════════ -->
+<section class="wrap" id="acuerdo" style="border-top:1px solid var(--hair)">
+  <div class="head">
+    <span class="kicker rv">Bajo acuerdo</span>
+    <h2 class="t-sec rv">Y otros que <span class="it lime">no podemos nombrar</span>.</h2>
+    <p class="body-l rv">
+      Son sistemas que corren dentro de empresas que prefieren no figurar. Los
+      podemos mostrar funcionando en la reunión, sin decir de quién son.
+    </div>
+  </div>
+  <div class="live">
+    <div class="live-row rv">
+      <span class="dot"></span>
+      <span><b>Catálogo digital de servicios</b><span>Vende y toma pedidos solo · <em>el dueño deja de contestar todo</em></span></span>
+    </div>
+    <div class="live-row rv" style="transition-delay:.04s">
+      <span class="dot"></span>
+      <span><b>CRM de ventas propio</b><span>Pipeline y métricas en vivo · <em>el equipo sabe qué cerrar hoy</em></span></span>
+    </div>
+    <div class="live-row rv" style="transition-delay:.08s">
+      <span class="dot"></span>
+      <span><b>Central de operaciones</b><span>Multi-marca, equipo y clientes · <em>toda la agencia en un tablero</em></span></span>
+    </div>
+    <div class="live-row rv" style="transition-delay:.12s">
+      <span class="dot"></span>
+      <span><b>Portal de datos en vivo</b><span>Información en tiempo real · <em>alto tráfico, siempre al aire</em></span></span>
+    </div>
+    <div class="live-row rv" style="transition-delay:.16s">
+      <span class="dot"></span>
+      <span><b>Plataforma con cobros</b><span>Pagos y facturación automáticos · <em>factura sola, sin intervención</em></span></span>
+    </div>
+    <div class="live-row rv" style="transition-delay:.2s">
+      <span class="dot"></span>
+      <span><b>Sistema de visión con cámaras</b><span>Evidencia verificable · <em>seguridad con prueba forense</em></span></span>
+    </div>
+  </div>
+  <p class="rv" style="margin-top:2.4rem;display:flex;gap:.7rem;flex-wrap:wrap;align-items:center">
+    <a href="contacto.html" class="btn btn-g">Quiero verlos en vivo →</a>
+    <span class="pend" title="Estos 6 salen del PDF de capacidades. Confirmar cuáles son realmente confidenciales y cuáles sí se pueden nombrar — si alguno se puede nombrar, se sube arriba con los demás">Confirmar cuáles son de verdad confidenciales</span>
+  </p>
+</section>
+
+<!-- ══════════ MARCAS ══════════ -->
+<section class="wrap" style="border-top:1px solid var(--hair);padding-top:clamp(50px,7vh,80px)">
+  <p class="mono-s" style="text-align:center;margin-bottom:1.4rem">Marcas que ya nos dejaron entrar a sus operaciones</p>
+  <div class="mq"><div class="mq-t"></div></div>
+</section>
+
+<!-- ══════════ CIERRE ══════════ -->
+<section class="closer">
+  <span class="kicker rv">El siguiente paso</span>
+  <h2 class="t-sec rv" style="margin-top:1.2rem">El próximo caso<br><span class="it lime">puede ser el tuyo</span>.</h2>
+  <p class="body-l rv">Tomémonos 30 minutos y te mostramos, en vivo, cómo se vería tu empresa con sus propios sistemas.</p>
+  <a href="contacto.html" class="btn btn-p rv">Conversemos →</a>
+</section>
+
+<footer>
+  <div class="foot-grid">
+    <div class="foot-brand">
+      <img src="assets/logo-lockup.png" alt="Group Quimera · Marketing y Tech">
+      <p>Tecnología a medida para empresas que quieren crecer. Tu sistema, tus datos, tu infraestructura.</p>
+      <p class="foot-place">Santa Cruz de la Sierra · Bolivia</div>
+    </div>
+    <nav class="foot-col">
+      <h5>Navegar</h5>
+      <a href="index.html">Inicio</a>
+      <a href="servicios.html">Servicios</a>
+      <a href="tecnologia.html">Tecnología</a>
+      <a href="proyectos2.html" aria-current="page">Proyectos</a>
+      <a href="nosotros.html">Nosotros</a>
+      <a href="contacto.html">Contacto</a>
+    </nav>
+    <nav class="foot-col">
+      <h5>El grupo</h5>
+      <a href="https://groupquimera.com" target="_blank" rel="noopener">groupquimera.com</a>
+      <a href="https://groupquimera.com.pe" target="_blank" rel="noopener">groupquimera.com.pe</a>
+      <a href="https://techagents.dev" target="_blank" rel="noopener">techagents.dev</a>
+      <a href="https://quimeracloud.com" target="_blank" rel="noopener">quimeracloud.com</a>
+      <a href="https://quimerahosting.com" target="_blank" rel="noopener">quimerahosting.com</a>
+    </nav>
+    <div class="foot-col">
+      <h5>Presencia</h5>
+      <span><b>Santa Cruz</b>Ingeniería</span>
+      <span><b>Miami</b>Tech Agents LLC</span>
+      <span><b>Silicon Valley</b>Ciberseguridad</span>
+      <span><b>Lima</b>Hub técnico</span>
+    </div>
+  </div>
+  <div class="foot-bar">
+    <p>© 2026 Group Quimera · <span class="pend" title="El sitio actual dice «Quimera Group S.A.» — confirmar">razón social a confirmar</span></p>
+    <div class="foot-social">
+      <a href="https://www.instagram.com/quimera_marketing/" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://www.linkedin.com/company/quimeramarketing/" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://www.facebook.com/Marketing.Quimera/" target="_blank" rel="noopener">Facebook</a>
+    </div>
+  </div>
+</footer>
+
+<div id="lb"><button id="lb-x">Cerrar ✕</button><div id="lb-in"></div></div>
+
+<button id="nb">⚠ Propuesta B · qué cambia</button>
+<div id="np">
+  <h4>Propuesta B</h4>
+  <p style="font-size:.8rem;color:var(--muted)">Misma información y mismos assets que la versión anterior. Cambia cómo se muestran.</p>
+
+  <span class="sec">El diagnóstico</span>
+  <ol>
+    <li>Los sitios eran <b>doce tarjetas iguales</b>: la vista se resbala y no se distingue una de otra. Y cada captura, que viene a 1200px, se veía a ~350 <b>y recortada</b> para que la grilla cerrara.</li>
+    <li>Los seis agentes son <b>la misma foto de un teléfono sobre fondo blanco</b>. Por eso la página no podía mostrarlos y los escondía detrás de un botón — justo la prueba más fuerte del pivote a IA, invisible.</li>
+    <li>Había <b>cinco grillas distintas apiladas</b> (tarjetas, manuales, reels, piezas, filas). Cada sección inventaba su propio formato.</li>
+  </ol>
+
+  <span class="sec">Lo que hace esta versión</span>
+  <ol start="4">
+    <li><b>Índice + escenario.</b> Una lista maneja una pieza grande. Los doce sitios entran casi en una pantalla —se percibe el volumen— y la captura se ve a ~900px <b>sin recortar</b> (las dos que vienen a 16:9 dejan un filo oscuro al costado, no pierden los bordes).</li>
+    <li><b>Las conversaciones ahora se leen.</b> Los diálogos están transcritos textuales de las capturas y compuestos con la tipografía del sitio. No imitan la interfaz de WhatsApp a propósito: si la imitaran se leerían como una captura falsa. La <b>captura real está a un clic</b> en cada panel para verificar.</li>
+    <li><b>Manuales y campañas van en tira a alto fijo.</b> Ahí estaba la causa real de que el mosaico se viera apilado: el material tiene tres proporciones mezcladas (4:5, cuadradas y banners 2.8:1) y ninguna grilla alinea con eso. Una tira sí — y no recorta nada.</li>
+    <li><b>Un solo gesto en toda la página</b>: elegir de una lista, ver una pieza grande. En Sitios el escenario va a la derecha y en Agentes a la izquierda, para que no se lean como la misma plantilla repetida.</li>
+    <li>El <b>caso destacado de Bolivia Fitness</b> dejó de ser una sección aparte: era el mismo mockup dos veces. Sus datos viven ahora en su propio panel de agente.</li>
+  </ol>
+
+  <span class="sec">Para mantenerla</span>
+  <ol start="9">
+    <li><b>Sumar un sitio = sumar UNA fila.</b> El número, la imagen del escenario, la nota y la miniatura de móvil se generan solos desde los <code>data-</code> de la fila. No hay nada duplicado que se pueda desincronizar.</li>
+    <li>La tira de campañas <b>acepta cualquier proporción</b>: para sumar piezas alcanza con agregar <code>&lt;img&gt;</code>. Hoy están las 12 ya elegidas; quedan <b>19 más descargadas</b> sin usar.</li>
+  </ol>
+
+  <span class="sec">Sigue pendiente de tu lado</span>
+  <ol start="11">
+    <li><b>Métricas de Bolivia Fitness:</b> los tres números. Es lo más valioso que falta en toda la web.</li>
+    <li><b>Confidencialidad:</b> confirmar que los clientes nombrados aprueban aparecer. Xiaomi y Meta Miami conviene chequearlos.</li>
+    <li>El <b>año de Juan Wagner y de GH Tractor</b> — quedaron en ámbar.</li>
+    <li>⚠ <b>Sapien9 aparece con dos papeles:</b> alianza en Tecnología, cliente acá. Decidir cómo se cuenta.</li>
+    <li><b>Juan Wagner y GH Tractor no están en <code>projects.ts</code></b> del sitio en producción — hay que sumarlos allá o los dos portafolios quedan desincronizados.</li>
+    <li>Ideal: una o dos frases de testimonio de clientes reales. Hoy no hay ninguna en toda la web.</li>
+  </ol>
+</div>
+
+<script src="assets/quimera.js?v=20260731a"></script>
+<script>
+/* ── Índice de sitios ──────────────────────────────────────────────
+   Todo sale de las filas: el número, la captura del escenario, la nota
+   y la miniatura de móvil. Una sola fuente de verdad — agregar un
+   proyecto es agregar un <a class="ix-row"> con sus data-*.          */
+(function(){
+  const list = document.getElementById('ixList');
+  if (!list) return;
+  const rows  = [...list.querySelectorAll('.ix-row')];
+  const frame = document.getElementById('ixFrame');
+  const elN   = document.getElementById('ixName');
+  const elT   = document.getElementById('ixNote');
+  const elU   = document.getElementById('ixUrl');
+
+  rows.forEach((r, i) => {
+    const nombre = r.querySelector('.ix-name').textContent;
+
+    // numeración correlativa
+    const n = document.createElement('span');
+    n.className = 'ix-n';
+    n.textContent = String(i + 1).padStart(2, '0');
+    r.prepend(n);
+
+    // nota y miniatura: sólo se ven en móvil, donde no hay escenario
+    const nota = document.createElement('span');
+    nota.className = 'ix-note';
+    nota.textContent = r.dataset.note;
+    r.appendChild(nota);
+
+    const mini = document.createElement('img');
+    mini.className = 'ix-shot';
+    mini.src = r.dataset.shot;
+    mini.alt = 'Captura del sitio de ' + nombre;
+    mini.loading = 'lazy';
+    r.appendChild(mini);
+
+    // capa del escenario. Van las doce en el DOM y se cruzan por
+    // opacidad: así el cambio es instantáneo y sin parpadeo.
+    const capa = document.createElement('img');
+    capa.src = r.dataset.shot;
+    capa.alt = 'Captura del sitio de ' + nombre;
+    capa.decoding = 'async';
+    frame.appendChild(capa);
+    r._capa = capa;
+  });
+
+  let activo = -1;
+  const mostrar = i => {
+    if (i === activo) return;
+    if (activo > -1) { rows[activo].classList.remove('on'); rows[activo]._capa.classList.remove('on'); }
+    activo = i;
+    const r = rows[i];
+    r.classList.add('on');
+    r._capa.classList.add('on');
+    elN.textContent = r.querySelector('.ix-name').textContent;
+    elT.textContent = r.dataset.note;
+    elU.textContent = r.dataset.url + ' ↗';
+    elU.href = r.href;
+  };
+
+  rows.forEach((r, i) => {
+    r.addEventListener('mouseenter', () => mostrar(i));
+    r.addEventListener('focus',      () => mostrar(i));
+  });
+  mostrar(0);
+})();
+
+/* ── Agentes: la lista cambia el panel ─────────────────────────────
+   Acá es click y no hover: con hover, mover el mouse por la lista te
+   cambia la conversación que estás leyendo.                          */
+(function(){
+  const list = document.getElementById('agList');
+  if (!list) return;
+  const paneles = [...document.querySelectorAll('.ag-panel')];
+  const botones = [...list.querySelectorAll('.ag-row')];
+  const apilado = matchMedia('(max-width:1000px)');
+  botones.forEach(b => b.addEventListener('click', () => {
+    botones.forEach(o => o.classList.toggle('on', o === b));
+    let abierto;
+    paneles.forEach(p => {
+      const va = p.dataset.ag === b.dataset.ag;
+      p.classList.toggle('on', va);
+      if (va) abierto = p;
+    });
+    // en móvil el panel queda DEBAJO de la lista: sin esto tocás un
+    // agente y parece que no pasó nada
+    if (apilado.matches && abierto) abierto.scrollIntoView({behavior:'smooth', block:'start'});
+  }));
+})();
+
+/* ── Tiras ─────────────────────────────────────────────────────────
+   El set va duplicado dentro del MISMO track: al desplazar -50% la
+   segunda copia cae exactamente donde arrancó la primera, así que el
+   ciclo no tiene junta. La matemática cierra porque el padding-right
+   iguala al gap (N piezas → N-1 huecos + 1 padding = N huecos).
+
+   Pero eso solo alcanza si UNA copia es más ancha que la pantalla: si
+   no, al llegar al -50% la tira ya se acabó y queda un hueco negro a
+   la derecha (se veía en la fila invertida de campañas). Así que
+   primero se repite el set hasta cubrir el ancho visible y recién
+   ahí se duplica.
+
+   Las <img> traen width/height: sin eso el ancho es 0 hasta que
+   cargan, y la cuenta de abajo daría cualquier cosa.               */
+document.querySelectorAll('[data-dup]').forEach(t => {
+  const base = [...t.children];
+  const unSet = t.scrollWidth;                                  // un set + su hueco final
+  const visible = t.parentElement.clientWidth;
+  for (let i = 1; i < Math.ceil((visible + 1) / unSet); i++)
+    base.forEach(el => t.appendChild(el.cloneNode(true)));
+
+  const copia = [...t.children].map(el => {
+    const c = el.cloneNode(true);
+    c.setAttribute('aria-hidden', 'true'); c.alt = '';
+    return c;
+  });
+  t.append(...copia);
+
+  // velocidad constante en px/s, la declara cada tira en data-dup
+  const px = parseFloat(t.dataset.dup) || 40;
+  t.style.animationDuration = (t.scrollWidth / 2 / px).toFixed(1) + 's';
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+# herramientas
+__pycache__/
+*.pyc
+
+# dependencias y compilados
+# app/ tiene su propio .gitignore con esto mismo; acá va de red de contención,
+# por si alguna vez se corre npm desde la raíz.
+node_modules/
+dist/
+dist-ssr/
+
+# sistema
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# capturas de trabajo del panel de revisión (se regeneran con tools/shot.mjs)
+_*.png

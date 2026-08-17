@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="es-BO">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- 3,6 KB en vez de los 39 del logo entero. El favicon no es un detalle de
+         carga: el navegador lo pide con prioridad ALTA, o sea que compite
+         directamente con el poster del hero. -->
+    <link rel="icon" type="image/webp" href="/assets/favicon.webp" />
+    <meta name="theme-color" content="#050604" />
+    <title>Group Quimera · Tecnología a medida para empresas · Santa Cruz, Bolivia</title>
+    <meta
+      name="description"
+      content="Ponemos la IA a trabajar dentro de tu empresa: agentes que atienden y venden, procesos automáticos y la foto real del negocio en una pantalla. Santa Cruz, Bolivia."
+    />
+
+    <!-- Manrope se sirve desde acá, no desde Google, y se precarga: es la que
+         pinta el titular del hero. El porqué está en src/index.css. -->
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="/fonts/manrope-400-600.woff2"
+      crossorigin
+    />
+    <!-- Marca que hay JavaScript, antes de que se pinte nada. Lo usa la regla
+         `[data-js] .reveal-oculto` de index.css: las secciones que entran con
+         scroll salen VISIBLES en el HTML y sólo se esconden si de verdad va a
+         haber quien las anime. Sin esto, y con el bundle cargando después del
+         primer pintado, media página quedaría en blanco esperándolo. -->
+    <script>
+      document.documentElement.dataset.js = ''
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

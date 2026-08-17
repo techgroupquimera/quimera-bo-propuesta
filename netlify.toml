@@ -1,0 +1,50 @@
+# Despliegue del sitio nuevo (app/). La propuesta original en HTML de la raíz
+# NO se publica: `publish` apunta a app/dist y nada más entra ahí.
+#
+# No hay regla de reescritura a index.html, y es a propósito: el build
+# pre-renderiza cada ruta como su propio archivo (dist/servicios/index.html,
+# dist/nosotros/index.html…). Una reescritura tipo SPA serviría el HTML del home
+# para /servicios y se perdería todo lo que el pre-render aporta. El 404 lo
+# resuelve dist/404.html, que Netlify toma solo.
+
+[build]
+  base    = "app"
+  command = "npm run build"
+  publish = "dist"
+
+# ── Cache ──
+# Los .js y .css que emite Vite llevan hash en el nombre: si cambia el
+# contenido, cambia la URL. Por eso pueden ser `immutable` y cachearse un año.
+[[headers]]
+  for = "/assets/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/assets/*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Las fuentes tampoco cambian sin cambiar de nombre (el peso está en el
+# archivo: manrope-400-600.woff2).
+[[headers]]
+  for = "/fonts/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Las imágenes y videos, en cambio, NO llevan hash: salen de ../assets con el
+# nombre que les puso quien las diseñó. Si acá dijera `immutable`, cambiar un
+# logo no le llegaría nunca a quien ya visitó el sitio. Una semana es el
+# compromiso: se cachea de verdad, y una corrección se ve sin renombrar nada.
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800, stale-while-revalidate=86400"
+
+# El HTML se revalida siempre: es lo que apunta a los assets con hash.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"

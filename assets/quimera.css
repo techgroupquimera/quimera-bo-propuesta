@@ -1,0 +1,518 @@
+/* ============================================================
+   GROUP QUIMERA · sistema de diseño
+   Negro neutro + verde como LUZ (no como relleno).
+   Bebas Neue para números/etiquetas · Manrope para lectura
+   · Instrument Serif italic para el énfasis.
+   ============================================================ */
+:root{
+  --ink:#050604;
+  --ink-2:#0a0c08;
+  --ink-3:#101410;
+  --lime:#81DE00;
+  --lime-2:#98C221;
+  --olive:#556C12;
+  --paper:#fff;
+  --muted:#9ba694;
+  --muted-2:#6b7565;
+  --hair:rgba(255,255,255,.09);
+  --hair-lime:rgba(129,222,0,.22);
+  --pend:#ffb020;
+  --sans:'Manrope',-apple-system,sans-serif;
+  --display:'Bebas Neue',Impact,sans-serif;
+  --serif:'Instrument Serif',Georgia,serif;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+  --g:clamp(20px,4.6vw,72px);
+  /* Ancho de la columna de contenido. En 1300 dejaba ~380px muertos a cada lado
+     en una pantalla de 1920 y el hero se leía "flotando al medio, corrido a la
+     derecha". A 1560 el margen baja a ~250px y en pantallas de ~1600 la columna
+     ya toca el gutter de página. Es la ÚNICA perilla: mover esto mueve el logo,
+     el hero, las secciones y el footer juntos, sin romper la alineación. */
+  --maxw:1560px;
+  --mq-gap:clamp(2.6rem,5vw,5.4rem);
+  --ease:cubic-bezier(.16,1,.3,1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{
+  background:var(--ink);color:var(--paper);font-family:var(--sans);font-weight:300;
+  font-size:17px;line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased;
+}
+img,video{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+::selection{background:var(--lime);color:#04120a}
+body::after{
+  content:'';position:fixed;inset:0;z-index:9990;pointer-events:none;opacity:.02;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ---------- tipografía ---------- */
+.t-hero{font-weight:200;font-size:clamp(2.7rem,6.6vw,6.2rem);line-height:.98;letter-spacing:-.035em}
+.t-sec{font-weight:200;font-size:clamp(2rem,4.4vw,4rem);line-height:1.02;letter-spacing:-.03em}
+.t-sub{font-weight:200;font-size:clamp(1.6rem,2.8vw,2.5rem);line-height:1.08;letter-spacing:-.025em}
+.t-card{font-weight:500;font-size:clamp(1.12rem,1.5vw,1.38rem);letter-spacing:-.015em;line-height:1.22}
+.it{font-family:var(--serif);font-style:italic;font-weight:400;letter-spacing:-.01em}
+.lime{color:var(--lime)}
+.bebas{font-family:var(--display);letter-spacing:.02em;text-transform:uppercase;font-weight:400}
+.kicker{
+  font-family:var(--sans);font-weight:600;font-size:.63rem;letter-spacing:.26em;text-transform:uppercase;
+  color:var(--lime-2);display:inline-flex;align-items:center;gap:.6rem;
+}
+.kicker::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--lime);box-shadow:0 0 10px var(--lime)}
+.body-l{font-size:clamp(1.02rem,1.22vw,1.18rem);color:#c8d1be;font-weight:300;max-width:56ch;line-height:1.72}
+.body-m{font-size:.95rem;color:#b4bfaa;line-height:1.66}
+.mono-s{font-family:var(--sans);font-weight:600;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted-2)}
+
+/* ---------- superficies ---------- */
+.glass{
+  background:linear-gradient(150deg,rgba(255,255,255,.055),rgba(255,255,255,.012));
+  backdrop-filter:blur(16px) saturate(1.2);
+  border:1px solid var(--hair);border-radius:16px;
+  box-shadow:0 20px 60px -20px rgba(0,0,0,.8),inset 0 1px 0 rgba(255,255,255,.06);
+}
+.glass-lime{border-color:var(--hair-lime);box-shadow:0 20px 70px -24px rgba(129,222,0,.18),inset 0 1px 0 rgba(129,222,0,.14)}
+
+/* ---------- reveal ---------- */
+.rv{opacity:0;transform:translateY(22px);transition:opacity 1s var(--ease),transform 1s var(--ease)}
+.rv.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}}
+
+/* ---------- NAV · logo suelto afuera + pill de navegación separada ---------- */
+/* La barra usa el MISMO ancho y el MISMO padding lateral que .wrap: así el
+   logo cae exactamente sobre la columna de texto de las secciones. Antes era
+   min(--maxw, 100%-28px) SIN padding y quedaba --g (hasta 72px) a la
+   izquierda de todo el contenido. */
+.topbar{
+  position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:900;
+  width:min(var(--maxw),100%);padding-inline:var(--g);
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  pointer-events:none;
+}
+.topbar>*{pointer-events:auto}
+
+/* el logo original, sin caja: vive sobre la página */
+.brand{display:block;flex:none}
+.brand img{
+  /* el lockup es apilado: por debajo de ~60px "Marketing y Tech" no se lee.
+     Al estar fuera de la pill puede respirar y usarse completo. */
+  height:clamp(62px,6.6vw,88px);width:auto;
+  filter:drop-shadow(0 6px 22px rgba(0,0,0,.7));
+  transition:opacity .3s;
+}
+.brand:hover img{opacity:.82}
+
+/* la pill: solo los enlaces */
+.navpill{
+  display:flex;align-items:center;gap:clamp(1.1rem,1.9vw,1.9rem);
+  padding:.78rem 1.6rem;border-radius:999px;
+  background:rgba(8,11,6,.55);backdrop-filter:blur(20px) saturate(1.3);
+  border:1px solid var(--hair);transition:background .4s,border-color .4s;
+}
+.navpill.stuck{background:rgba(6,8,5,.88);border-color:rgba(129,222,0,.16)}
+.navpill a{font-size:.83rem;font-weight:400;color:#a4ae9b;transition:color .25s;position:relative;white-space:nowrap}
+.navpill a:hover,.navpill a[aria-current]{color:var(--paper)}
+.navpill a[aria-current]::after{
+  content:'';position:absolute;left:0;right:0;bottom:-7px;height:1px;background:var(--lime);
+}
+@media(max-width:1050px){
+  .navpill{display:none}
+  .topbar{top:12px}
+}
+
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
+  font-family:var(--sans);font-size:.85rem;font-weight:600;letter-spacing:-.01em;
+  padding:.72rem 1.3rem;border-radius:999px;border:0;cursor:pointer;
+  transition:transform .3s var(--ease),box-shadow .3s,filter .3s,border-color .3s,background .3s;white-space:nowrap;
+}
+.btn-p{background:linear-gradient(160deg,#a6f22a,#7ac400);color:#0a1a00;box-shadow:0 8px 26px -8px rgba(129,222,0,.55),inset 0 1px 0 rgba(255,255,255,.4)}
+.btn-p:hover{transform:translateY(-2px);filter:brightness(1.07)}
+.btn-g{background:rgba(255,255,255,.04);color:var(--paper);border:1px solid var(--hair)}
+.btn-g:hover{border-color:var(--hair-lime);background:rgba(129,222,0,.07)}
+
+/* ---------- layout ---------- */
+section{position:relative}
+.wrap{padding:clamp(72px,10vh,140px) var(--g)}
+
+/* Contención: el contenido vive dentro de un ancho máximo y se centra.
+   Los fondos (bokeh, velos) siguen a sangre porque son absolute dentro de la sección. */
+.wrap,.closer,.foot-grid,.foot-bar{max-width:var(--maxw);margin-inline:auto}
+.head{max-width:66ch;margin-bottom:clamp(2.3rem,5vw,3.8rem);display:flex;flex-direction:column;gap:1.15rem}
+.rule{height:1px;background:var(--hair);border:0}
+
+/* ---------- HERO de página interna ----------
+   El padding lateral reproduce la columna de .wrap SIN limitar el ancho de la
+   sección, así el fondo sigue a sangre. Antes la sección era full-width con
+   padding --g y los hijos iban max-width:--maxw centrados: eso daba un borde
+   izquierdo distinto al de .wrap (310px vs 382px en 1920), y el .kicker, que es
+   inline-flex, ni siquiera se centraba con margin-inline:auto — se quedaba
+   pegado a --g. Eran tres alineaciones distintas en la misma pantalla. */
+.phero{
+  position:relative;overflow:hidden;isolation:isolate;
+  padding-block:clamp(148px,20vh,220px) clamp(48px,7vh,80px);
+  padding-inline:max(var(--g),calc((100% - var(--maxw))/2 + var(--g)));
+}
+.phero-bg{position:absolute;inset:0;z-index:-3;background-size:cover;background-position:center;opacity:.34}
+.phero-veil{
+  position:absolute;inset:0;z-index:-2;
+  background:
+    radial-gradient(70% 60% at 82% 30%,rgba(129,222,0,.14),transparent 64%),
+    linear-gradient(100deg,var(--ink) 26%,rgba(5,6,4,.7) 60%,rgba(5,6,4,.45) 100%),
+    linear-gradient(to top,var(--ink) 2%,transparent 40%);
+}
+.crumb{font-family:var(--sans);font-weight:600;font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted-2);margin-bottom:1.5rem}
+.crumb a:hover{color:var(--lime)}
+.crumb i{font-style:normal;opacity:.5;margin:0 .5rem}
+.phero h1{max-width:20ch;margin-bottom:1.4rem}
+
+/* ---------- grid de tarjetas ---------- */
+.cards{display:grid;gap:14px}
+.cards.c2{grid-template-columns:repeat(auto-fit,minmax(330px,1fr))}
+.cards.c3{grid-template-columns:repeat(auto-fit,minmax(290px,1fr))}
+.cards.c4{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.card{padding:clamp(1.6rem,2.5vw,2.2rem);border-radius:18px;position:relative;transition:transform .5s var(--ease),border-color .4s}
+.card:hover{transform:translateY(-4px);border-color:var(--hair-lime)}
+.card h3{margin-bottom:.55rem}
+.card .tag{
+  display:block;font-family:var(--sans);font-weight:600;font-size:.57rem;letter-spacing:.17em;
+  text-transform:uppercase;color:var(--lime-2);margin-bottom:.9rem;
+}
+.ico{
+  width:42px;height:42px;border-radius:11px;display:grid;place-items:center;margin-bottom:1.3rem;
+  background:linear-gradient(150deg,rgba(129,222,0,.18),rgba(129,222,0,.04));border:1px solid var(--hair-lime);
+}
+.ico svg{width:20px;height:20px;stroke:var(--lime);fill:none;stroke-width:1.6}
+
+/* ---------- lista de checks ---------- */
+.checks{list-style:none;display:flex;flex-direction:column;gap:.1rem}
+/* El item era `display:grid` con dos columnas (check + texto). Problema: en una
+   grilla, cada corrida de texto separada por una etiqueta se vuelve un item
+   propio, así que un <li> con <b> adentro generaba TRES items y el texto se
+   partía en filas. Ahora el check va absoluto y el <li> es un bloque normal:
+   admite cualquier marcado inline sin romperse. */
+.checks li{
+  position:relative;padding:1rem 0 1rem 2.4rem;
+  border-top:1px solid var(--hair);font-size:.97rem;color:#c3ccbb;line-height:1.6;
+}
+.checks li::before{
+  content:'';position:absolute;left:0;top:1.28rem;width:16px;height:16px;border-radius:4px;
+  background:rgba(129,222,0,.15);border:1px solid var(--hair-lime);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 8.5l3 3 6-7' fill='none' stroke='%2381DE00' stroke-width='2'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:center;
+}
+
+/* Siete items en una sola columna se leen como una lista de tareas y estiran la
+   página; en dos columnas se leen como un inventario. */
+.checks.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));column-gap:clamp(1.5rem,3.4vw,3.4rem)}
+
+/* ---------- números / trayectoria ---------- */
+.figs{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1px;background:var(--hair)}
+.figs div{background:var(--ink);padding:clamp(1.3rem,2.4vw,2rem)}
+.figs b{display:block;font-family:var(--display);font-size:clamp(2.6rem,5vw,4.4rem);line-height:.9;color:var(--lime)}
+.figs span{display:block;margin-top:.6rem;font-size:.87rem;color:var(--muted);line-height:1.5}
+
+/* ---------- stack / pills técnicas ---------- */
+.stack-group{padding:clamp(1.3rem,2.2vw,1.8rem);border-radius:16px}
+.stack-group h4{
+  font-family:var(--sans);font-weight:600;font-size:.63rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--lime);margin-bottom:1rem;
+}
+.stack-group h4 em{font-style:normal;color:var(--muted-2);text-transform:none;letter-spacing:.06em}
+.pills{display:flex;flex-wrap:wrap;gap:.4rem}
+.pills i{
+  font-family:var(--sans);font-weight:600;font-style:normal;font-size:.68rem;letter-spacing:.02em;
+  color:#d3dbc9;background:rgba(255,255,255,.035);border:1px solid var(--hair);
+  padding:.36rem .7rem;border-radius:7px;transition:border-color .3s,color .3s;
+}
+.stack-group:hover .pills i{border-color:rgba(129,222,0,.16)}
+
+/* ---------- proceso ---------- */
+.flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:0}
+.flow div{padding:1.6rem 1.4rem 1.6rem 0;border-top:1px solid var(--hair);position:relative}
+.flow b{
+  display:block;font-family:var(--display);font-size:2.2rem;line-height:1;color:transparent;
+  -webkit-text-stroke:1px rgba(129,222,0,.5);margin-bottom:.7rem;
+}
+.flow h4{font-family:var(--display);font-size:1.15rem;letter-spacing:.05em;text-transform:uppercase;margin-bottom:.5rem}
+.flow p{font-size:.87rem;color:var(--muted);line-height:1.55}
+
+/* ---------- marquesina ---------- */
+/* ---------- marquesina ----------
+   UN solo track con el contenido duplicado, desplazado a -50%.
+   Antes eran dos tracks animados por separado: cualquier desfase de un frame
+   entre ambas animaciones se ve como un corte en la junta.
+   La matemática del -50% es exacta porque el padding-right iguala al gap:
+   2N logos → (2N-1) gaps + 1 de padding = 2N gaps, así que la mitad del ancho
+   es exactamente un set completo con su gap final. */
+.mq{
+  overflow:hidden;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);
+          mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);
+}
+.mq-t{
+  display:flex;align-items:center;
+  gap:var(--mq-gap);padding-right:var(--mq-gap);
+  width:max-content;
+  animation:mq-slide 62s linear infinite;
+  will-change:transform;            /* compositado en GPU: sin tartamudeo */
+}
+.mq:hover .mq-t{animation-play-state:paused}
+@keyframes mq-slide{
+  from{transform:translate3d(0,0,0)}
+  to{transform:translate3d(-50%,0,0)}
+}
+/* Los logos vienen recortados al contenido (sin padding transparente) y se
+   limitan por ALTO y por ANCHO: así un logo horizontal largo y uno compacto
+   ocupan un peso visual equivalente en vez de quedar desparejos. */
+/* Los topes coinciden con los usados al exportar (64 de alto / 340 de ancho,
+   guardados a 2x para retina). La proporción 340:64 se mantiene en los clamp
+   para que al reducir la pantalla todos escalen igual y ninguno se recorte
+   antes que los demás. */
+.mq-t img{
+  height:auto;width:auto;
+  max-height:clamp(40px,4.4vw,64px);
+  max-width:clamp(212px,23vw,340px);
+  object-fit:contain;
+  opacity:.78;filter:grayscale(1) brightness(2);
+  transition:opacity .35s,filter .35s;flex:none;
+}
+.mq-t img:hover{opacity:1;filter:none}
+/* sin movimiento: la tira se convierte en una grilla estática y se oculta la copia */
+@media (prefers-reduced-motion:reduce){
+  .mq{-webkit-mask-image:none;mask-image:none}
+  .mq-t{animation:none;width:auto;flex-wrap:wrap;justify-content:center;padding-right:0}
+  .mq-t img[aria-hidden]{display:none}
+}
+
+/* ---------- media a sangre ---------- */
+.shot{position:relative}
+.shot img{width:100%;border-radius:18px;box-shadow:0 40px 90px -32px rgba(0,0,0,.9)}
+.shot::after{content:'';position:absolute;inset:-8%;z-index:-1;background:radial-gradient(circle,rgba(129,222,0,.16),transparent 62%);filter:blur(40px)}
+.shot.rose::after{background:radial-gradient(circle,rgba(214,32,92,.2),transparent 62%)}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:clamp(2rem,5vw,5rem);align-items:center}
+@media(max-width:900px){.split{grid-template-columns:1fr}}
+
+/* ---------- bloque Johnny · foto real, sin efectos ----------
+   Vive acá y no en el <style> de una página porque lo usan el inicio y
+   /nosotros. Antes el retrato iba en mix-blend-mode con una máscara y un halo
+   verde: se leía como filtro de plantilla. Ahora es lo que es —fotos de estudio
+   presentadas como fotos: rectángulo, esquinas suaves, sombra— y el apellido
+   gigante queda detrás, sangrando por el borde, que es un recurso de revista y
+   no un shader. */
+.bio{position:relative;overflow:hidden;isolation:isolate;border-top:1px solid var(--hair)}
+.bio-bg{position:absolute;inset:0;z-index:-3;background:url('bg-bokeh-2.webp') center/cover;opacity:.3}
+.bio-veil{position:absolute;inset:0;z-index:-2;background:linear-gradient(to bottom,var(--ink) 3%,rgba(5,6,4,.55) 42%,var(--ink) 97%)}
+.bio-stage{
+  position:relative;max-width:var(--maxw);margin-inline:auto;
+  padding:clamp(84px,11vh,140px) var(--g);
+  display:grid;grid-template-columns:minmax(260px,33%) 1fr;column-gap:clamp(2rem,4vw,4rem);
+}
+/* El apellido va ARRIBA, no detrás del texto: cuando cruzaba la columna de
+   copy la mitad quedaba tapada y se leía "ERRANTE". Acá corre de punta a punta
+   y la foto le pisa la cola, que es lo que hace que se sienta armado a mano. */
+.bio-name{
+  grid-column:1/-1;grid-row:1;z-index:0;margin-bottom:clamp(1rem,2vh,2rem);
+  font-family:var(--display);font-size:clamp(3.4rem,26vw,26rem);line-height:.74;
+  color:transparent;-webkit-text-stroke:1.5px rgba(129,222,0,.3);
+  pointer-events:none;user-select:none;white-space:nowrap;
+}
+.bio-copy{grid-column:1;grid-row:2;position:relative;z-index:2;align-self:center}
+.bio-copy h2{margin:1rem 0 .9rem}
+/* Tríptico: tres tomas de la misma sesión, sin recortar, escalonadas.
+   Escalonar los tres arranques es lo que evita que se lea como una grilla de
+   tarjetas; son fotogramas de una tira de contactos, no cards. */
+.bio-shots{
+  grid-column:2;grid-row:2;align-self:center;
+  display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(9px,1.1vw,16px);
+}
+.bio-shots figure:nth-child(1){margin-top:clamp(22px,4vh,54px)}
+.bio-shots figure:nth-child(3){margin-top:clamp(38px,7vh,92px)}
+.bio-shots img{width:100%;border-radius:12px;box-shadow:0 30px 70px -26px rgba(0,0,0,.95)}
+/* pie del bloque: lo que no entra en la columna angosta (credenciales, botones) */
+.bio-pie{position:relative;z-index:2;max-width:var(--maxw);margin-inline:auto;padding:0 var(--g) clamp(84px,11vh,140px)}
+@media(max-width:900px){
+  .bio-stage{grid-template-columns:1fr;row-gap:2.2rem}
+  .bio-name{grid-column:1;grid-row:1;font-size:clamp(3rem,17vw,6rem);white-space:normal;margin-bottom:0}
+  .bio-shots{grid-column:1;grid-row:2}
+  .bio-copy{grid-column:1;grid-row:3}
+}
+
+/* ---------- visor 9:16 ----------
+   Los reels son verticales. Abrirlos a pantalla completa los deja con dos
+   franjas negras enormes a los costados y el video minúsculo al medio: el
+   navegador respeta el alto de la pantalla, no el del video. Acá el visor toma
+   la altura disponible y el ancho sale de la proporción, como en TikTok. */
+#lb{
+  position:fixed;inset:0;z-index:9996;display:none;place-items:center;padding:clamp(14px,3vw,32px);
+  background:rgba(3,5,2,.95);backdrop-filter:blur(12px);
+}
+#lb.open{display:grid}
+#lb video{
+  height:min(86svh, 92vw * 16 / 9);width:auto;aspect-ratio:9/16;
+  border-radius:16px;background:#000;display:block;box-shadow:0 40px 100px -30px #000;
+}
+#lb img{max-height:86svh;max-width:min(92vw,560px);width:auto;border-radius:16px;display:block;box-shadow:0 40px 100px -30px #000}
+#lb-x{
+  position:absolute;top:clamp(12px,2vw,20px);right:clamp(12px,2vw,22px);
+  background:rgba(255,255,255,.05);border:1px solid var(--hair);color:#fff;cursor:pointer;
+  font:600 .64rem/1 var(--sans);letter-spacing:.12em;text-transform:uppercase;
+  padding:.65rem 1rem;border-radius:999px;
+}
+#lb-x:hover{border-color:var(--lime);color:var(--lime)}
+
+/* ---------- reel · el video vertical tal cual ----------
+   Los clips son 9:16 con subtítulo quemado: son reels, y se presentan como
+   reels. Mismo criterio que las fotos de Johnny — nada de máscaras, blends ni
+   halos encima: rectángulo, esquinas suaves, sombra. No se recorta a 16:9
+   porque a 1080 de ancho el recorte le come la cabeza y le mete el subtítulo
+   adentro (medido). El poster es un fotograma real del propio clip. */
+.reel{position:relative;width:100%;max-width:340px}
+.reel video{
+  width:100%;aspect-ratio:9/16;object-fit:cover;background:#000;
+  border-radius:14px;box-shadow:0 30px 70px -26px rgba(0,0,0,.95);
+}
+.reel-play{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:66px;height:66px;border-radius:50%;cursor:pointer;
+  display:grid;place-items:center;padding-left:4px;
+  font-size:1.1rem;color:#0a1a00;
+  background:linear-gradient(160deg,#a6f22a,#7ac400);border:0;
+  box-shadow:0 10px 34px -6px rgba(129,222,0,.55);
+  transition:transform .3s var(--ease),opacity .25s;
+}
+.reel-play:hover{transform:translate(-50%,-50%) scale(1.07)}
+.reel.playing .reel-play{opacity:0;pointer-events:none}
+.reel figcaption{
+  margin-top:.9rem;font-size:.78rem;color:var(--muted-2);line-height:1.5;
+}
+/* Variante en fila: la portada es una imagen, no un <video>. Seis elementos de
+   video en la misma pantalla arrancan seis decodificadores para nada; acá no
+   se carga un solo byte de video hasta que tocás play y se abre el visor. */
+.reel.sm{max-width:none}
+.reel.sm .reel-poster{
+  width:100%;aspect-ratio:9/16;object-fit:cover;display:block;
+  border-radius:14px;box-shadow:0 30px 70px -26px rgba(0,0,0,.95);
+}
+.reel.sm .reel-play{width:46px;height:46px;font-size:.85rem}
+.reel.sm figcaption{margin-top:.6rem;font-size:.78rem}
+.reel figcaption b{display:block;color:#c3ccbb;font-weight:500;font-size:.88rem;margin-bottom:.15rem}
+
+/* Cita textual de un video. Todo lo que va con esta clase salió de la boca de
+   ellos en cámara — no es copy escrito por nosotros. Por eso se marca como cita. */
+.pull{
+  font-family:var(--serif);font-style:italic;letter-spacing:-.01em;
+  font-size:clamp(1.2rem,2.1vw,1.7rem);line-height:1.34;color:#eef3e8;
+  border-left:2px solid var(--lime);padding-left:clamp(1rem,1.8vw,1.5rem);
+}
+.pull cite{
+  display:block;margin-top:.75rem;font:600 .58rem/1 var(--sans);
+  letter-spacing:.16em;text-transform:uppercase;color:var(--muted-2);font-style:normal;
+}
+
+/* Fila editorial: la columna de texto manda y el reel ocupa su ancho natural.
+   .rev invierte el orden en pantalla sin tocar el orden del DOM, para que las
+   dos secciones no se lean como la misma plantilla repetida. */
+.reel-row{display:grid;grid-template-columns:1fr minmax(240px,340px);gap:clamp(2rem,5vw,5rem);align-items:center}
+.reel-row.rev{grid-template-columns:minmax(240px,340px) 1fr}
+.reel-row.rev .reel{order:-1}
+@media(max-width:900px){
+  .reel-row,.reel-row.rev{grid-template-columns:1fr;row-gap:2.4rem}
+  .reel-row.rev .reel{order:0}
+  .reel{max-width:300px;margin-inline:auto}
+}
+
+/* ---------- formulario ---------- */
+form{display:flex;flex-direction:column;gap:1rem}
+.f2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.field{display:flex;flex-direction:column;gap:.45rem}
+label{font-family:var(--sans);font-weight:600;font-size:.57rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+input,textarea,select{
+  background:rgba(255,255,255,.03);border:1px solid var(--hair);color:var(--paper);
+  padding:.82rem .95rem;font-family:var(--sans);font-size:.95rem;font-weight:300;
+  border-radius:10px;transition:border-color .25s,background .25s;
+}
+input::placeholder,textarea::placeholder{color:#5d6656}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--lime);background:rgba(129,222,0,.04)}
+textarea{min-height:104px;resize:vertical}
+.ch{display:flex;align-items:center;gap:1rem;padding:1.05rem 0;border-top:1px solid var(--hair);transition:padding-left .35s var(--ease)}
+.ch:first-of-type{border-top:0}
+.ch:hover{padding-left:8px}
+.ch-i{width:38px;height:38px;flex:none;border-radius:11px;display:grid;place-items:center;background:rgba(129,222,0,.09);border:1px solid var(--hair-lime)}
+.ch-i svg{width:17px;height:17px;stroke:var(--lime);fill:none;stroke-width:1.7}
+.ch b{display:block;font-size:.97rem;font-weight:500;letter-spacing:-.01em}
+.ch small{font-size:.8rem;color:var(--muted)}
+@media(max-width:900px){.f2{grid-template-columns:1fr}}
+
+/* ---------- CTA de cierre ---------- */
+.closer{position:relative;padding:clamp(90px,14vh,170px) var(--g);text-align:center;overflow:hidden;border-top:1px solid var(--hair)}
+.closer::before{
+  content:'';position:absolute;left:50%;top:-30%;transform:translateX(-50%);
+  width:min(900px,110%);aspect-ratio:1.6;border-radius:50%;
+  background:radial-gradient(circle,rgba(129,222,0,.15),transparent 60%);filter:blur(50px);pointer-events:none;
+}
+.closer .body-l{margin:1.3rem auto 2.1rem}
+
+/* ---------- footer ---------- */
+/* mismo criterio que .phero: la columna del footer arranca donde arranca el
+   texto de las secciones (antes el logo del footer quedaba 72px a la izquierda) */
+footer{
+  border-top:1px solid var(--hair);
+  padding-block:clamp(2.6rem,5vw,4rem) 2rem;
+  padding-inline:max(var(--g),calc((100% - var(--maxw))/2 + var(--g)));
+}
+/* El footer era un directorio de links suelto con el logo a 54px — a ese tamaño
+   "GROUP" y "Marketing y Tech" del lockup son una mancha, igual que pasaba en el
+   badge del hero. Ahora: la marca pesa (logo al tamaño del header + bajada +
+   plaza) y las columnas usan el mismo lenguaje de hairlines que el resto del
+   sitio (.pain-grid, .live-row), en vez de listas al aire. */
+.foot-grid{
+  display:grid;grid-template-columns:1.8fr repeat(3,1fr);
+  gap:clamp(1.8rem,3.4vw,3.6rem);margin-bottom:clamp(2.2rem,4vh,3.2rem);
+}
+.foot-brand img{height:clamp(70px,5.6vw,86px);width:auto;margin-bottom:1.35rem;opacity:1}
+.foot-brand p{font-size:.97rem;color:#b4bfaa;max-width:34ch;line-height:1.66;font-weight:300}
+.foot-brand .foot-place{margin-top:1.1rem;font-size:.85rem;color:var(--muted-2)}
+
+.foot-col h5{
+  font-family:var(--sans);font-weight:600;font-size:.58rem;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--lime-2);padding-bottom:.95rem;
+  border-bottom:1px solid var(--hair);
+}
+.foot-col a,.foot-col span{
+  display:block;font-size:.9rem;color:var(--muted);font-weight:300;
+  padding:.62rem 0;border-bottom:1px solid var(--hair);
+}
+.foot-col a{transition:color .25s,padding-left .3s var(--ease)}
+.foot-col a:hover,.foot-col a[aria-current]{color:var(--lime)}
+.foot-col a:hover{padding-left:7px}
+.foot-col span b{display:block;font-weight:500;color:#cfd8c6;font-size:.92rem;margin-bottom:.05rem}
+
+.foot-bar{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;align-items:center;padding-top:1.6rem;border-top:1px solid var(--hair)}
+.foot-bar p,.foot-social a{font-family:var(--sans);font-weight:600;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted-2)}
+.foot-social{display:flex;gap:1.4rem}
+.foot-bar a:hover{color:var(--lime)}
+@media(max-width:880px){
+  .foot-grid{grid-template-columns:1fr 1fr}
+  .foot-brand{grid-column:1/-1}
+}
+
+/* ---------- datos pendientes ---------- */
+.pend{border-bottom:1px dashed var(--pend);color:var(--pend);background:rgba(255,176,32,.06);padding:0 .2em;cursor:help}
+
+/* ---------- panel de notas ---------- */
+#nb{position:fixed;right:16px;bottom:16px;z-index:9995;background:var(--pend);color:#1a1000;border:0;cursor:pointer;font-family:var(--sans);font-weight:600;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;padding:.8rem 1.15rem;border-radius:999px;box-shadow:0 10px 34px rgba(0,0,0,.6)}
+#np{position:fixed;right:16px;bottom:66px;z-index:9995;width:min(430px,calc(100vw - 32px));max-height:min(72vh,660px);overflow-y:auto;display:none;background:#0b0f07;border:1px solid var(--pend);border-radius:16px;padding:1.5rem}
+#np.open{display:block}
+#np h4{font-family:var(--display);font-size:1.5rem;color:var(--pend);text-transform:uppercase;margin-bottom:.3rem}
+#np ol{margin-left:1.1rem;display:flex;flex-direction:column;gap:.75rem;margin-top:.8rem}
+#np li{font-size:.83rem;color:#c7d0bd;line-height:1.55}
+#np li b{color:var(--pend)}
+#np .sec{font-family:var(--sans);font-weight:600;font-size:.57rem;letter-spacing:.18em;text-transform:uppercase;color:var(--lime-2);margin:1.3rem 0 .5rem;display:block}
+#np code{font-family:var(--mono);font-size:.78em;color:#e8eede}
+#np a{color:var(--lime)}
+
+/* ---------- modal video ---------- */
+#vm{position:fixed;inset:0;z-index:9996;background:rgba(3,5,2,.95);backdrop-filter:blur(10px);display:none;place-items:center;padding:20px}
+#vm.open{display:grid}
+#vm video{max-height:86svh;width:auto;border-radius:14px;border:1px solid var(--hair)}
+#vc{position:absolute;top:18px;right:20px;background:rgba(255,255,255,.05);border:1px solid var(--hair);color:#fff;font-family:var(--sans);font-weight:600;font-size:.64rem;letter-spacing:.12em;padding:.65rem 1rem;border-radius:999px;cursor:pointer;text-transform:uppercase}
+#vc:hover{border-color:var(--lime);color:var(--lime)}

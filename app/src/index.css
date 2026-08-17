@@ -1,0 +1,591 @@
+@import "tailwindcss";
+
+/* ============================================================
+   TIPOGRAFÍA · servida por nosotros, no por Google
+   ============================================================
+   Antes el <head> tenía dos preconnect y un <link rel=stylesheet> a
+   fonts.googleapis.com. Eso son, en orden y en serie: resolver un dominio,
+   abrir TLS, bajar un CSS que bloquea el render, y recién ahí descubrir las
+   URLs de fonts.gstatic.com — otro dominio, otro TLS — y empezar a bajar las
+   tipografías. Cuatro viajes de ida y vuelta antes de la primera letra.
+
+   Ahora los .woff2 viven en public/fonts/, salen del mismo origen y del mismo
+   cache, y el <head> los precarga en paralelo con el CSS. Se bajan con
+   `npm run fuentes` (scripts/bajar-fuentes.mjs) y se versionan.
+
+   Sólo el subconjunto `latin`: el castellano entero cae en U+0000-00FF.
+
+   De las dos familias se precarga sólo Manrope (el <link> está en index.html):
+   es la que pinta el titular del hero, que es el elemento LCP en móvil. Bebas
+   queda afuera a propósito — la usan las cuatro cifras chicas del panel, y
+   precargarla sería competirle ancho de banda a la que decide la métrica.
+
+   `font-display: swap` a propósito: el texto se pinta con la fuente del sistema
+   y cambia a Manrope al llegar. La alternativa (`optional`) no cambiaría nunca
+   dentro de la carga y el hero se vería con otra letra — acá el titular ES el
+   diseño. El salto se paga en un layout shift chico, que es lo que compensa el
+   `size-adjust` de más abajo. */
+/* Manrope variable, 400..600 en UN archivo de 24 KB — lo mismo que costaba una
+   sola de las tres estáticas. Los tres pesos del brandboard están sobre el
+   pliegue de la home (titular 400, botón 500, badge y cifras 600), así que las
+   estáticas eran tres pedidos que había que precargar los tres. */
+@font-face {
+  font-family: "Manrope";
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url("/fonts/manrope-400-600.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Bebas Neue";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/bebas-neue-400.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* Los sustitutos, ajustados para que el swap no mueva el layout.
+   Mientras Manrope viaja, el texto se pinta con la fuente del sistema. Si esa
+   fuente ocupa otro ancho y otra altura de línea, al llegar la real todo el
+   bloque se reacomoda — eso es exactamente lo que mide el CLS.
+
+   `size-adjust`, `ascent-override` y `descent-override` deforman al sustituto
+   hasta que sus métricas son las de Manrope y Bebas. Los números salen de la
+   relación entre unitsPerEm y los ascent/descent de cada familia; con ellos el
+   reflow del swap es de píxeles sueltos en vez de una línea entera.
+
+   Bebas es condensada y angosta: contra Arial hace falta bajarle el ancho a la
+   mitad larga (88%) o los números del hero saltan visiblemente. */
+@font-face {
+  font-family: "Manrope respaldo";
+  src: local("Segoe UI"), local("Helvetica Neue"), local("Arial"), local("Roboto");
+  size-adjust: 100.7%;
+  ascent-override: 103.5%;
+  descent-override: 29.5%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: "Bebas respaldo";
+  src: local("Haettenschweiler"), local("Impact"), local("Arial Narrow"), local("Arial");
+  size-adjust: 88%;
+  ascent-override: 105%;
+  descent-override: 22%;
+  line-gap-override: 0%;
+}
+
+/* ============================================================
+   GROUP QUIMERA · sistema de diseño
+   Negro neutro + verde como LUZ (no como relleno).
+
+   Dos tipografías, las del brandboard: Bebas Neue para números y etiquetas,
+   Manrope para todo lo demás. Manrope va en Regular 400 / Medium 500 /
+   Semibold 600 — los pesos del board. El énfasis se marca con peso y color,
+   no con una tercera familia.
+
+   Los tokens viven acá y salen como utilidades de Tailwind:
+   --color-lima → text-lima / bg-lima / border-lima
+   --text-sec   → text-sec (ya trae line-height y tracking)
+   --spacing-g  → px-g / py-g
+   ============================================================ */
+@theme {
+  /* ---------- color ---------- */
+  --color-ink: #050604;
+  --color-ink-2: #0a0c08;
+  --color-ink-3: #101410;
+  --color-lima: #81de00;
+  --color-lima-2: #98c221;
+  --color-oliva: #556c12;
+  --color-paper: #ffffff;
+  --color-muted: #9ba694;
+  --color-muted-2: #6b7565;
+  --color-hair: rgba(255, 255, 255, 0.09);
+  --color-hair-lima: rgba(129, 222, 0, 0.22);
+  --color-pend: #ffb020;
+  /* grises de lectura que el diseño usa sueltos */
+  --color-read: #c8d1be;
+  --color-read-2: #b4bfaa;
+  --color-read-3: #c3ccbb;
+  --color-read-hi: #eef3e8;
+
+  /* ---------- tipografía ---------- */
+  /* El respaldo va ANTES del genérico: es el que se usa durante el swap, con
+     las métricas ya calzadas contra la real. */
+  --font-sans: "Manrope", "Manrope respaldo", -apple-system, sans-serif;
+  --font-display: "Bebas Neue", "Bebas respaldo", Impact, sans-serif;
+  /* La mono del sistema. Era JetBrains Mono, una familia entera bajada para dos
+     `code` sueltos: el del 404 y el de las citas textuales de <Rich>. A ese
+     tamaño y en ese uso, la mono del sistema dice lo mismo y no cuesta un viaje
+     de red. */
+  --font-mono: ui-monospace, "SF Mono", "Cascadia Mono", "Segoe UI Mono", Menlo,
+    Consolas, monospace;
+
+  --text-hero: clamp(2.7rem, 6.6vw, 6.2rem);
+  --text-hero--line-height: 0.98;
+  --text-hero--letter-spacing: -0.035em;
+
+  --text-sec: clamp(1.6rem, 3vw, 2.75rem);
+  --text-sec--line-height: 1.1;
+  --text-sec--letter-spacing: -0.025em;
+
+  --text-sub: clamp(1.6rem, 2.8vw, 2.5rem);
+  --text-sub--line-height: 1.08;
+  --text-sub--letter-spacing: -0.025em;
+
+  --text-card: clamp(1.12rem, 1.5vw, 1.38rem);
+  --text-card--line-height: 1.22;
+  --text-card--letter-spacing: -0.015em;
+
+  --text-body-l: clamp(1.02rem, 1.22vw, 1.18rem);
+  --text-body-l--line-height: 1.72;
+
+  /* La bajada que acompaña a un titular grande. Más chica que body-l porque no
+     es un bloque de lectura: es el pie del título. La usan el hero y las
+     secciones que siguen el wireframe nuevo. */
+  --text-bajada: clamp(0.88rem, 0.96vw, 0.97rem);
+  --text-bajada--line-height: 1.7;
+
+  --text-body-m: 0.95rem;
+  --text-body-m--line-height: 1.66;
+
+  --text-kicker: 0.63rem;
+  --text-kicker--line-height: 1;
+  --text-kicker--letter-spacing: 0.26em;
+
+  --text-eyebrow: 0.6rem;
+  --text-eyebrow--line-height: 1;
+  --text-eyebrow--letter-spacing: 0.2em;
+
+  --text-tag: 0.57rem;
+  --text-tag--line-height: 1;
+  --text-tag--letter-spacing: 0.17em;
+
+  /* ---------- medidas ---------- */
+  /* Ancho de la columna de contenido. Es la ÚNICA perilla: mover esto mueve el
+     logo, el hero, las secciones y el footer juntos, sin romper la alineación. */
+  --container-maxw: 1560px;
+  /* gutter lateral · px-g en todo el sitio */
+  --spacing-g: clamp(20px, 4.6vw, 72px);
+  /* Aire vertical de una sección · py-aire. Entre dos secciones se suma dos
+     veces, así que este número se ve al doble.
+
+     Es una perilla POR PÁGINA: se pisa en un contenedor y todas las secciones
+     de adentro cambian juntas, sin tocar componente por componente. El home lo
+     quiere amplio —es una secuencia de golpes y cada uno necesita silencio
+     alrededor—; /servicios es un solo argumento en capítulos, y ahí el mismo
+     aire corta la lectura en vez de ordenarla. */
+  --spacing-aire: clamp(112px, 16vh, 230px);
+  --spacing-mq-gap: clamp(3.4rem, 6.6vw, 7.2rem);
+
+  /* ---------- movimiento ---------- */
+  --ease-soft: cubic-bezier(0.16, 1, 0.3, 1);
+  /* El `out(3)` que usaba la línea de tiempo del hero: potencia 3, o sea
+     easeOutCubic. No es --ease-soft, que es bastante más expo. */
+  --ease-intro: cubic-bezier(0.215, 0.61, 0.355, 1);
+  --animate-mq: mq-slide 62s linear infinite;
+  /* Las dos verticales del hero de /tecnologia. Misma matemática que la
+     horizontal —un track con el set duplicado, corrido medio track— pero en Y.
+     Son dos animaciones y no una con `direction:reverse` porque reverse arranca
+     la columna en su fotograma final y las dos quedan sincronizadas al revés de
+     lo que se busca: acá una sube desde el tope y la otra ya viene bajando. */
+  --animate-mq-arriba: mq-arriba 32s linear infinite;
+  --animate-mq-abajo: mq-abajo 32s linear infinite;
+  --animate-dot: dot-pulse 2.6s ease-in-out infinite;
+  /* El abanico del stack: la línea se dibuja de la etiqueta hacia la ficha.
+     Funciona con pathLength="1" en el <path>, así el trazo se mide en 0–1 y el
+     mismo keyframe sirve para curvas de largos distintos. */
+  --animate-trazo: trazo 0.85s var(--ease-soft) both;
+  --animate-entra-x: entra-x 0.5s var(--ease-soft) both;
+  /* El relevo del mapa de /nosotros: el país que entra aparece creciendo un
+     pelo, no deslizándose — un mapa que se corre lateralmente se lee como que
+     el territorio se movió. */
+  --animate-aparece: aparece 0.7s var(--ease-soft) both;
+  /* La barra que muestra cuánto falta para el siguiente. La duración la pone
+     quien la usa, para que sea exactamente la de su ronda. */
+  --animate-barra: barra linear both;
+
+  @keyframes mq-slide {
+    from {
+      transform: translate3d(0, 0, 0);
+    }
+    to {
+      transform: translate3d(-50%, 0, 0);
+    }
+  }
+  @keyframes mq-arriba {
+    from {
+      transform: translate3d(0, 0, 0);
+    }
+    to {
+      transform: translate3d(0, -50%, 0);
+    }
+  }
+  @keyframes mq-abajo {
+    from {
+      transform: translate3d(0, -50%, 0);
+    }
+    to {
+      transform: translate3d(0, 0, 0);
+    }
+  }
+  @keyframes trazo {
+    from {
+      stroke-dashoffset: 1;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  @keyframes entra-x {
+    from {
+      opacity: 0;
+      transform: translate3d(-12px, 0, 0);
+    }
+    to {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+  }
+  @keyframes aparece {
+    from {
+      opacity: 0;
+      transform: scale(0.94);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  @keyframes barra {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+  @keyframes dot-pulse {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.35;
+    }
+  }
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+  body {
+    background: var(--color-ink);
+    color: var(--color-paper);
+    font-family: var(--font-sans);
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 1.6;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  /* Reparto de líneas, por defecto y para todo el sitio.
+     · balance en los titulares: iguala el largo de las líneas, así ninguna
+       queda con una sola palabra al final. Es lo que dejaba «sí.» colgando en
+       una cuarta línea y «a» solo en el hero — pasa cada vez que se cambia el
+       cuerpo o el ancho de una columna, y arreglarlo a mano no escala.
+     · pretty en los párrafos: evita la última línea de una sola palabra sin
+       redistribuir todo el bloque, que es lo que hace falta en texto corrido. */
+  h1,
+  h2,
+  h3,
+  h4 {
+    text-wrap: balance;
+  }
+  p,
+  q,
+  blockquote,
+  li {
+    text-wrap: pretty;
+  }
+
+  img,
+  video {
+    display: block;
+    max-width: 100%;
+  }
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+  ::selection {
+    background: var(--color-lima);
+    color: #04120a;
+  }
+  /* grano fino sobre toda la página */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 9990;
+    pointer-events: none;
+    opacity: 0.02;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  input::placeholder,
+  textarea::placeholder {
+    color: #5d6656;
+  }
+}
+
+@layer components {
+  /* ══════════ la entrada del hero ══════════
+     Ocho piezas que entran en orden, con tiempos que se pisan: el panel arranca
+     antes que el texto y las cifras entran mientras el CTA todavía se acomoda.
+
+     Esto era una línea de tiempo de anime.js. Se pasó a CSS por una razón de
+     medición, no de gusto: la línea de tiempo escondía las ocho piezas
+     (`opacity: 0`) y recién las mostraba cuando el bundle había bajado, parseado
+     e hidratado. El titular del hero es el elemento LCP de la home, así que el
+     LCP no se contaba al pintar la página sino uno o dos segundos después —
+     JavaScript decidiendo cuándo empieza a existir el contenido.
+
+     En CSS la animación arranca con el primer pintado, sin esperar a nada. Y con
+     el HTML pre-renderizado, el hero ya viene escrito en la respuesta: se ve
+     mientras el JS todavía viaja.
+
+     La coreografía es la misma, número por número. Cada pieza trae sus tiempos
+     como custom properties en el marcado (ver components/home/introHero.js), que
+     es lo que evita ocho reglas sueltas acá y deja la tabla de tiempos en un
+     solo lugar, como estaba.
+
+     `both` es lo que sostiene el estado inicial durante el retraso: sin él la
+     pieza se ve un fotograma antes de esconderse para entrar.
+
+     Con `prefers-reduced-motion` no se declara nada: el marcado sale visible y
+     no hay animación que anular. */
+  @media (prefers-reduced-motion: no-preference) {
+    [data-intro] {
+      animation: intro-hero var(--intro-dura, 900ms)
+        var(--intro-ease, var(--ease-intro)) var(--intro-en, 0ms) both;
+    }
+  }
+
+  @keyframes intro-hero {
+    from {
+      opacity: 0;
+      transform: translate3d(0, var(--intro-y, 0px), 0) scale(var(--intro-escala, 1));
+    }
+    to {
+      opacity: 1;
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+  }
+
+  /* Superficie verde de la marca. La usan los dos paneles de sección («Cien
+     mensajes», «No arranca con una propuesta») y el bloque de «No son
+     promesas», así el verde se lee como UN material y no como tres fondos
+     parecidos.
+
+     No es lima pleno: a tamaño de sección el #81DE00 es insostenible. Al 13%
+     sobre el negro da un verde profundo que no pelea con la tipografía ni con
+     el lima de los acentos. Perilla: el primer alfa. */
+  .fondo-verde {
+    background:
+      radial-gradient(120% 90% at 12% 0%, rgba(129, 222, 0, 0.13), transparent 62%),
+      radial-gradient(90% 70% at 100% 100%, rgba(129, 222, 0, 0.07), transparent 60%),
+      linear-gradient(#0a0f06, #080c05);
+  }
+
+  /* CTA principal · adaptación del botón de Uiverse (adamgiebl).
+
+     La gracia es el chip: la flecha vive en una pastilla pegada al borde
+     derecho que al pasar el mouse crece hasta ocupar el botón entero, mientras
+     la flecha empuja hacia adelante. La etiqueta queda tapada — es el efecto,
+     no un descuido: el chip es un posicionado y pinta encima del texto.
+
+     El violeta del original (#a370f0 fondo, #714da6 sombra interna, #7b52b9
+     halo) se mapea al lima de la marca. Dos cambios que no son cosméticos:
+     · el texto va en ink, no en blanco — sobre lima el blanco no se lee;
+     · el chip es ink con la flecha en lima, así al abrirse el botón se da
+       vuelta al negro del sitio en vez de a un blanco que acá no existe.
+
+     Vive en CSS y no en clases arbitrarias porque el hover cambia el ancho de
+     un hijo: eso no se expresa con utilidades sueltas. */
+  /* Todo el botón se mide en em: font-size es la única perilla de tamaño.
+     Bajarlo achica alto, paddings, chip y flecha juntos, sin desarmar la
+     proporción. */
+  .cta {
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    width: fit-content;
+    height: 2.6em;
+    padding: 0.3em 2.95em 0.3em 1.05em;
+    border: none;
+    border-radius: 0.85em;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: #0a1a00;
+    background: var(--color-lima);
+    box-shadow: inset 0 0 1.6em -0.6em #4e7a00;
+  }
+  .cta-icono {
+    position: absolute;
+    right: 0.28em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 2.04em;
+    width: 2.04em;
+    border-radius: 0.65em;
+    background: var(--color-ink);
+    box-shadow: 0.1em 0.1em 0.6em 0.2em rgba(46, 74, 0, 0.45);
+    transition:
+      width 0.3s,
+      transform 0.3s;
+  }
+  .cta:hover .cta-icono,
+  .cta:focus-visible .cta-icono {
+    width: calc(100% - 0.56em);
+  }
+  .cta:active .cta-icono {
+    transform: scale(0.95);
+  }
+  /* lucide trae width y height propios: hay que pisar los dos o la caja del
+     svg queda de 24px de alto y descentra la flecha dentro del chip. */
+  .cta-icono svg {
+    width: 1.05em;
+    height: 1.05em;
+    color: var(--color-lima);
+    transition: transform 0.3s;
+  }
+  .cta:hover .cta-icono svg,
+  .cta:focus-visible .cta-icono svg {
+    transform: translateX(0.1em);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cta-icono,
+    .cta-icono svg {
+      transition: none;
+    }
+  }
+}
+
+@layer utilities {
+  /* Layout y pintado diferidos hasta que la sección se acerca a la pantalla.
+
+     El home son diez secciones y /proyectos otras tantas. Sin esto el navegador
+     tiene que maquetar la página ENTERA antes de pintar la primera pantalla:
+     medido en el home, la mitad del trabajo de layout de la carga se iba en
+     secciones que quedan a tres pantallas de distancia.
+
+     `contain-intrinsic-size: auto 900px` es la parte que evita que esto rompa
+     el scroll. Mientras la sección está sin maquetar el navegador necesita
+     suponerle un alto, y 900px es el promedio medido de las secciones del
+     sitio; el `auto` de adelante le dice que, una vez que la maquetó de verdad,
+     RECUERDE el alto real en vez de volver a la suposición. Sin `auto`, cada
+     sección que sale de pantalla vuelve a los 900 supuestos y la barra de
+     scroll salta mientras se navega.
+
+     No mueve el CLS: lo que se reacomoda son secciones fuera de pantalla, y la
+     métrica sólo cuenta lo que se ve. Medido: 0.
+
+     ── DÓNDE NO PONERLO ──
+     `content-visibility: auto` arrastra `contain: paint`, que RECORTA al borde
+     de la caja igual que un `overflow: hidden`. Cualquier sección que pinte
+     fuera de sí misma —un resplandor que nace por encima de su borde, un fondo
+     a sangre, una letra que se sale de la columna— queda cortada con una línea
+     recta donde antes había una transición.
+
+     Ya pasó una vez: se le puso a <Cierre>, cuyo halo verde nace 38% por encima
+     del borde superior justo para fundirse con la sección de arriba. El
+     resultado fue una raya recta encima del footer, en las seis páginas.
+
+     Regla: si la sección tiene un hijo absoluto con offset negativo o un
+     `blur` grande cerca del borde, no lleva esta clase. Si ya tiene
+     `overflow-hidden` propio, en cambio, es gratis: el recorte ya estaba. */
+  .contenido-diferido {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 900px;
+  }
+
+  /* El estado escondido de <Reveal>, condicionado a que HAYA JavaScript.
+
+     `data-js` lo pone un script de una línea en el <head> (ver index.html),
+     antes de que se pinte nada. Sin él —JS deshabilitado, un error de red, el
+     bundle todavía viajando— la regla no aplica y las secciones se ven, que es
+     como vienen escritas en el HTML pre-renderizado.
+
+     Antes esto eran dos utilidades sueltas (`opacity-0 translate-y-[22px]`) en
+     el marcado. Funcionaba porque el JS llegaba enseguida; ahora llega después
+     del primer pintado a propósito, y con las utilidades el HTML habría salido
+     con media página invisible esperando a que el bundle apareciera. */
+  [data-js] .reveal-oculto {
+    opacity: 0;
+    transform: translate3d(0, 22px, 0);
+  }
+
+  /* Un solo borde izquierdo en toda la página. Reproduce la columna de contenido
+     SIN limitar el ancho de la sección, así los fondos siguen a sangre. */
+  .px-column {
+    padding-inline: max(
+      var(--spacing-g),
+      calc((100% - var(--container-maxw)) / 2 + var(--spacing-g))
+    );
+  }
+  /* El calado tipográfico (FERRANTE, los números del proceso) */
+  .stroke-lima {
+    color: transparent;
+    -webkit-text-stroke: 1.5px rgba(129, 222, 0, 0.3);
+  }
+  .stroke-lima-thin {
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(129, 222, 0, 0.5);
+  }
+  /* Los números del proceso: van a tamaño grande y SOBRE el texto, así que el
+     trazo tiene que ser fino y apagado o tapa lo que hay debajo. 1.5px de
+     grosor —a 120px de cuerpo el de 1px se deshilacha— pero al 34% de opacidad,
+     que es lo que deja pasar el título. */
+  .stroke-lima-numero {
+    color: transparent;
+    -webkit-text-stroke: 1.5px rgba(129, 222, 0, 0.34);
+  }
+  /* la misma letra calada, pero en blanco: es la capa que revela el foco */
+  .stroke-paper {
+    color: transparent;
+    -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.9);
+  }
+  /* Igual que mask-fade-x pero en vertical: lo usan las dos columnas del hero
+     de /tecnologia, que si no se cortan planas arriba y abajo. */
+  .mask-fade-y {
+    -webkit-mask-image: linear-gradient(180deg, transparent, #000 13%, #000 87%, transparent);
+    mask-image: linear-gradient(180deg, transparent, #000 13%, #000 87%, transparent);
+  }
+  /* La tira de marcas se desvanece en los dos extremos en vez de cortarse */
+  .mask-fade-x {
+    -webkit-mask-image: linear-gradient(
+      90deg,
+      transparent,
+      #000 8%,
+      #000 92%,
+      transparent
+    );
+    mask-image: linear-gradient(
+      90deg,
+      transparent,
+      #000 8%,
+      #000 92%,
+      transparent
+    );
+  }
+}

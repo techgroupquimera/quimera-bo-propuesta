@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="es-BO">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Proyectos · Group Quimera · No son promesas, están funcionando</title>
+<meta name="description" content="Sistemas de Group Quimera en línea hoy: catálogos que venden solos, CRM propio, central de operaciones, portales de datos en vivo, plataformas con cobros y visión con cámaras.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Instrument+Serif:ital@0;1&family=Manrope:wght@200;300;400;500;600;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/quimera.css?v=20260731a">
+<style>
+/* lista de sistemas en línea */
+.live{display:grid;grid-template-columns:1fr 1fr;gap:0 clamp(2rem,5vw,4rem)}
+.live-row{display:grid;grid-template-columns:auto 1fr;gap:1rem;align-items:start;padding:1.4rem 0;border-top:1px solid var(--hair)}
+.live-row .dot{width:8px;height:8px;border-radius:50%;background:var(--lime);box-shadow:0 0 10px var(--lime);margin-top:.55rem;flex:none;animation:pulse 2.6s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+@media (prefers-reduced-motion:reduce){.live-row .dot{animation:none}}
+.live-row b{display:block;font-size:1.02rem;font-weight:500;letter-spacing:-.01em;margin-bottom:.25rem}
+.live-row span{display:block;font-size:.87rem;color:var(--muted)}
+.live-row em{font-family:var(--serif);font-style:italic;color:var(--lime-2);font-size:.94rem}
+@media(max-width:860px){.live{grid-template-columns:1fr}}
+/* proyectos de marca */
+.work{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+.work-item{border-radius:18px;overflow:hidden;position:relative;background:var(--ink-2);border:1px solid var(--hair);transition:border-color .4s,transform .5s var(--ease)}
+.work-item:hover{border-color:var(--hair-lime);transform:translateY(-4px)}
+/* 2.2:1 = el recorte con el que vienen las capturas de cada sitio. Con el
+   16/10 anterior, object-fit:cover les comía los costados. */
+.work-item .ph{aspect-ratio:2.2/1;overflow:hidden;background:#0b0f07}
+/* anclado arriba: las capturas que vienen a 16:9 se recortan por abajo, así
+   la barra de navegación y el titular del hero siempre sobreviven al encuadre */
+.work-item .ph img{width:100%;height:100%;object-fit:cover;object-position:top;opacity:.85;transition:opacity .4s,transform .8s var(--ease)}
+.work-item:hover .ph img{opacity:1;transform:scale(1.04)}
+.work-item .meta{padding:1.3rem 1.4rem 1.5rem}
+.work-item .meta .tag{display:flex;justify-content:space-between;font-family:var(--sans);font-weight:600;font-size:.57rem;letter-spacing:.16em;text-transform:uppercase;color:var(--lime-2);margin-bottom:.7rem}
+.work-item .meta .tag i{font-style:normal;color:var(--muted-2)}
+.work-item .meta .url{display:inline-block;margin-top:.8rem;font-size:.8rem;color:var(--lime-2);border-bottom:1px solid transparent;transition:border-color .25s}
+.work-item:hover .meta .url{border-color:var(--hair-lime)}
+
+/* Automatizaciones: los mockups son seis fotos de un teléfono sobre fondo
+   blanco — puestas en grilla serían seis bloques blancos casi idénticos. Lo
+   que sí distingue a cada una es QUÉ hace el agente, así que van como texto. */
+.auto{display:grid;grid-template-columns:1fr 1fr;gap:0 clamp(2rem,5vw,4rem)}
+.auto-row{display:grid;grid-template-columns:auto 1fr;gap:1rem;align-items:start;padding:1.5rem 0;border-top:1px solid var(--hair)}
+.auto-row .dot{width:8px;height:8px;border-radius:50%;background:var(--lime);box-shadow:0 0 10px var(--lime);margin-top:.5rem;flex:none;animation:pulse 2.6s ease-in-out infinite}
+.auto-row .dot.wip{background:var(--pend);box-shadow:0 0 10px var(--pend);animation:none}
+.auto-row b{display:block;font-size:1.02rem;font-weight:500;letter-spacing:-.01em;margin-bottom:.3rem}
+.auto-row p{font-size:.89rem;color:var(--muted);line-height:1.6}
+/* Cada agente tiene su captura real de la conversación: se abre en el visor
+   en vez de meter seis mockups blancos idénticos en la página. */
+.ver-chat{
+  background:none;border:0;padding:0;cursor:pointer;white-space:nowrap;
+  font:600 .78rem/1.6 var(--sans);color:var(--lime-2);
+  border-bottom:1px solid var(--hair-lime);
+}
+.ver-chat:hover{color:var(--lime)}
+@media(max-width:860px){.auto{grid-template-columns:1fr}}
+
+/* Manuales de marca: los siete vienen como el MISMO mockup sobre fondo blanco.
+   En tarjetas serían siete bloques idénticos; en tira a un alto parejo se leen
+   por lo que son y cada tapa se distingue sola. */
+.manuales{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:clamp(10px,1.4vw,18px)}
+.manuales img{width:100%;border-radius:10px;display:block}
+.manuales figcaption{margin-top:.7rem;font-size:.82rem;color:var(--muted);line-height:1.4}
+
+/* Fila de reels de contenido: mismo componente que el resto del sitio, más
+   chico, porque son seis y no uno. */
+.reels-fila{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:clamp(10px,1.4vw,18px)}
+.reel.sm{max-width:none}
+.reel.sm .reel-play{width:46px;height:46px;font-size:.85rem}
+.reel.sm figcaption{margin-top:.6rem;font-size:.78rem}
+
+/* Piezas de campaña. El mosaico por columnas se veía apilado y sucio, y la
+   causa era el material: había tres proporciones mezcladas —20 piezas en 4:5,
+   5 cuadradas y 5 banners de 2.8:1— y ninguna grilla alinea con eso. Acá van
+   sólo las 4:5, así la grilla queda pareja sin recortar ni una. */
+.piezas{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:clamp(9px,1.2vw,15px)}
+.piezas img{
+  width:100%;aspect-ratio:4/5;object-fit:cover;display:block;border-radius:10px;
+  opacity:.9;transition:opacity .35s,transform .5s var(--ease);
+}
+.piezas img:hover{opacity:1;transform:translateY(-3px)}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="brand" href="index.html"><img src="assets/logo-lockup.png" alt="Group Quimera · Marketing y Tech"></a>
+  <nav class="navpill">
+    <a href="servicios.html">Servicios</a>
+    <a href="tecnologia.html">Tecnología</a>
+    <a href="proyectos.html" aria-current="page">Proyectos</a>
+    <a href="nosotros.html">Nosotros</a>
+  </nav>
+  <a href="contacto.html" class="btn btn-p">Conversemos</a>
+</div>
+
+<!-- ══════════ HERO ══════════ -->
+<header class="phero">
+  <div class="phero-bg" style="background-image:url('assets/bg-bokeh-2.webp');opacity:.4"></div>
+  <div class="phero-veil"></div>
+  <p class="crumb"><a href="index.html">Inicio</a><i>›</i>Proyectos</p>
+  <span class="kicker rv">Prueba real · en línea hoy</span>
+  <h1 class="t-hero rv" style="margin-top:1.3rem">No son <span class="it lime">promesas</span>.<br>Están funcionando.</h1>
+  <p class="body-l rv">
+    Estos sistemas están corriendo ahora mismo, con clientes usándolos todos los
+    días. Podemos mostrarte cualquiera en vivo durante la reunión.
+  </p>
+</header>
+
+<!-- ══════════ SITIOS ══════════
+     Diez sitios reales, con su captura y su enlace. Antes eran cuatro tarjetas
+     con fotos del estudio de relleno. Capturas traídas del VPS. -->
+<section class="wrap" id="sitios" style="border-top:1px solid var(--hair)">
+  <div class="head">
+    <span class="kicker rv">Sitios en producción</span>
+    <h2 class="t-sec rv">Sitios que podés <span class="it lime">abrir ahora</span>.</h2>
+    <p class="body-l rv">
+      Cada uno está en línea. No hay mockups ni pantallas de ejemplo: entrá y miralos.
+    </p>
+  </div>
+  <div class="work">
+    <article class="work-item rv">
+      <div class="ph"><img src="assets/proyectos/camebol.webp" alt="Sitio de CAMEBOL Santa Cruz" loading="lazy"></div>
+      <div class="meta">
+        <p class="tag"><span>Institucional</span><i>2026</i></p>
+        <h3 class="t-card">CAMEBOL Santa Cruz</h3>
+        <p class="body-m" style="margin-top:.5rem">La filial cruceña de la Cámara de Mujeres Empresarias de Bolivia — la misma que invitó a Johnny como speaker del Foro FEM.</p>
+        <a class="url" href="https://camebolscz.com/" target="_blank" rel="noopener">camebolscz.com ↗</a>
+      </div>
+    </article>
+    <article class="work-item rv" style="transition-delay:.04s">
+      <div class="ph"><img src="assets/proyectos/peredo.webp" alt="Sitio de Peredo.ai" loading="lazy"></div>
+      <div class="meta">
+        <p class="tag"><span>Autoridad personal</span><i>2026</i></p>
+        <h3 class="t-card">Peredo.ai</h3>
+        <p class="body-m" style="margin-top:.5rem">Sitio del Dr. Marcelo Peredo, Global CISO y AI Risk Strategist. Una web que tiene que transmitir autoridad y nada más.</p>
+        <a class="url" href="https://peredo.ai/" target="_blank" rel="noopener">peredo.ai ↗</a>
+      </div>
+    </article>
+    <article class="work-item rv" style="transition-delay:.08s">
+      <div class="ph"><img src="assets/proyectos/sapien9.webp" alt="Sitio de Sapien9" loading="lazy"></div>
+      <div class="meta">
+        <p class="tag"><span>Ciberseguridad</span><i>2024</i></p>
+        <h3 class="t-card">Sapien9</h3>
+        <p class="body-m" style="margin-top:.5rem">Plataforma de ciberseguridad empresarial. Visual premium, narrativa clara y código optimizado para velocidad.</p>
+        <a class="url" href="https://sapien9.com/" target="_blank" rel="noopener">sapien9.com ↗</a>
+      </div>
+    </article>
+    <article class="work-item rv" style="transition-delay:.12s">
+      <div class="ph"><img src="assets/proyectos/victlan.webp" alt="Sitio de Victlan" loading="lazy"></div>
+      <div class="meta">
+        <p class="tag"><span>Inmobiliaria</span><i>2026</i></p>
+        <h3 class="t-card">Victlan</h3>
+        <p class="body-m" style="margin-top:.5rem">Desarrolladora con modelo vertical: constructora, desarrolladora e inmobiliaria en un mismo proceso. Estética arquitectónica y editorial.</p>
+        <a class="url" href="https://victlan.com/" target="_blank" rel="noopener">victlan.com ↗</a>
+      </div>
+    </article>
+    <article class="work-item rv" style="transition-delay:.16s">
+      <div class="ph"><img src="assets/proyectos/givera.webp" alt="Sitio de Grupo Givera" loading="lazy"></div>
+      <div class="meta">
+        <p class="tag"><span>Agroindustria</span><i>2026</i></p>
+        <h3 class="t-card">Grupo Givera</h3>
+        <p class="body-m" style="margin-top:.5rem">Más de 35 años en nutrición vegetal y maquinaria agrícola. La web tenía que transmitir respaldo científico sin volverse ilegible.</p>
+        <a class="url" href="https://grupogivera.com/" target="_blank" rel="noopener">grupogivera.com ↗</a>
+      </div>
+    </article>
+    <article class="work-item rv" style="transition-delay:.2s">
+      <div class="ph"><img src="assets/proyectos/bolecuarg.webp" alt="Sitio de Bolecuarg" loading="lazy"></div>
+      <div class="meta">
+        <p class="tag"><span>Agroindustria</span><i>2026</i></p>
+        <h3 class="t-card">Bolecuarg</h3>
+        <p class="body-m" style="margin-top:.5rem">Empresa agrícola fundada en 1989. Tono cercano y técnico — «la tierra habla, nosotros escuchamos».</p>
+        <a class="url" href="https://bolecuarg.com/" target="_blank" rel="noopener">bolecuarg.com ↗</a>
+      </div>
+    </article>
+    <article class="work-item rv" style="transition-delay:.24s">
+      <div class="ph"><img src="assets/proyectos/talento.webp" alt="Sitio de Talento y Empleabilidad Hub" loading="lazy"></div>
+      <div class="meta">
+        <p class="tag"><span>Consultoría</span><i>2026</i></p>
+        <h3 class="t-card">Talento y Empleabilidad Hub</h3>
+        <p class="body-m" style="margin-top:.5rem">Consultora de gestión de talento humano. Tiene que hablarle a dos públicos a la vez: profesionales y empresas.</p>
+        <a class="url" href="https://talentoyempleabilidadhub.com/" target="_blank" rel="noopener">talentoyempleabilidadhub.com ↗</a>
+      </div>
+    </article>
+    <article class="work-item rv" style="transition-delay:.28s">
+      <div class="ph"><img src="assets/proyectos/shiba.webp" alt="Sitios de IKA y LTR, del grupo Shiba" loading="lazy"></div>
+      <div class="meta">
+        <p class="tag"><span>Dos marcas</span><i>2025</i></p>
+        <h3 class="t-card">Shiba · IKA y LTR</h3>
+        <p class="body-m" style="margin-top:.5rem">Distribuidor de climatización. Dos identidades distintas sobre una misma base técnica, optimizadas para conversión por WhatsApp.</p>
+        <a class="url" href="https://ika.com.bo/" target="_blank" rel="noopener">ika.com.bo ↗</a>
+      </div>
+    </article>
+    <article class="work-item rv" style="transition-delay:.32s">
+      <div class="ph"><img src="assets/proyectos/natukira.webp" alt="Sitio de Natukira" loading="lazy"></div>
+      <div class="meta">
+        <p class="tag"><span>Producto</span><i>2026</i></p>
+        <h3 class="t-card">Natukira</h3>
+        <p class="body-m" style="margin-top:.5rem">Desodorantes naturales para niños y adolescentes. Web cálida y dermo-consciente, dirigida a padres.</p>
+        <a class="url" href="https://natukira.com/" target="_blank" rel="noopener">natukira.com ↗</a>
+      </div>
+    </article>
+    <article class="work-item rv" style="transition-delay:.36s">
+      <div class="ph"><img src="assets/proyectos/juanwagner.webp" alt="Sitio de Juan Wagner" loading="lazy"></div>
+      <div class="meta">
+        <p class="tag"><span>Marca personal</span><i class="pend" title="Confirmar el año">año</i></p>
+        <h3 class="t-card">Juan Wagner</h3>
+        <p class="body-m" style="margin-top:.5rem">Creador de contenido, entrenador en línea y actor, con más de 3 millones de seguidores. Planes, alianzas y sponsors en un solo lugar.</p>
+        <a class="url" href="https://www.juanwagner.com/" target="_blank" rel="noopener">juanwagner.com ↗</a>
+      </div>
+    </article>
+    <article class="work-item rv" style="transition-delay:.4s">
+      <div class="ph"><img src="assets/proyectos/ghtractor.webp" alt="Sitio de GH Tractor" loading="lazy"></div>
+      <div class="meta">
+        <p class="tag"><span>Maquinaria pesada</span><i class="pend" title="Confirmar el año">año</i></p>
+        <h3 class="t-card">GH Tractor</h3>
+        <p class="body-m" style="margin-top:.5rem">Repuestos alternativos para maquinaria pesada: más de 13.000 ítems, catálogo buscable y cotización directa por WhatsApp.</p>
+        <a class="url" href="https://ghtractor.com/" target="_blank" rel="noopener">ghtractor.com ↗</a>
+      </div>
+    </article>
+    <article class="work-item rv" style="transition-delay:.44s">
+      <div class="ph"><img src="assets/proyectos/quimerahosting.webp" alt="Sitio de Quimera Hosting" loading="lazy"></div>
+      <div class="meta">
+        <p class="tag"><span>Casa propia</span><i>2026</i></p>
+        <h3 class="t-card">Quimera Hosting</h3>
+        <p class="body-m" style="margin-top:.5rem">Nuestra propia plataforma de hosting: búsqueda y transferencia de dominios, planes claros y contratación sin fricción.</p>
+        <a class="url" href="https://quimerahosting.com/" target="_blank" rel="noopener">quimerahosting.com ↗</a>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ══════════ AUTOMATIZACIÓN CON IA ══════════
+     Los seis agentes que ya están operando. Salen de projects.ts del sitio en
+     producción (/opt/quimera-group/frontend/src/data/projects.ts), no los
+     inventé. Son la prueba directa del pivote y en esta página no estaban. -->
+<section class="wrap" id="agentes" style="border-top:1px solid var(--hair)">
+  <div class="head">
+    <span class="kicker rv">Automatización con IA</span>
+    <h2 class="t-sec rv">Agentes <span class="it lime">atendiendo</span><br>por empresas reales.</h2>
+    <p class="body-l rv">
+      No son demos. Cada uno atiende, califica y deja el registro donde el equipo
+      del cliente lo revisa e interviene cuando hace falta.
+    </p>
+  </div>
+
+  <div class="auto">
+    <div class="auto-row rv">
+      <span class="dot"></span>
+      <span><b>Bolivia Fitness</b><p>Muestra el catálogo, responde las dudas de siempre y registra el pedido con recojo o envío. Todo queda en base de datos y el equipo interviene desde un panel. <button class="ver-chat" data-lb="img" data-src="assets/proyectos/boliviafitness.webp" data-alt="Conversación real del agente de Bolivia Fitness">Ver la conversación ↗</button></p></span>
+    </div>
+    <div class="auto-row rv" style="transition-delay:.04s">
+      <span class="dot"></span>
+      <span><b>Academia Diamond Art</b><p>Inscripciones para una academia de danza infantil: da la bienvenida, muestra las sucursales con ubicación en Maps y los horarios de cada disciplina, y deja todo anotado para seguir las clases de prueba. <button class="ver-chat" data-lb="img" data-src="assets/proyectos/diamondart.webp" data-alt="Conversación real del agente de Academia Diamond Art">Ver la conversación ↗</button></p></span>
+    </div>
+    <div class="auto-row rv" style="transition-delay:.08s">
+      <span class="dot"></span>
+      <span><b>Meta Miami Investment Forum</b><p>Agente de venta para una firma inmobiliaria: conversa, califica y asigna al asesor que sigue la cita. El equipo lo opera desde GoHighLevel con cada interacción registrada. <button class="ver-chat" data-lb="img" data-src="assets/proyectos/metamiami.webp" data-alt="Conversación real del agente de Meta Miami Investment Forum">Ver la conversación ↗</button></p></span>
+    </div>
+    <div class="auto-row rv" style="transition-delay:.12s">
+      <span class="dot"></span>
+      <span><b>Xiaomi</b><p>Chatbot de registro para la promoción del Día de la Madre: inscribe al participante, valida los datos y deja todo auditable para el equipo de la marca. <button class="ver-chat" data-lb="img" data-src="assets/proyectos/xiaomi.webp" data-alt="Conversación real del agente de Xiaomi">Ver la conversación ↗</button></p></span>
+    </div>
+    <div class="auto-row rv" style="transition-delay:.16s">
+      <span class="dot"></span>
+      <span><b>Quimera AI</b><p>El agente de la propia casa: atiende la consulta inicial, califica el lead, muestra los servicios y conecta con el equipo según la necesidad concreta. <button class="ver-chat" data-lb="img" data-src="assets/proyectos/quimeraai.webp" data-alt="Conversación real del agente de Quimera AI">Ver la conversación ↗</button></p></span>
+    </div>
+    <div class="auto-row rv" style="transition-delay:.2s">
+      <span class="dot wip"></span>
+      <span><b>Shiba Hogar <span class="pend" style="font-size:.7rem;font-weight:400">en desarrollo</span></b><p>Vende y asesora en aires acondicionados: cierra la venta, avisa al encargado cuando entra un depósito y envía la ubicación para cotizar. <button class="ver-chat" data-lb="img" data-src="assets/proyectos/shibahogar.webp" data-alt="Conversación real del agente de Shiba Hogar">Ver la conversación ↗</button></p></span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ CASO DESTACADO ══════════ -->
+<section class="wrap split" style="border-top:1px solid var(--hair)">
+  <div>
+    <span class="kicker rv">Caso destacado</span>
+    <h2 class="t-sec rv" style="margin:1.2rem 0 1.2rem;font-size:clamp(1.9rem,3.4vw,3rem)">Bolivia Fitness</h2>
+    <p class="body-l rv">
+      Un agente de atención y venta que muestra el catálogo completo, responde las
+      dudas de siempre, registra el pedido y lo sincroniza con el sistema del
+      cliente. Funciona de noche, los domingos y en feriados.
+    </p>
+    <!-- Antes acá había tres cifras en «—» esperando el dato del cliente: tres
+         guiones vacíos en mitad de la página, que se leen como algo sin
+         terminar. Estas cuatro salen de la propia conversación del mockup y de
+         la ficha del proyecto, así que se pueden sostener hoy. -->
+    <ul class="checks rv" style="margin-top:1.7rem">
+      <li>Atiende consultas de <b style="font-weight:600">cinco ciudades</b> — Santa Cruz, La Paz, Cochabamba, Oruro y Sucre.</li>
+      <li>Muestra el catálogo por categoría y pregunta cuál interesa antes de cerrar.</li>
+      <li>Registra el pedido para pago, con opción de recojo o envío.</li>
+      <li>Todo queda en base de datos y el equipo entra a la conversación cuando quiere.</li>
+    </ul>
+    <p class="rv" style="margin-top:1.6rem;display:flex;gap:.7rem;flex-wrap:wrap;align-items:center">
+      <button class="btn btn-g" data-lb="img" data-src="assets/proyectos/boliviafitness.webp" data-alt="Conversación real del agente de Bolivia Fitness">Ver la conversación completa</button>
+      <span class="pend" title="Consultas atendidas por mes, pedidos cerrados sin intervención humana y horas liberadas al equipo. Es el dato que más convierte de toda la web.">Faltan los tres números del cliente</span>
+    </p>
+  </div>
+  <!-- Antes acá había una foto del estudio de relleno. Este es el mockup real
+       del agente, traído del VPS: se lee la conversación completa. -->
+  <div class="shot rv">
+    <img src="assets/proyectos/boliviafitness.webp" alt="Conversación real del agente de Bolivia Fitness en WhatsApp: saluda, ofrece el catálogo y lista las sucursales">
+  </div>
+</section>
+
+<!-- ══════════ MARCA ══════════
+     Los siete manuales vienen todos como el mismo mockup sobre fondo blanco:
+     en tarjetas serían siete bloques idénticos. En tira, a un alto parejo, se
+     leen por lo que son —siete manuales, uno por marca— y cada tapa se
+     distingue sola. -->
+<section class="wrap" id="marca" style="border-top:1px solid var(--hair)">
+  <div class="head">
+    <span class="kicker rv">Identidad</span>
+    <h2 class="t-sec rv">Marcas construidas<br><span class="it lime">desde cero</span>.</h2>
+    <p class="body-l rv">Cada una con su manual: logotipo, paleta, tipografías y usos.</p>
+  </div>
+  <div class="manuales">
+    <figure class="rv"><img src="assets/proyectos/br-dudu.webp" alt="Manual de marca de Dudu Service" loading="lazy"><figcaption>Dudu Service</figcaption></figure>
+    <figure class="rv" style="transition-delay:.01s"><img src="assets/proyectos/br-welding.webp" alt="Manual de marca de Welding Solutions" loading="lazy"><figcaption>Welding Solutions</figcaption></figure>
+    <figure class="rv" style="transition-delay:.02s"><img src="assets/proyectos/br-seremar.webp" alt="Manual de marca de Seremar" loading="lazy"><figcaption>Seremar</figcaption></figure>
+    <figure class="rv" style="transition-delay:.03s"><img src="assets/proyectos/br-fisiospa.webp" alt="Manual de marca de Fisio &amp; Spa" loading="lazy"><figcaption>Fisio &amp; Spa</figcaption></figure>
+    <figure class="rv" style="transition-delay:.04s"><img src="assets/proyectos/br-shiva.webp" alt="Manual de marca de Shiba Hogar" loading="lazy"><figcaption>Shiba Hogar</figcaption></figure>
+    <figure class="rv" style="transition-delay:.05s"><img src="assets/proyectos/br-tecnotel.webp" alt="Manual de marca de Tecnotel" loading="lazy"><figcaption>Tecnotel</figcaption></figure>
+    <figure class="rv" style="transition-delay:.06s"><img src="assets/proyectos/br-tuestilofavorito.webp" alt="Manual de marca de Tu Estilo Favorito" loading="lazy"><figcaption>Tu Estilo Favorito</figcaption></figure>
+  </div>
+</section>
+
+<!-- ══════════ CONTENIDO ══════════ -->
+<section class="wrap" id="contenido" style="border-top:1px solid var(--hair)">
+  <div class="head">
+    <span class="kicker rv">Producción audiovisual</span>
+    <h2 class="t-sec rv">Y el contenido que<br>las <span class="it lime">pone a andar</span>.</h2>
+    <p class="body-l rv">Piezas para redes, rodadas y editadas por el equipo. Tocá para reproducir con sonido.</p>
+  </div>
+  <div class="reels-fila">
+    <figure class="reel sm rv">
+      <img class="reel-poster" src="assets/proyectos/ct-tuestilo.webp" alt="Pieza de contenido para Tu Estilo Favorito" loading="lazy">
+      <button class="reel-play" data-lb="video" data-src="assets/proyectos/ct-tuestilo.mp4" aria-label="Reproducir el reel de Tu Estilo Favorito">▶</button>
+      <figcaption><b>Tu Estilo Favorito</b></figcaption>
+    </figure>
+    <figure class="reel sm rv">
+      <img class="reel-poster" src="assets/proyectos/ct-shibacont.webp" alt="Pieza de contenido para Shiba Hogar" loading="lazy">
+      <button class="reel-play" data-lb="video" data-src="assets/proyectos/ct-shibacont.mp4" aria-label="Reproducir el reel de Shiba Hogar">▶</button>
+      <figcaption><b>Shiba Hogar</b></figcaption>
+    </figure>
+    <figure class="reel sm rv">
+      <img class="reel-poster" src="assets/proyectos/ct-servicentro.webp" alt="Pieza de contenido para Servicentro" loading="lazy">
+      <button class="reel-play" data-lb="video" data-src="assets/proyectos/ct-servicentro.mp4" aria-label="Reproducir el reel de Servicentro">▶</button>
+      <figcaption><b>Servicentro</b></figcaption>
+    </figure>
+    <figure class="reel sm rv">
+      <img class="reel-poster" src="assets/proyectos/ct-metalforte.webp" alt="Pieza de contenido para Metal Forte" loading="lazy">
+      <button class="reel-play" data-lb="video" data-src="assets/proyectos/ct-metalforte.mp4" aria-label="Reproducir el reel de Metal Forte">▶</button>
+      <figcaption><b>Metal Forte</b></figcaption>
+    </figure>
+    <figure class="reel sm rv">
+      <img class="reel-poster" src="assets/proyectos/ct-rekids.webp" alt="Pieza de contenido para Rekids" loading="lazy">
+      <button class="reel-play" data-lb="video" data-src="assets/proyectos/ct-rekids.mp4" aria-label="Reproducir el reel de Rekids">▶</button>
+      <figcaption><b>Rekids</b></figcaption>
+    </figure>
+    <figure class="reel sm rv">
+      <img class="reel-poster" src="assets/proyectos/ct-patiobelen.webp" alt="Pieza de contenido para Patio Belén" loading="lazy">
+      <button class="reel-play" data-lb="video" data-src="assets/proyectos/ct-patiobelen.mp4" aria-label="Reproducir el reel de Patio Belén">▶</button>
+      <figcaption><b>Patio Belén</b></figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ══════════ ANUNCIOS ══════════ -->
+<section class="wrap" id="anuncios" style="border-top:1px solid var(--hair)">
+  <div class="head">
+    <span class="kicker rv">Campañas</span>
+    <h2 class="t-sec rv">Campañas que<br><span class="it lime">salieron al aire</span>.</h2>
+    <p class="body-l rv">Una selección de piezas, para marcas de rubros muy distintos. Hay muchas más.</p>
+  </div>
+  <div class="piezas">
+    <img src="assets/proyectos/anuncios/a01.webp" alt="Pieza de campaña" loading="lazy">
+    <img src="assets/proyectos/anuncios/a03.webp" alt="Pieza de campaña" loading="lazy">
+    <img src="assets/proyectos/anuncios/a05.webp" alt="Pieza de campaña" loading="lazy">
+    <img src="assets/proyectos/anuncios/a06.webp" alt="Pieza de campaña" loading="lazy">
+    <img src="assets/proyectos/anuncios/a08.webp" alt="Pieza de campaña" loading="lazy">
+    <img src="assets/proyectos/anuncios/a14.webp" alt="Pieza de campaña" loading="lazy">
+    <img src="assets/proyectos/anuncios/a20.webp" alt="Pieza de campaña" loading="lazy">
+    <img src="assets/proyectos/anuncios/a21.webp" alt="Pieza de campaña" loading="lazy">
+    <img src="assets/proyectos/anuncios/a23.webp" alt="Pieza de campaña" loading="lazy">
+    <img src="assets/proyectos/anuncios/a24.webp" alt="Pieza de campaña" loading="lazy">
+    <img src="assets/proyectos/anuncios/a30.webp" alt="Pieza de campaña" loading="lazy">
+    <img src="assets/proyectos/anuncios/a31.webp" alt="Pieza de campaña" loading="lazy">
+  </div>
+</section>
+
+<!-- ══════════ LOS QUE NO SE PUEDEN NOMBRAR ══════════
+     Antes abría la página, y abrir con seis sistemas anónimos justo antes de
+     18 trabajos con nombre y enlace era regalar la prueba. Acá abajo, y dicho
+     como lo que es —confidencialidad, no vaguedad—, suma en vez de restar. -->
+<section class="wrap" style="border-top:1px solid var(--hair)">
+  <div class="head">
+    <span class="kicker rv">Bajo acuerdo</span>
+    <h2 class="t-sec rv">Y otros que <span class="it lime">no podemos nombrar</span>.</h2>
+    <p class="body-l rv">
+      Son sistemas que corren dentro de empresas que prefieren no figurar. Los
+      podemos mostrar funcionando en la reunión, sin decir de quién son.
+    </p>
+  </div>
+  <div class="live">
+    <div class="live-row rv">
+      <span class="dot"></span>
+      <span><b>Catálogo digital de servicios</b><span>Vende y toma pedidos solo · <em>el dueño deja de contestar todo</em></span></span>
+    </div>
+    <div class="live-row rv" style="transition-delay:.04s">
+      <span class="dot"></span>
+      <span><b>CRM de ventas propio</b><span>Pipeline y métricas en vivo · <em>el equipo sabe qué cerrar hoy</em></span></span>
+    </div>
+    <div class="live-row rv" style="transition-delay:.08s">
+      <span class="dot"></span>
+      <span><b>Central de operaciones</b><span>Multi-marca, equipo y clientes · <em>toda la agencia en un tablero</em></span></span>
+    </div>
+    <div class="live-row rv" style="transition-delay:.12s">
+      <span class="dot"></span>
+      <span><b>Portal de datos en vivo</b><span>Información en tiempo real · <em>alto tráfico, siempre al aire</em></span></span>
+    </div>
+    <div class="live-row rv" style="transition-delay:.16s">
+      <span class="dot"></span>
+      <span><b>Plataforma con cobros</b><span>Pagos y facturación automáticos · <em>factura sola, sin intervención</em></span></span>
+    </div>
+    <div class="live-row rv" style="transition-delay:.2s">
+      <span class="dot"></span>
+      <span><b>Sistema de visión con cámaras</b><span>Evidencia verificable · <em>seguridad con prueba forense</em></span></span>
+    </div>
+  </div>
+  <p class="rv" style="margin-top:2.4rem;display:flex;gap:.7rem;flex-wrap:wrap;align-items:center">
+    <a href="contacto.html" class="btn btn-g">Quiero verlos en vivo →</a>
+    <span class="pend" title="Estos 6 salen del PDF de capacidades. Confirmar cuáles son realmente confidenciales y cuáles sí se pueden nombrar — si alguno se puede nombrar, se sube arriba con los demás">Confirmar cuáles son de verdad confidenciales</span>
+  </p>
+</section>
+
+<!-- ══════════ MARCAS ══════════ -->
+<section class="wrap" style="border-top:1px solid var(--hair);padding-top:clamp(50px,7vh,80px)">
+  <p class="mono-s" style="text-align:center;margin-bottom:1.4rem">Marcas que ya nos dejaron entrar a sus operaciones</p>
+  <div class="mq"><div class="mq-t"></div></div>
+</section>
+
+<!-- ══════════ CIERRE ══════════ -->
+<section class="closer">
+  <span class="kicker rv">El siguiente paso</span>
+  <h2 class="t-sec rv" style="margin-top:1.2rem">El próximo caso<br><span class="it lime">puede ser el tuyo</span>.</h2>
+  <p class="body-l rv">Tomémonos 30 minutos y te mostramos, en vivo, cómo se vería tu empresa con sus propios sistemas.</p>
+  <a href="contacto.html" class="btn btn-p rv">Conversemos →</a>
+</section>
+
+<footer>
+  <div class="foot-grid">
+    <div class="foot-brand">
+      <img src="assets/logo-lockup.png" alt="Group Quimera · Marketing y Tech">
+      <p>Tecnología a medida para empresas que quieren crecer. Tu sistema, tus datos, tu infraestructura.</p>
+      <p class="foot-place">Santa Cruz de la Sierra · Bolivia</p>
+    </div>
+    <nav class="foot-col">
+      <h5>Navegar</h5>
+      <a href="index.html">Inicio</a>
+      <a href="servicios.html">Servicios</a>
+      <a href="tecnologia.html">Tecnología</a>
+      <a href="proyectos.html" aria-current="page">Proyectos</a>
+      <a href="nosotros.html">Nosotros</a>
+      <a href="contacto.html">Contacto</a>
+    </nav>
+    <nav class="foot-col">
+      <h5>El grupo</h5>
+      <a href="https://groupquimera.com" target="_blank" rel="noopener">groupquimera.com</a>
+      <a href="https://groupquimera.com.pe" target="_blank" rel="noopener">groupquimera.com.pe</a>
+      <a href="https://techagents.dev" target="_blank" rel="noopener">techagents.dev</a>
+      <a href="https://quimeracloud.com" target="_blank" rel="noopener">quimeracloud.com</a>
+      <a href="https://quimerahosting.com" target="_blank" rel="noopener">quimerahosting.com</a>
+    </nav>
+    <div class="foot-col">
+      <h5>Presencia</h5>
+      <span><b>Santa Cruz</b>Ingeniería</span>
+      <span><b>Miami</b>Tech Agents LLC</span>
+      <span><b>Silicon Valley</b>Ciberseguridad</span>
+      <span><b>Lima</b>Hub técnico</span>
+    </div>
+  </div>
+  <div class="foot-bar">
+    <p>© 2026 Group Quimera · <span class="pend" title="El sitio actual dice «Quimera Group S.A.» — confirmar">razón social a confirmar</span></p>
+    <div class="foot-social">
+      <a href="https://www.instagram.com/quimera_marketing/" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://www.linkedin.com/company/quimeramarketing/" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://www.facebook.com/Marketing.Quimera/" target="_blank" rel="noopener">Facebook</a>
+    </div>
+  </div>
+</footer>
+
+<div id="lb"><button id="lb-x">Cerrar ✕</button><div id="lb-in"></div></div>
+
+<button id="nb">⚠ Datos por completar</button>
+<div id="np">
+  <h4>Antes de publicar</h4>
+  <p style="font-size:.8rem;color:var(--muted)">Los 6 sistemas en línea salen textuales del PDF de capacidades.</p>
+  <span class="sec">Nuevo · las cuatro categorías, no solo webs</span>
+  <ol>
+    <li>Antes solo estaban webs y agentes. Ahora están las cuatro: <b>sitios · agentes · manuales de marca · contenido · campañas</b>, traído de <code>projects.ts</code> y de los assets del sitio en producción.</li>
+    <li><b>Los sitios subieron al principio.</b> La página abría con seis sistemas <i>anónimos</i> justo antes de todo el trabajo con nombre y enlace: era regalar la prueba. Esos seis bajaron al final, reencuadrados como «los que no podemos nombrar» — dicho como confidencialidad suman en vez de restar.</li>
+    <li><b>Los videos abren en un visor 9:16</b>, no a pantalla completa. A pantalla completa el navegador respeta el alto del monitor y el reel queda minúsculo entre dos franjas negras. Además, la fila de contenido ya no carga seis elementos de video: son portadas, y el video baja recién cuando tocás play.</li>
+    <li><b>Cada agente tiene su «Ver la conversación»</b>, que abre la captura real de su chat en el mismo visor. Antes solo se veía la de Bolivia Fitness.</li>
+  </ol>
+
+  <span class="sec">Se quitaron los totales de los títulos</span>
+  <ol start="5">
+    <li>Decían «Treinta y una piezas publicadas» y «Siete marcas construidas»: <b>eso subestima lo que realmente tienen</b> — son las que están cargadas en el sitio, no las que hicieron. Ahora dicen «Campañas que salieron al aire» y «Marcas construidas desde cero», y el texto aclara que es <b>una selección</b>. Así podés sumar material sin tocar los títulos.</li>
+    <li>Lo mismo con «Doce que podés abrir ahora» y «Seis agentes» → sin número.</li>
+  </ol>
+
+  <span class="sec">Las piezas de campaña</span>
+  <ol start="7">
+    <li>El mosaico se veía apilado por el <b>material, no por el CSS</b>: había tres proporciones mezcladas — 20 piezas en 4:5, 5 cuadradas y 5 banners de 2.8:1. Ninguna grilla alinea con eso.</li>
+    <li>Ahora van <b>solo las 4:5 y solo las 12 más fuertes visualmente</b>: quedaron fuera las que son listas de texto densas (promos de spa, checklist de montacargas, el mapa con QR). <b>Están todas descargadas</b> — si querés otra selección es cambiar la lista de nombres.</li>
+  </ol>
+
+  <span class="sec">Pendiente de tu lado</span>
+  <ol start="7">
+    <li><b>Juan Wagner y GH Tractor no están en <code>projects.ts</code></b> — los agregaste vos acá. Hay que sumarlos también al sitio en producción o los dos portafolios quedan desincronizados.</li>
+    <li><b>CAMEBOL es cliente de ustedes.</b> Es la misma cámara que invitó a Johnny como speaker del Foro FEM, y esa conexión no se decía en ningún lado.</li>
+    <li>⚠ <b>Sapien9 aparece con dos papeles:</b> alianza en Tecnología, cliente en el portafolio. Decidir cómo se cuenta.</li>
+    <li>El <b>año de Juan Wagner y GH Tractor</b> — quedaron en ámbar.</li>
+  </ol>
+
+  <span class="sec">Sigue faltando</span>
+  <ol start="6">
+    <li><b>Métricas de Bolivia Fitness:</b> los tres números. Es lo más valioso que falta en toda la web.</li>
+    <li><b>Confidencialidad:</b> confirmar que los 18 clientes nombrados aprueban aparecer. Xiaomi y Meta Miami conviene chequearlos.</li>
+    <li><b>El año de Juan Wagner y de GH Tractor</b> — quedaron marcados en ámbar.</li>
+    <li>Ideal: una o dos frases de testimonio de clientes reales. Hoy no hay ninguna en toda la web.</li>
+  </ol>
+</div>
+
+<script src="assets/quimera.js?v=20260731a"></script>
+</body>
+</html>
