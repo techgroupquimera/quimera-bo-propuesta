@@ -174,33 +174,66 @@ export const FOOTER = {
         { label: 'Contacto', href: '/contacto' },
       ],
     },
+    /* ── Ecosistema ──
+       Antes era «El grupo» y listaba los cinco dominios pelados
+       (`quimerahosting.com`, `techagents.dev`…). Ahora dice los NOMBRES: un
+       dominio es una dirección y una marca es una empresa, y lo que este bloque
+       tiene que decir es qué hay atrás. El destino no se pierde — cada nombre
+       enlaza a su sitio.
+
+       Sapien9 va en su propio subtítulo y con la flecha. No es una unidad del
+       grupo sino un aliado, y la flecha marca justamente eso: los cuatro de
+       arriba llevan a sitios de la casa, éste sale afuera.
+
+       ⚠ `groupquimera.com.pe` dejó de figurar: estaba en la lista vieja y el
+       boceto nuevo no lo trae. Perú sigue nombrado en la columna de al lado
+       («Technical Hub · Lima») pero ya no hay dónde clickearlo. */
     {
-      titulo: 'El grupo',
+      titulo: 'Ecosistema',
       tipo: 'links',
       items: [
-        { label: 'groupquimera.com', href: 'https://groupquimera.com', externo: true },
-        { label: 'groupquimera.com.pe', href: 'https://groupquimera.com.pe', externo: true },
-        { label: 'techagents.dev', href: 'https://techagents.dev', externo: true },
-        { label: 'quimeracloud.com', href: 'https://quimeracloud.com', externo: true },
-        { label: 'quimerahosting.com', href: 'https://quimerahosting.com', externo: true },
+        { label: 'Group Quimera', href: 'https://groupquimera.com', externo: true },
+        { label: 'Quimera Cloud', href: 'https://quimeracloud.com', externo: true },
+        { label: 'Quimera Hosting', href: 'https://quimerahosting.com', externo: true },
+        { label: 'Tech Agents LLC', href: 'https://techagents.dev', externo: true },
       ],
+      sub: {
+        titulo: 'Alianza estratégica',
+        items: [
+          { label: 'Sapien9', href: 'https://sapien9.com', externo: true, fuera: true },
+        ],
+      },
     },
+    /* ── Presencia & red ──
+       Eran cuatro plazas sueltas (Santa Cruz · Miami · Silicon Valley · Lima) y
+       ahora se agrupan por país, con lo que se hace en cada uno. La diferencia
+       no es de orden: «Silicon Valley · Ciberseguridad» leído en la misma lista
+       que las otras tres decía que el grupo tiene oficina ahí, y lo que hay es
+       un aliado. Por eso el partner va separado y con su nombre.
+
+       Los encabezados van en inglés porque así vienen del cliente, igual que en
+       el bloque corporativo de arriba. */
     {
-      titulo: 'Presencia',
+      titulo: 'Presencia & red',
       tipo: 'datos',
       items: [
-        { plaza: 'Santa Cruz', rol: 'Ingeniería' },
-        { plaza: 'Miami', rol: 'Tech Agents LLC' },
-        { plaza: 'Silicon Valley', rol: 'Ciberseguridad' },
-        { plaza: 'Lima', rol: 'Hub técnico' },
+        { zona: 'Bolivia', lineas: ['Ingeniería & Operaciones', 'Santa Cruz de la Sierra'] },
+        { zona: 'United States', lineas: ['Software, AI & Operations', 'Miami · Florida'] },
+        { zona: 'Peru', lineas: ['Technical Hub', 'Lima'] },
+        {
+          zona: 'Strategic partner',
+          lineas: ['Sapien9', 'Cybersecurity', 'Silicon Valley · USA'],
+        },
       ],
     },
   ],
-  copyright: '© 2026 Group Quimera · ',
-  copyrightPend: {
-    texto: 'razón social a confirmar',
-    nota: 'El sitio actual dice «Quimera Group S.A.» — confirmar',
-  },
+
+  /* La razón social ya no es un pendiente: es «Quimera Marketing SRL», la misma
+     que firma el bloque corporativo de arriba. El marcador que había acá decía
+     que el sitio actual la nombra «Quimera Group S.A.», que no coincide con
+     ninguna de las dos — si esa sociedad existe además de la SRL, hay que
+     decidir cuál va en el pie. */
+  copyright: '© 2026 Quimera Marketing SRL',
   social: [
     { label: 'Instagram', href: 'https://www.instagram.com/quimera_marketing/' },
     { label: 'LinkedIn', href: 'https://www.linkedin.com/company/quimeramarketing/' },

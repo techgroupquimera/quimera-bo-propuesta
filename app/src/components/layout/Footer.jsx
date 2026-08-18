@@ -1,7 +1,7 @@
+import { ArrowUpRight } from 'lucide-react'
 import { NavLink } from 'react-router-dom'
 import { FOOTER, MARCA } from '../../content/site'
 import { cx } from '../../lib/cx'
-import { Pend } from '../ui/Pend'
 
 /* La marca pesa (logo al tamaño del header + bajada + plaza) y las columnas
    usan el mismo lenguaje de hairlines que el resto del sitio, en vez de listas
@@ -44,54 +44,14 @@ export function Footer() {
           <Corporativo />
         </div>
 
-        {FOOTER.columnas.map((col) => {
-          const Contenedor = col.tipo === 'links' ? 'nav' : 'div'
-          return (
-            <Contenedor key={col.titulo}>
-              <h5 className="border-b border-hair pb-[.95rem] font-sans text-tag font-semibold uppercase tracking-[.2em] text-lima-2">
-                {col.titulo}
-              </h5>
-
-              {col.tipo === 'links'
-                ? col.items.map((item) =>
-                    item.externo ? (
-                      <a
-                        key={item.href}
-                        href={item.href}
-                        target="_blank"
-                        rel="noopener"
-                        className={claseEnlace(false)}
-                      >
-                        {item.label}
-                      </a>
-                    ) : (
-                      <NavLink
-                        key={item.href}
-                        to={item.href}
-                        end={item.href === '/'}
-                        className={({ isActive }) => claseEnlace(isActive)}
-                      >
-                        {item.label}
-                      </NavLink>
-                    ),
-                  )
-                : col.items.map((item) => (
-                    <span key={item.plaza} className={cx(CLASE_FILA, 'text-muted')}>
-                      <b className="mb-[.05rem] block text-[.92rem] font-medium text-[#cfd8c6]">
-                        {item.plaza}
-                      </b>
-                      {item.rol}
-                    </span>
-                  ))}
-            </Contenedor>
-          )
-        })}
+        {FOOTER.columnas.map((col) => (
+          <Columna key={col.titulo} col={col} />
+        ))}
       </div>
 
       <div className="mx-auto flex max-w-maxw flex-wrap items-center justify-between gap-4 border-t border-hair pt-[1.6rem]">
         <p className="font-sans text-tag font-semibold uppercase tracking-[.14em] text-muted-2">
           {FOOTER.copyright}
-          <Pend nota={FOOTER.copyrightPend.nota}>{FOOTER.copyrightPend.texto}</Pend>
         </p>
         <div className="flex gap-[1.4rem]">
           {FOOTER.social.map((red) => (
@@ -108,6 +68,91 @@ export function Footer() {
         </div>
       </div>
     </footer>
+  )
+}
+
+/* Una columna del pie. Dos formas: `links`, que es una lista de destinos, y
+   `datos`, que es información agrupada por país y no lleva a ningún lado.
+
+   Salió del cuerpo del <Footer> cuando la columna de links ganó un subtítulo
+   («Alianza estratégica») y la de datos pasó de una línea por plaza a un grupo
+   con varias: eran tres ternarios anidados adentro de un map, que es donde el
+   marcado deja de leerse. */
+function Columna({ col }) {
+  const Contenedor = col.tipo === "links" ? "nav" : "div"
+
+  return (
+    <Contenedor>
+      <h5 className="border-b border-hair pb-[.95rem] font-sans text-tag font-semibold uppercase tracking-[.2em] text-lima-2">
+        {col.titulo}
+      </h5>
+
+      {col.tipo === "links" ? (
+        <>
+          {col.items.map((item) => (
+            <Enlace key={item.href} item={item} />
+          ))}
+
+          {/* El subtítulo va con el aire de un bloque nuevo y no con el de una
+              fila más: lo que separa a Sapien9 de los cuatro de arriba es que no
+              es del grupo, y eso tiene que verse antes de leerlo. */}
+          {col.sub && (
+            <>
+              <h6 className="mt-[1.6rem] font-sans text-tag font-semibold uppercase tracking-[.16em] text-muted-2">
+                {col.sub.titulo}
+              </h6>
+              {col.sub.items.map((item) => (
+                <Enlace key={item.href} item={item} />
+              ))}
+            </>
+          )}
+        </>
+      ) : (
+        col.items.map((zona) => (
+          <div key={zona.zona} className="border-b border-hair py-[.62rem]">
+            <b className="block font-sans text-tag font-semibold uppercase tracking-[.16em] text-[#cfd8c6]">
+              {zona.zona}
+            </b>
+            {zona.lineas.map((linea) => (
+              <span key={linea} className="mt-[.2rem] block text-[.9rem] text-muted">
+                {linea}
+              </span>
+            ))}
+          </div>
+        ))
+      )}
+    </Contenedor>
+  )
+}
+
+/* Un destino de la columna. `fuera` marca al que sale del grupo —hoy sólo
+   Sapien9— y es lo único que lleva flecha: los otros cuatro externos son sitios
+   de la casa, y una flecha en cada uno diría que todos son ajenos. */
+function Enlace({ item }) {
+  if (!item.externo) {
+    return (
+      <NavLink
+        to={item.href}
+        end={item.href === "/"}
+        className={({ isActive }) => claseEnlace(isActive)}
+      >
+        {item.label}
+      </NavLink>
+    )
+  }
+
+  return (
+    <a
+      href={item.href}
+      target="_blank"
+      rel="noopener"
+      className={cx(claseEnlace(false), item.fuera && "flex items-center gap-[.4rem]")}
+    >
+      {item.label}
+      {item.fuera && (
+        <ArrowUpRight aria-hidden strokeWidth={1.6} className="h-[.85em] w-[.85em]" />
+      )}
+    </a>
   )
 }
 
