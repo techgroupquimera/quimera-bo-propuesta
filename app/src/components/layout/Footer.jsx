@@ -40,6 +40,8 @@ export function Footer() {
             {FOOTER.bajada}
           </p>
           <p className="mt-[1.1rem] text-[.85rem] text-muted-2">{FOOTER.plaza}</p>
+
+          <Corporativo />
         </div>
 
         {FOOTER.columnas.map((col) => {
@@ -106,5 +108,57 @@ export function Footer() {
         </div>
       </div>
     </footer>
+  )
+}
+
+/* Las dos sociedades, el correo y el teléfono, colgando de la columna de la
+   marca. Van acá y no en una columna propia: son el pie de la identidad —quién
+   firma— y no una lista de enlaces como las otras tres.
+
+   El encabezado repite el tratamiento de las columnas (versalita lima sobre
+   hairline) en vez de la línea de guiones del boceto: el sitio ya tiene una
+   forma de decir «acá empieza un bloque» y usarla ata este a los de al lado.
+
+   La medida es la misma de la bajada (34ch), así que las tres piezas de la
+   columna caen sobre el mismo eje.
+
+   El teléfono NO va enlazado y el correo sí: `+591 XXX XXX XX` es un marcador,
+   y un `tel:` a un número que no existe es un enlace roto de los que no avisan.
+   Cuando llegue el número real, se le agrega el `tel:`. */
+function Corporativo() {
+  const { titulo, sedes, correo, telefono } = FOOTER.corporativo
+
+  return (
+    <div className="mt-[clamp(1.9rem,3.4vh,2.6rem)] max-w-[34ch]">
+      <h5 className="border-b border-hair pb-[.95rem] font-sans text-tag font-semibold uppercase tracking-[.2em] text-lima-2">
+        {titulo}
+      </h5>
+
+      {/* <dl> y no una lista suelta: cada sede es un país y lo que hay en ese
+          país, que es exactamente un par término/descripción. */}
+      <dl className="mt-[1.25rem] grid gap-[1.15rem]">
+        {sedes.map((sede) => (
+          <div key={sede.pais}>
+            <dt className="font-sans text-tag font-semibold uppercase tracking-[.16em] text-muted-2">
+              {sede.pais}
+            </dt>
+            <dd className="mt-[.4rem] text-[.9rem] leading-[1.5] text-read-2">
+              {sede.razon}
+              <span className="block text-muted">{sede.plaza}</span>
+            </dd>
+          </div>
+        ))}
+      </dl>
+
+      <p className="mt-[1.25rem] text-[.9rem] leading-[1.6]">
+        <a
+          href={`mailto:${correo}`}
+          className="text-read-2 transition-colors duration-250 ease-soft hover:text-lima"
+        >
+          {correo}
+        </a>
+        <span className="block text-muted">{telefono}</span>
+      </p>
+    </div>
   )
 }

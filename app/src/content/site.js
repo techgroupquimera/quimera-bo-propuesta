@@ -107,6 +107,40 @@ export const FOOTER = {
   bajada:
     'Tecnología a medida para empresas que quieren crecer. Tu sistema, tus datos, tu infraestructura.',
   plaza: 'Santa Cruz de la Sierra · Bolivia',
+
+  /* ── Los datos corporativos ──
+     Las dos sociedades, el correo y el teléfono, debajo del logo y la bajada.
+     No es sólo información de contacto: nombrar la S.R.L. boliviana y la LLC de
+     Miami es parte del argumento del sitio —«un grupo, no un proveedor suelto»—
+     y es lo que una empresa que va a firmar algo busca antes de escribir.
+
+     ⚠ DOS DE ESTOS CAMPOS SON MARCADORES, NO DATOS: la razón social boliviana y
+     el teléfono. Van escritos como los mandó el cliente —«[NOMBRE LEGAL] S.R.L.»
+     y «+591 XXX XXX XX»— y no con algo que parezca real: un pie con una razón
+     social inventada es mucho peor que uno que muestra el hueco. Están anotados
+     en content/notas.js.
+
+     El correo sí es real y va enlazado. Ojo con esto: /contacto todavía ofrece
+     `hola@quimera.com`, que es de otro dominio y está marcado como pendiente
+     desde el principio. Ahora el sitio dice dos correos distintos en dos lugares
+     — hay que unificarlos. */
+  corporativo: {
+    titulo: 'Corporate',
+    sedes: [
+      {
+        pais: 'Bolivia',
+        razon: '[NOMBRE LEGAL] S.R.L.',
+        plaza: 'Santa Cruz de la Sierra',
+      },
+      {
+        pais: 'United States',
+        razon: 'Tech Agents LLC',
+        plaza: 'Miami · Florida',
+      },
+    ],
+    correo: 'contacto@groupquimera.com',
+    telefono: '+591 XXX XXX XX',
+  },
   columnas: [
     {
       titulo: 'Navegar',
