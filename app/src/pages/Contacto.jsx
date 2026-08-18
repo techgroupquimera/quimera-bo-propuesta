@@ -21,7 +21,7 @@ export default function Contacto() {
     <div className="aire-corto">
       <HeroIndice hero={HERO} fondo={HERO.fondo.src} opacidad={HERO.fondo.opacidad} />
       <Formulario />
-      <PendienteSeccion origen="contacto.html" pendientes={['Dónde estamos']} />
+      <PendienteSeccion origen="el HTML original (26b67ac)" pendientes={['Dónde estamos']} />
     </div>
   )
 }

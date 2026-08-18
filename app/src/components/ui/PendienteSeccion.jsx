@@ -6,7 +6,13 @@ import { Section } from './Section'
    visible mientras la página se arma por partes, para que nadie la dé por
    terminada al ver el hero listo. Se saca de la página cuando no queda nada.
 
-   Hoy lo usa sólo /proyectos, a la que le falta «El caso Shiba». */
+   Lo usan /proyectos («El caso Shiba») y /contacto («Dónde estamos»).
+
+   `origen` decía el archivo del sitio original —«proyectos6.html»— y esos
+   archivos se borraron del árbol cuando el sitio en React quedó completo. Ahora
+   dice el commit, que es donde siguen enteros: `git show 26b67ac:proyectos6.html`.
+
+   Nada de esto se ve hoy: la capa de revisión está apagada (lib/revision.js). */
 export function PendienteSeccion({ origen, pendientes }) {
   if (!REVISION) return null
 

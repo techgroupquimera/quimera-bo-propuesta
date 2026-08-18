@@ -34,8 +34,9 @@ que tiene que confirmar el cliente.
 En números: **64 componentes**, ~7.700 líneas de JSX/JS/CSS y **1.810 líneas de
 contenido**, sobre 26 MB de assets en 160 archivos.
 
-De `/tecnologia` **no se migró «Sin ataduras»**: el cliente pidió sacarla. Sigue
-en `tecnologia.html` por si hay que recuperarla.
+De `/tecnologia` **no se migró «Sin ataduras»**: el cliente pidió sacarla. Está
+en el `tecnologia.html` del original, que ya no está en el árbol — se recupera
+con `git show 26b67ac:tecnologia.html`.
 
 ---
 
@@ -71,15 +72,15 @@ npm run imagenes   # genera las derivadas en ../assets (necesita ffmpeg)
 
 ### La propuesta original
 
+Las trece páginas HTML de la raíz y su `assets/quimera.css` ya no están en el
+árbol: se borraron cuando el sitio en React quedó completo. Siguen enteras en
+el commit `26b67ac` y se recuperan de a una:
+
 ```bash
+git show 26b67ac:proyectos6.html > proyectos6.html
+git show 26b67ac:assets/quimera.css > assets/quimera.css
 python tools/serve.py . 8000
 ```
-
-Después, <http://127.0.0.1:8000/proyectos6.html>.
-
-**No alcanza con abrir el HTML directamente**: el servidor manda
-`Cache-Control: no-store`, que es lo que evita que el navegador sirva CSS
-cacheado mientras se revisa.
 
 ---
 
@@ -103,22 +104,10 @@ cacheado mientras se revisa.
 │   └── README.md            ← el detalle de diseño vive ahí
 ├── assets/                  imágenes, videos y logos originales
 ├── tools/                   servidor de revisión y capturas por CDP
-├── *.html                   la propuesta original
 ├── vercel.json              config de despliegue (compila app/, publica app/dist)
 ├── netlify.toml             lo mismo, para Netlify
 └── PROYECTO.md              este archivo
 ```
-
-Las páginas HTML de la raíz:
-
-| Archivo | Qué es |
-|---|---|
-| `index.html` · `index2.html` | Home, dos variantes (se migró la **B**) |
-| `servicios` · `tecnologia` · `nosotros` · `contacto` `.html` | Secciones |
-| `proyectos.html` | **v1** del portafolio — la base aprobada |
-| `proyectos2…5.html` | Iteraciones descartadas; se conservan por lo aprendido |
-| `proyectos6.html` | **Vigente**: la v1 con los injertos que funcionaron |
-| `v1.html` | Maqueta original |
 
 ---
 

@@ -26,7 +26,7 @@ export default function Proyectos() {
     <div className="aire-corto">
       <HeroIndice hero={HERO} fondo={HERO.fondo.src} opacidad={HERO.fondo.opacidad} />
       <Accesos />
-      <PendienteSeccion origen="proyectos6.html" pendientes={['El caso Shiba']} />
+      <PendienteSeccion origen="el HTML original (26b67ac)" pendientes={['El caso Shiba']} />
       {/* La misma tira del home, con la misma frase. En el original está en las
           dos páginas; acá cierra en vez de abrir. */}
       <Marcas />

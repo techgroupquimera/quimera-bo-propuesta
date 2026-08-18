@@ -1,7 +1,8 @@
 # Propuesta groupquimera.com.bo
 
 Propuesta de rediseño del sitio de Group Quimera Bolivia, con el pivote de
-marketing hacia **IA aplicada**. HTML estático, sin build ni dependencias.
+marketing hacia **IA aplicada**. React + Tailwind, pre-renderizado a HTML
+estático ruta por ruta en el build.
 
 > **Repositorio privado.** Contiene material de clientes: capturas de sus sitios,
 > piezas de campaña y conversaciones reales de WhatsApp con números de teléfono a
@@ -9,16 +10,15 @@ marketing hacia **IA aplicada**. HTML estático, sin build ni dependencias.
 > hay seis sistemas bajo acuerdo de confidencialidad. No hacerlo público sin
 > revisar eso primero — está anotado en el panel de revisión de cada página.
 
-## Migración a React
+## El sitio
 
-El sitio se está pasando a **React + Tailwind** en [`app/`](app/) — mismo
-contenido, diseño nuevo.
+Vive en [`app/`](app/): mismo contenido que la propuesta original, diseño nuevo.
 
 ```bash
 cd app && npm install && npm run dev
 ```
 
-**Las seis rutas ya viven en React.** Faltan dos secciones («El caso Shiba» en
+**Las ocho rutas viven en React.** Faltan dos secciones («El caso Shiba» en
 `/proyectos` y «Dónde estamos» en `/contacto`) y los datos que tiene que
 confirmar el cliente.
 
@@ -26,31 +26,24 @@ confirmar el cliente.
 convenciones, qué falta y por qué. El detalle del sistema de diseño está en
 [`app/README.md`](app/README.md).
 
-## Páginas
+## La propuesta original en HTML
 
-| Archivo | Qué es |
-|---|---|
-| `index.html` · `index2.html` | Home, dos variantes |
-| `nosotros.html` · `servicios.html` · `tecnologia.html` · `contacto.html` | Secciones |
-| `proyectos.html` | **v1** del portafolio — la base aprobada |
-| `proyectos2…5.html` | Iteraciones descartadas, se conservan por lo que se aprendió en cada una |
-| `proyectos6.html` | **Versión vigente**: la v1 con los injertos que sí funcionaron |
-| `v1.html` | Maqueta original |
+Ya no está en el árbol. Eran trece páginas estáticas —`index.html`,
+`proyectos.html` a `proyectos6.html`, `v1.html` y las de sección— más
+`assets/quimera.css` y `assets/quimera.js`, y fueron la fuente de todo el copy
+y de casi todas las decisiones de diseño que hoy están en React.
 
-Cada página trae abajo a la derecha un botón que abre el **panel de revisión**:
-qué cambió, por qué, y qué sigue pendiente del lado del cliente.
-
-## Levantar el sitio
+Se borraron cuando el sitio nuevo quedó completo, pero siguen enteras en el
+historial. Para recuperar una:
 
 ```bash
-python tools/serve.py . 8000
+git show 26b67ac:proyectos6.html > proyectos6.html
+git show 26b67ac:assets/quimera.css > assets/quimera.css
 ```
 
-Después abrir <http://127.0.0.1:8000/proyectos6.html>.
-
-No alcanza con abrir el HTML directamente: el servidor manda
-`Cache-Control: no-store`, que es lo que evita que el navegador sirva una
-versión cacheada del CSS mientras se revisa.
+Los comentarios del código las siguen nombrando —«textual del original»,
+«así está en proyectos6.html»— y esas referencias siguen siendo válidas: es a
+ese commit al que apuntan.
 
 ## Herramientas (`tools/`)
 
@@ -60,7 +53,6 @@ Sin dependencias — Node 24 ya trae `WebSocket` y `fetch` globales.
 |---|---|
 | `serve.py <dir> <puerto>` | Servidor de revisión con `no-store` |
 | `shot.mjs <url> <salida.png> [ancho] [alto] [selector\|full]` | Captura por CDP. Hace scroll real antes para disparar los `IntersectionObserver` de los `.rv`, que si no salen en opacidad 0 |
-| `measure.mjs <ancho>` | Imprime el borde izquierdo de los elementos clave de las páginas |
 
 ## Notas de implementación
 

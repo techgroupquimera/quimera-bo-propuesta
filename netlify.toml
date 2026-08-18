@@ -1,5 +1,6 @@
-# Despliegue del sitio nuevo (app/). La propuesta original en HTML de la raíz
-# NO se publica: `publish` apunta a app/dist y nada más entra ahí.
+# Despliegue del sitio (app/): `publish` apunta a app/dist y nada más entra ahí.
+# La propuesta original en HTML vivía en la raíz y tampoco se publicaba; hoy ni
+# siquiera está en el árbol (git show 26b67ac).
 #
 # No hay regla de reescritura a index.html, y es a propósito: el build
 # pre-renderiza cada ruta como su propio archivo (dist/servicios/index.html,

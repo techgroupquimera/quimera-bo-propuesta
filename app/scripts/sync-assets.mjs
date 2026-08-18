@@ -16,7 +16,13 @@ if (!existsSync(origen)) {
 }
 
 /* quimera.css y quimera.js se quedan afuera: el sistema de diseño vive en
-   src/index.css y el comportamiento en los componentes. */
+   src/index.css y el comportamiento en los componentes.
+
+   Los dos archivos ya no existen —se borraron con el resto del sitio original—,
+   así que hoy el filtro no descarta nada. Se deja igual porque recuperarlos del
+   historial para comparar contra el diseño viejo es algo que se hace
+   (`git show 26b67ac:assets/quimera.css`), y sin este filtro esa copia se
+   colaría en public/assets y de ahí al build. */
 const EXCLUIDOS = new Set(['quimera.css', 'quimera.js'])
 
 rmSync(destino, { recursive: true, force: true })
