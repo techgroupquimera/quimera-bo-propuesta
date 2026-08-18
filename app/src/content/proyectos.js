@@ -73,7 +73,10 @@ export const HERO_TECNOLOGIA = {
     { label: 'Tecnología' },
   ],
   kicker: 'Proyectos · Tecnología',
-  titulo: 'Sitios y agentes\n*en producción*.',
+  /* «Páginas web» y no «Sitios»: es como lo nombra el cliente cuando lo pide.
+     La sección de abajo sigue diciendo «Sitios en producción», que es textual
+     del original. */
+  titulo: 'Páginas web y agentes\n*en producción*.',
   bajada:
     'Están corriendo ahora mismo, con clientes usándolos todos los días. Podemos mostrarte cualquiera en vivo durante la reunión.',
   fondo: { src: '/assets/bg-bokeh-2-lite.webp', opacidad: 0.4 },
