@@ -198,7 +198,7 @@ function Enlace({ item }) {
    como texto plano, porque un `tel:` a un número que no existe es un enlace
    roto de los que no avisan. */
 function Corporativo() {
-  const { titulo, sedes, correo } = FOOTER.corporativo
+  const { titulo, sedes } = FOOTER.corporativo
 
   return (
     <div className="mt-[clamp(1.9rem,3.4vh,2.6rem)] max-w-[34ch]">
@@ -229,19 +229,22 @@ function Corporativo() {
               >
                 {sede.telefono}
               </a>
+
+              {/* Hoy sólo lo trae Bolivia. Va adentro de la ficha, debajo del
+                  teléfono: es el correo de esa sede y no una casilla del grupo,
+                  y al pie del bloque entero se leía como si fuera de las dos. */}
+              {sede.correo && (
+                <a
+                  href={`mailto:${sede.correo}`}
+                  className="block w-fit transition-colors duration-250 ease-soft hover:text-lima"
+                >
+                  {sede.correo}
+                </a>
+              )}
             </dd>
           </div>
         ))}
       </dl>
-
-      <p className="mt-[1.25rem] text-[.9rem] leading-[1.6]">
-        <a
-          href={`mailto:${correo}`}
-          className="text-read-2 transition-colors duration-250 ease-soft hover:text-lima"
-        >
-          {correo}
-        </a>
-      </p>
     </div>
   )
 }

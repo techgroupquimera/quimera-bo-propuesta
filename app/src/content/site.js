@@ -142,10 +142,14 @@ export const FOOTER = {
      de la marca: el sitio se llama Group Quimera en todos lados y acá dice quién
      firma, que es otra cosa. Va tal como la escribió el cliente, sin puntos.
 
-     ⚠ Lo que sigue sin cerrar, anotado en content/notas.js: el correo vino como
-     «puede ser marketing@groupquimera.com». Se usa ése, pero /contacto sigue
-     ofreciendo `hola@quimera.com` —otro dominio— así que el sitio dice dos
-     correos distintos hasta que se unifiquen. */
+     El correo cuelga de la sede boliviana y no del bloque entero: es el correo
+     de Bolivia, no una casilla del grupo, y al pie de las dos fichas se leía
+     como si fuera de las dos. Si Miami tiene el suyo, se agrega ahí y el
+     componente lo dibuja igual.
+
+     Ojo con el correo: vino como «puede ser marketing@groupquimera.com». Es el
+     mismo que ahora ofrece /contacto, así que el sitio ya no dice dos correos
+     distintos, pero sigue sin confirmarse. */
   corporativo: {
     titulo: 'Corporate',
     sedes: [
@@ -155,6 +159,7 @@ export const FOOTER = {
         direccion: ['Santa Cruz de la Sierra'],
         telefono: '+591 77 314 890',
         telefonoHref: 'tel:+59177314890',
+        correo: 'marketing@groupquimera.com',
       },
       {
         pais: 'United States',
@@ -164,7 +169,6 @@ export const FOOTER = {
         telefonoHref: 'tel:+18039160333',
       },
     ],
-    correo: 'marketing@groupquimera.com',
   },
 
   columnas: [
