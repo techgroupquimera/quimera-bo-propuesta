@@ -85,9 +85,20 @@ export const FORMULARIO = {
   ],
   enviar: 'Enviar',
   /* El comportamiento del original: valida y avisa, no manda nada. */
+  /* Los cinco estados del envío. `sinClave` es el único que no debería ver
+     nunca un visitante: sale cuando falta la clave de Web3Forms, o sea cuando
+     el formulario no está configurado todavía.
+
+     El de error nombra los otros dos canales a propósito: si el envío falla,
+     lo último que sirve es un «intentá de nuevo» — sirve decirle por dónde más
+     puede escribir, y los dos están a diez centímetros en la misma pantalla. */
   avisos: {
     falta: 'Completá nombre, email y el proceso que querés automatizar.',
-    ok: 'Demo local: todavía no envía. En producción va al endpoint /leads del backend, que ya existe y funciona — falta apuntarlo a un correo de la empresa.',
+    enviando: 'Enviando…',
+    ok: 'Listo, nos llegó. Te respondemos en menos de 24 horas hábiles.',
+    error:
+      'No se pudo enviar. Escribinos por WhatsApp o a marketing@groupquimera.com y lo vemos igual.',
+    sinClave: 'El formulario todavía no está conectado. Escribinos por WhatsApp o por correo.',
   },
   /* Los cuatro canales ya tienen su destino real: los dos números y el correo
      salieron del bloque corporativo del pie, y la agenda es un Google Calendar.

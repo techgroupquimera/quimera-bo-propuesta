@@ -79,6 +79,35 @@ export const CTA_PRINCIPAL = { label: 'Conversemos', href: '/contacto' }
    `ancho` y `alto` son los del viewBox y no una medida de display: lo único
    que hacen es fijarle la proporción al <img> para que la barra no se
    reacomode cuando el archivo llega. El tamaño real lo pone la clase. */
+/* ── El formulario de /contacto: Web3Forms ──
+   El envío lo hace el navegador contra api.web3forms.com y el correo lo manda
+   ellos. No hay backend nuestro, que es el punto: el sitio es estático y así
+   sigue — sin función serverless que mantener, sin variables de entorno en el
+   hosting, sin un servicio propio que se caiga sin que nadie se entere.
+
+   La clave va acá, en el repo, y no en una variable de entorno: es PÚBLICA por
+   diseño —viaja en el formulario, cualquiera la ve con inspeccionar elemento—
+   así que esconderla en el hosting no protege nada y sí agrega un lugar más
+   donde el sitio puede romperse sin aviso. Lo que protege del spam es el
+   honeypot que manda el componente y, si hiciera falta, el captcha que
+   Web3Forms ofrece en su panel.
+
+   ⚠ FALTA LA CLAVE. Se saca en web3forms.com poniendo el correo al que tienen
+   que llegar los leads —hoy sería marketing@groupquimera.com— y llega por mail
+   en un minuto. Mientras esté vacía, el formulario valida y avisa que no está
+   configurado, pero no intenta enviar: una petición sin clave devuelve un error
+   del servidor y el visitante vería «no se pudo enviar» sin que sea su culpa.
+
+   `asunto` y `remitente` son lo que se ve en la bandeja de quien recibe. Sin
+   ellos el asunto es «New Submission from Web3Forms», que en una bandeja con
+   cien correos no dice de qué sitio vino. */
+export const WEB3FORMS = {
+  clave: '',
+  url: 'https://api.web3forms.com/submit',
+  asunto: 'Nuevo lead del sitio · Group Quimera',
+  remitente: 'groupquimera.com.bo',
+}
+
 export const MARCA = {
   lockup: '/assets/logo-lockup.svg',
   ancho: 694,

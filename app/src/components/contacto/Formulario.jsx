@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { FORMULARIO } from '../../content/contacto'
+import { WEB3FORMS } from '../../content/site'
 import { cx } from '../../lib/cx'
 import { Button } from '../ui/Button'
 import { Icono } from '../ui/iconos'
@@ -68,14 +69,56 @@ function Campo({ campo }) {
   )
 }
 
+/* Los tres que el original marca como obligatorios. La validación es la misma
+   de siempre: un aviso al pie y no los globos del navegador campo por campo. */
+const OBLIGATORIOS = ['name', 'email', 'need']
+
 export function Formulario() {
   const [aviso, setAviso] = useState(null)
+  const [enviando, setEnviando] = useState(false)
 
-  const enviar = (e) => {
+  /* ── El envío ──
+     Va directo del navegador a Web3Forms, que manda el correo. El sitio sigue
+     siendo estático: no hay backend nuestro en el medio.
+
+     Se manda el <form> entero como FormData en vez de armar un objeto campo por
+     campo: así, cuando alguien agregue una pregunta al contenido, viaja sola —
+     Web3Forms lista en el correo todo lo que reciba, con el `name` de cada
+     campo como etiqueta.
+
+     Sin clave no se intenta: la petición devolvería un error del servidor y el
+     visitante leería «no se pudo enviar» sin que sea su culpa. Con clave vacía
+     el formulario valida igual y avisa que no está conectado. */
+  const enviar = async (e) => {
     e.preventDefault()
-    const f = e.target
-    const falta = ['name', 'email', 'need'].some((n) => !f[n].value.trim())
-    setAviso(falta ? { tipo: 'falta' } : { tipo: 'ok' })
+    const formulario = e.target
+
+    if (OBLIGATORIOS.some((n) => !formulario[n].value.trim())) {
+      return setAviso('falta')
+    }
+
+    if (!WEB3FORMS.clave) return setAviso('sinClave')
+
+    setEnviando(true)
+    setAviso('enviando')
+
+    try {
+      const datos = new FormData(formulario)
+      datos.append('access_key', WEB3FORMS.clave)
+      datos.append('subject', WEB3FORMS.asunto)
+      datos.append('from_name', WEB3FORMS.remitente)
+
+      const respuesta = await fetch(WEB3FORMS.url, { method: 'POST', body: datos })
+      const cuerpo = await respuesta.json()
+
+      setAviso(cuerpo.success ? 'ok' : 'error')
+      if (cuerpo.success) formulario.reset()
+    } catch {
+      /* sin red, o el servicio caído: es lo mismo para quien está mirando */
+      setAviso('error')
+    } finally {
+      setEnviando(false)
+    }
   }
 
   return (
@@ -102,7 +145,18 @@ export function Formulario() {
               </div>
             ))}
 
-            <Button variante="primario" type="submit" className="self-start">
+            {/* El honeypot de Web3Forms: los bots completan todo lo que
+                encuentran, y si esta casilla llega marcada el envío se descarta
+                del lado de ellos. Va escondida con `hidden` y fuera del tabulador
+                para que no exista para quien navega con teclado o lector. */}
+            <input type="checkbox" name="botcheck" hidden tabIndex={-1} autoComplete="off" />
+
+            <Button
+              variante="primario"
+              type="submit"
+              disabled={enviando}
+              className={cx('self-start', enviando && 'pointer-events-none opacity-60')}
+            >
               {FORMULARIO.enviar}
             </Button>
 
@@ -112,10 +166,14 @@ export function Formulario() {
               aria-live="polite"
               className={cx(
                 'text-[.83rem] leading-[1.6]',
-                aviso?.tipo === 'falta' ? 'text-pend' : 'text-lima-2',
+                /* ámbar para lo que hay que corregir o no funcionó, lima para lo
+                   que salió bien o está en camino */
+                aviso === 'falta' || aviso === 'error' || aviso === 'sinClave'
+                  ? 'text-pend'
+                  : 'text-lima-2',
               )}
             >
-              {aviso ? FORMULARIO.avisos[aviso.tipo] : ''}
+              {aviso ? FORMULARIO.avisos[aviso] : ''}
             </p>
           </form>
         </Reveal>
