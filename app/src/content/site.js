@@ -66,10 +66,23 @@ export const CTA_PRINCIPAL = { label: 'Conversemos', href: '/contacto' }
    No es un logo cualquiera para la carga: está en la barra de las seis rutas y,
    medido, es el elemento LCP en móvil — el panel de video del hero queda debajo
    del pliegue, así que el logo es lo más grande de la primera pantalla. */
+/* El lockup de la marca —la quimera alada, GROUP QUIMERA y la bajada— en SVG.
+   Era un webp de 208px de ancho y a 74px de alto la línea «Marketing y Tech»
+   se veía como una mancha gris: son letras de 6px, y a esa altura ningún
+   raster aguanta. El SVG las dibuja nítidas a cualquier tamaño y en cualquier
+   densidad de pantalla.
+
+   Pesa 19 KB contra los 15 del webp, o sea 4 KB más — pero comprimido son 8 y
+   el webp no se comprime, así que por la red viaja la mitad. Importa: este
+   archivo es, medido con Lighthouse, el elemento LCP en móvil.
+
+   `ancho` y `alto` son los del viewBox y no una medida de display: lo único
+   que hacen es fijarle la proporción al <img> para que la barra no se
+   reacomode cuando el archivo llega. El tamaño real lo pone la clase. */
 export const MARCA = {
-  lockup: '/assets/logo-lockup.webp',
-  ancho: 208,
-  alto: 178,
+  lockup: '/assets/logo-lockup.svg',
+  ancho: 694,
+  alto: 619,
   alt: 'Group Quimera · Marketing y Tech',
 }
 

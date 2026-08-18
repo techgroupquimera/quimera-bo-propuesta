@@ -13,7 +13,6 @@
      escenario-hd.webp  1080×1920  180 KB   poster del panel de video
                                             → es el elemento LCP en escritorio
      bg-bokeh.webp      1700×3029   28 KB   fondo del hero, al 22% de opacidad
-     logo-lockup.png     538×460    75 KB   el logo de la barra, en las 6 rutas
 
    El poster va en UN solo tamaño, 720 px, y no en dos con srcset. Se probaron
    las dos formas y ésta gana por una razón que sólo aparece midiendo: el
@@ -67,10 +66,12 @@ const TAREAS = [
        ffmpeg -i captura.png -vf scale=96:96:flags=lanczos -quality 88 \n         ../assets/favicon.webp
 
      Es un trámite de una vez: el SVG es el que se ve en el 99% de los casos. */
-  /* El logo lleva transparencia y tipografía chica («Marketing y Tech»): la
-     calidad va alta y el escalado también en lanczos, que es el que menos
-     deshilacha los remates a este tamaño. */
-  { de: 'logo-lockup.png', a: 'logo-lockup.webp', ancho: 208, calidad: 86 },
+  /* El lockup tampoco está acá, por lo mismo que el favicon: hoy es
+     assets/logo-lockup.svg. El logo-lockup.webp que queda en assets/ ya no lo
+     muestra ninguna página — lo usa el logo de los datos estructurados
+     (Organization.logo, en prerender.mjs), donde conviene un raster porque no
+     todos los consumidores de schema.org leen SVG. Salió de rasterizar el
+     mismo SVG, con el procedimiento de arriba y `-vf scale=208:-2`. */
   /* Las cuatro fotos de fondo de las tarjetas de «Nuestra propuesta». No están
      acá por peso de carga —van bajo el pliegue y con loading="lazy"— sino por
      proporción: la tarjeta es un rectángulo parado de 3:4 y los originales son
