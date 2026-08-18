@@ -228,12 +228,30 @@ export const FOOTER = {
     },
   ],
 
-  /* La razón social ya no es un pendiente: es «Quimera Marketing SRL», la misma
-     que firma el bloque corporativo de arriba. El marcador que había acá decía
-     que el sitio actual la nombra «Quimera Group S.A.», que no coincide con
-     ninguna de las dos — si esa sociedad existe además de la SRL, hay que
-     decidir cuál va en el pie. */
-  copyright: '© 2026 Quimera Marketing SRL',
+  /* La barra de abajo: quién firma, lo legal y las redes.
+
+     El copyright nombra la MARCA y no la sociedad. Las dos están en el pie y
+     cada una en su lugar: «Quimera Marketing SRL» arriba, en el bloque
+     corporativo, que es donde se dice quién firma un contrato; acá abajo, el
+     nombre con el que la conocen. (Ojo: el sitio actual usa «Quimera Group
+     S.A.», que no es ninguna de las dos. Si esa sociedad existe, hay que
+     decidir cuál va.)
+
+     ⚠ Las tres piezas legales NO son enlaces todavía: las páginas no existen.
+     Van como texto, que es la misma regla que se aplica en /contacto a los
+     canales sin destino — un enlace que no lleva a ningún lado es peor que una
+     línea de texto, porque promete algo y falla al tocarlo. Cuando existan las
+     rutas se les agrega `href` y se vuelven enlaces sin tocar el componente.
+
+     Y no es sólo cuestión de escribirlas: una política de privacidad tiene que
+     decir qué datos toma el formulario, dónde se guardan y quién los ve. Eso lo
+     define el cliente, no el sitio. */
+  copyright: '© 2026 Group Quimera · All rights reserved',
+  legales: [
+    { label: 'Privacidad' },
+    { label: 'Términos' },
+    { label: 'Cookies' },
+  ],
   social: [
     { label: 'Instagram', href: 'https://www.instagram.com/quimera_marketing/' },
     { label: 'LinkedIn', href: 'https://www.linkedin.com/company/quimeramarketing/' },

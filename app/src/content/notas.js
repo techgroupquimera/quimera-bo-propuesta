@@ -27,6 +27,7 @@ export const NOTAS = {
       items: [
         '**Métricas de Bolivia Fitness** — consultas/mes, pedidos sin humano, horas liberadas.',
         '**Precios** — al menos un «desde» para las tres modalidades.',
+        '**Privacidad, Términos y Cookies** — el pie ya los nombra, pero las tres páginas no existen. Van como texto hasta que existan.',
         '**Dos correos distintos:** el pie usa `marketing@groupquimera.com` —que vino como «puede ser»— y /contacto `hola@quimera.com`.',
         '**El WhatsApp de /contacto** sigue inventado. ¿Es el mismo `+591 77314890` del pie?',
         '**Cifra de marcas:** el PDF dice 100+, el sitio dice +50 y +30, y hay 29 logos. Elegir una.',

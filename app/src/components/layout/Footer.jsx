@@ -9,6 +9,10 @@ import { cx } from '../../lib/cx'
    arranca donde arranca el texto de las secciones. */
 const CLASE_FILA = 'block border-b border-hair py-[.62rem] text-[.9rem] font-normal'
 
+/* La tipografía de la barra de abajo. La comparten los tres grupos —firma,
+   legales y redes— y estaba escrita dos veces. */
+const BARRA = 'font-sans text-tag font-semibold uppercase tracking-[.14em] text-muted-2'
+
 /* El color va aparte del resto: `cx` no resuelve conflictos, así que poner
    text-muted y text-lima juntos deja que gane el que Tailwind haya emitido
    último en la hoja — que es text-muted, y el enlace activo no se pinta. */
@@ -49,10 +53,32 @@ export function Footer() {
         ))}
       </div>
 
-      <div className="mx-auto flex max-w-maxw flex-wrap items-center justify-between gap-4 border-t border-hair pt-[1.6rem]">
-        <p className="font-sans text-tag font-semibold uppercase tracking-[.14em] text-muted-2">
-          {FOOTER.copyright}
-        </p>
+      {/* La barra de abajo: firma, legales y redes. `gap-x-8` y no
+          `justify-between` a secas: con tres grupos, el espacio repartido dejaba
+          los legales flotando en el medio de la nada en pantallas anchas. */}
+      <div className="mx-auto flex max-w-maxw flex-wrap items-center justify-between gap-x-8 gap-y-3 border-t border-hair pt-[1.6rem]">
+        <p className={BARRA}>{FOOTER.copyright}</p>
+
+        {/* Texto y no enlaces: las tres páginas todavía no existen. El separador
+            es un «·» de verdad entre elementos y no un borde, porque así se
+            copia y se lee igual que el resto de la barra. */}
+        <ul className={cx(BARRA, "flex flex-wrap gap-x-[.55rem]")}>
+          {FOOTER.legales.map((legal, i) => (
+            <li key={legal.label}>
+              {/* el punto hereda el color de la fila: con `text-hair-lima`, que
+                  es un color de borde al 22%, no se veía sobre el negro */}
+              {i > 0 && <span className="mr-[.55rem]">·</span>}
+              {legal.href ? (
+                <NavLink to={legal.href} className="transition-colors duration-250 hover:text-lima">
+                  {legal.label}
+                </NavLink>
+              ) : (
+                legal.label
+              )}
+            </li>
+          ))}
+        </ul>
+
         <div className="flex gap-[1.4rem]">
           {FOOTER.social.map((red) => (
             <a
@@ -60,7 +86,7 @@ export function Footer() {
               href={red.href}
               target="_blank"
               rel="noopener"
-              className="font-sans text-tag font-semibold uppercase tracking-[.14em] text-muted-2 hover:text-lima"
+              className={cx(BARRA, "transition-colors duration-250 hover:text-lima")}
             >
               {red.label}
             </a>
