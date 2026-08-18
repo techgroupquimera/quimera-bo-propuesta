@@ -156,11 +156,7 @@ export const AGENTE = {
   reel: {
     video: '/assets/reel-agente.mp4',
     poster: '/assets/reel-agente.webp',
-    autor: 'Kristel ',
-    autorPend: {
-      texto: '· apellido y rol por confirmar',
-      nota: 'Falta el apellido y el rol',
-    },
+    autor: 'Kristel · Digital Marketing Strategist',
     duracion: '35 s · con sonido',
   },
 }

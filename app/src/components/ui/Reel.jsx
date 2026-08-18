@@ -2,7 +2,6 @@ import { Play } from 'lucide-react'
 import { useRef, useState } from 'react'
 import { useInView } from '../../hooks/useInView'
 import { cx } from '../../lib/cx'
-import { Pend } from './Pend'
 
 /* Reel vertical, tal cual.
    Los clips son 9:16 con subtítulo quemado: son reels, y se presentan como
@@ -76,7 +75,6 @@ export function Reel({ reel, className }) {
       <figcaption className="mt-[.9rem] text-[.78rem] leading-[1.5] text-muted-2">
         <b className="mb-[.15rem] block text-[.88rem] font-medium text-read-3">
           {reel.autor}
-          {reel.autorPend && <Pend nota={reel.autorPend.nota}>{reel.autorPend.texto}</Pend>}
         </b>
         {reel.duracion}
       </figcaption>

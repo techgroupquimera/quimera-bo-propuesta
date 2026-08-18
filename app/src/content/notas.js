@@ -67,7 +67,6 @@ export const NOTAS = {
         '**«Cien mensajes al día»** — el dolor sale textual de tu reel `100 mensajes` («eso no es crecimiento, eso es caos») y la solución de `ia - kristel`. Los cuatro verbos —responde, califica, informa, agenda— son literalmente los de ella.',
         '**«No arranca con una propuesta»** — el escalón que faltaba en el embudo. No lo inventé: Johnny lo ofrece en cámara en `ia 1 ferrante`. El sitio live solo ofrecía «agendá una llamada», que es pedirle el paso 5 a quien está en el paso 1.',
         '**El «cara a cara» es el mejor argumento que tienen y no estaba escrito.** Aparece dos veces en los reels: «cansado de ver puras publicidades y no verlos físicamente» y «un proveedor que puedas ver face to face».',
-        '**Falta el apellido y el rol de Kristel** para poder acreditarla bien.',
         '**Los reels traen íconos cian/turquesa**, no el lima `#81DE00` de la marca. Se nota al reproducirlos. Se puede regradear con ffmpeg o dejarlo así asumiendo que es material de redes.',
         '**Los subtítulos van quemados** en el video: por eso el clip se muestra vertical y sin recortar. Recortarlo a 16:9 le come la cabeza y le mete el subtítulo adentro (lo medí).',
         '**Decisión pendiente:** los reels dicen «agencia de Inteligencia Artificial» (Ferrante) y «si nos ves como una agencia más, ya empezamos mal» (Martha), y el PDF firma «Quimera·Tech». Son tres sustantivos distintos para lo mismo.',

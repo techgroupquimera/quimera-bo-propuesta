@@ -149,11 +149,7 @@ export const TRABAJAMOS = {
   reel: {
     video: '/assets/reel-socio.mp4',
     poster: '/assets/reel-socio.webp',
-    autor: 'Martha ',
-    autorPend: {
-      texto: '· apellido y rol por confirmar',
-      nota: 'Falta el apellido y el rol',
-    },
+    autor: 'Martha Elena · Chief Marketing Officer',
     duracion: '29 s · con sonido',
   },
   /* La enumeración es textual del reel «ia 1 ferrante» — no la escribimos
