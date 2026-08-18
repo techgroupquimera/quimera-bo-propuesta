@@ -49,26 +49,35 @@ export const CONSTRUIMOS = {
   id: 'construimos',
   kicker: 'Lo que construimos',
   titulo: 'Un solo sistema, *tuyo*,\nhecho a tu medida.',
+  /* Las mismas cuatro fotos que las tarjetas del home, y a propósito: son las
+     mismas cuatro piezas contadas de nuevo, así que repetir la imagen es lo que
+     hace que se reconozcan de una página a la otra. Las dos que acá cambian
+     —«Áreas conectadas» y «A tu medida»— toman la agenda y el dueño mirando su
+     negocio, que son las escenas que les corresponden. */
   piezas: [
     {
       icono: 'personas',
       titulo: 'Tu CRM',
+      imagen: '/assets/tarjeta-crm.webp',
       texto: 'Tus clientes y tu proceso de ventas ordenados, sin pagar por usuario.',
       destacada: true,
     },
     {
       icono: 'documento',
       titulo: 'Tu ERP',
+      imagen: '/assets/tarjeta-finanzas.webp',
       texto: 'Finanzas, inventario, equipo y facturación en un solo lugar.',
     },
     {
       icono: 'red',
       titulo: 'Áreas conectadas',
+      imagen: '/assets/tarjeta-agenda.webp',
       texto: 'Ventas, soporte y finanzas hablándose solas, sin planillas sueltas.',
     },
     {
       icono: 'diana',
       titulo: 'A tu medida',
+      imagen: '/assets/tarjeta-negocio.webp',
       texto: 'Diseñado para tu negocio, no una plantilla que hay que forzar.',
     },
   ],

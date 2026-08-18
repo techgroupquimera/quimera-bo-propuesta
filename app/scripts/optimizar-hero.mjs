@@ -37,6 +37,11 @@ import { fileURLToPath } from 'node:url'
 
 const ASSETS = resolve(dirname(fileURLToPath(import.meta.url)), '../../assets')
 
+/* Recorte 3:4 centrado que sirve para las dos orientaciones: toma el lado
+   que sobra y deja el otro entero. ffmpeg centra solo cuando no se le pasa
+   x/y, así que el sujeto —que en las cuatro está al medio— no se pierde. */
+const RECORTE_3_4 = "crop='min(iw,ih*3/4)':'min(ih,iw*4/3)'"
+
 /* q=72 en el poster: pasa por debajo de un tinte plano al 26% y de dos
    degradados, así que el detalle fino no llega a verse. Medido contra el
    original al 100%, la diferencia aparece recién al 300% de zoom.
@@ -62,11 +67,28 @@ const TAREAS = [
      calidad va alta y el escalado también en lanczos, que es el que menos
      deshilacha los remates a este tamaño. */
   { de: 'logo-lockup.png', a: 'logo-lockup.webp', ancho: 208, calidad: 86 },
+  /* Las cuatro fotos de fondo de las tarjetas de «Nuestra propuesta». No están
+     acá por peso de carga —van bajo el pliegue y con loading="lazy"— sino por
+     proporción: la tarjeta es un rectángulo parado de 3:4 y los originales son
+     tres apaisados y uno parado. Dejando que object-cover recorte, el navegador
+     baja 1000 px de ancho para mostrar 290 y descarta más de la mitad de los
+     píxeles. Recortadas acá, las cuatro juntas pesan menos que el JPG más chico.
+
+     720 de ancho = 960 de alto: cubre 2,5× la tarjeta de escritorio (290 px) y
+     2× la de un teléfono a dos columnas.
+
+     q=62: la foto se ve al 42% de opacidad, desaturada y bajo un degradado que
+     la tapa entera en el pie. Es el mismo caso que los bokeh — el detalle fino
+     no llega nunca a la pantalla. */
+  { de: 'crm.jpg', a: 'tarjeta-crm.webp', ancho: 720, calidad: 62, recorte: RECORTE_3_4 },
+  { de: 'finanzas.jpg', a: 'tarjeta-finanzas.webp', ancho: 720, calidad: 62, recorte: RECORTE_3_4 },
+  { de: 'agendamiento.jpg', a: 'tarjeta-agenda.webp', ancho: 720, calidad: 62, recorte: RECORTE_3_4 },
+  { de: 'negocio.jpg', a: 'tarjeta-negocio.webp', ancho: 720, calidad: 62, recorte: RECORTE_3_4 },
 ]
 
 const kb = (ruta) => (statSync(ruta).size / 1024).toFixed(1)
 
-for (const { de, a, ancho, calidad } of TAREAS) {
+for (const { de, a, ancho, calidad, recorte } of TAREAS) {
   const origen = join(ASSETS, de)
   const destino = join(ASSETS, a)
 
@@ -78,7 +100,9 @@ for (const { de, a, ancho, calidad } of TAREAS) {
       '-i', origen,
       /* -2 en el alto: lo calcula manteniendo la proporción y lo redondea a
          par, que es lo que el codificador necesita para el submuestreo. */
-      '-vf', `scale=${ancho}:-2:flags=lanczos`,
+      /* el recorte va primero: escalar y después recortar sería tirar
+         píxeles que ya se pagaron en el remuestreo. */
+      '-vf', [recorte, `scale=${ancho}:-2:flags=lanczos`].filter(Boolean).join(','),
       '-quality', String(calidad),
       '-compression_level', '6',
       destino,
@@ -87,4 +111,47 @@ for (const { de, a, ancho, calidad } of TAREAS) {
   )
 
   console.log(`  ${de} (${kb(origen)} KB) → ${a} (${kb(destino)} KB)`)
+}
+
+/* ── La imagen para compartir (Open Graph) ──
+   Es la que aparece cuando alguien pega un enlace del sitio en WhatsApp,
+   LinkedIn o Facebook. Sin ella el enlace sale como un renglón de texto, y este
+   sitio se va a compartir por WhatsApp más que por cualquier otra vía.
+
+   Va aparte del bucle de arriba por dos razones y las dos son del formato:
+
+   · Sale en JPG. Facebook ya acepta webp, pero WhatsApp no de forma confiable, y
+     un enlace que no muestra la imagen en WhatsApp es el peor lugar donde
+     fallar. El JPG lo entienden todos.
+   · Por eso mismo la calidad se pide con `-q:v` (2 a 31, más bajo es mejor) y no
+     con el `-quality` de arriba, que es una opción del codificador webp: con un
+     destino .jpg, ffmpeg corta con «option not found».
+
+   1200×630 es la medida que piden las tres plataformas (1.91:1). La fuente es
+   vertical —todo el material del sitio sale de video 9:16— así que se recorta la
+   franja horizontal de 1080×567 donde está la escena: Johnny en el escenario con
+   la pantalla detrás. Es el fotograma de la disertación de CAMEBOL y no el del
+   poster del hero, que en formato apaisado agarra un plano de espaldas donde no
+   se reconoce a nadie — y una tarjeta de enlace tiene que decir de qué es en un
+   golpe de vista. */
+const OG = { de: 'disertacion-escena.webp', a: 'og.jpg', recorte: 'crop=1080:567:0:430', calidad: 4 }
+
+{
+  const origen = join(ASSETS, OG.de)
+  const destino = join(ASSETS, OG.a)
+
+  execFileSync(
+    'ffmpeg',
+    [
+      '-y',
+      '-loglevel', 'error',
+      '-i', origen,
+      '-vf', `${OG.recorte},scale=1200:630:flags=lanczos`,
+      '-q:v', String(OG.calidad),
+      destino,
+    ],
+    { stdio: 'inherit' },
+  )
+
+  console.log(`  ${OG.de} (${kb(origen)} KB) → ${OG.a} (${kb(destino)} KB)  1200×630`)
 }

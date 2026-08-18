@@ -18,7 +18,7 @@ import { HERO } from '../content/contacto'
    `min-h-svh` del componente por un alto propio para esta página. */
 export default function Contacto() {
   return (
-    <div className="[--spacing-aire:clamp(72px,9.6vh,146px)]">
+    <div className="aire-corto">
       <HeroIndice hero={HERO} fondo={HERO.fondo.src} opacidad={HERO.fondo.opacidad} />
       <Formulario />
       <PendienteSeccion origen="contacto.html" pendientes={['Dónde estamos']} />

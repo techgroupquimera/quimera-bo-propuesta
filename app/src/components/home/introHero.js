@@ -27,9 +27,17 @@
    properties en vez de alimentar un `createTimeline`.
 
    ── El orden ──
-   El panel primero, porque es el ancla visual y lo primero que el ojo busca.
-   Después la columna de texto de arriba hacia abajo, como se lee. Las cifras y
-   el play cierran, ya adentro del panel que entró al principio.
+   El video primero, porque es el ancla visual y lo primero que el ojo busca.
+   Después la columna de texto de arriba hacia abajo, como se lee, y las cifras
+   cierran el hero igual que en pantalla.
+
+   `panel` se llama así por la versión anterior del hero, donde el video era un
+   panel con borde; hoy es el video a sangre. El nombre se queda porque es la
+   clave de la primera pieza de la coreografía y renombrarlo no cambia nada de
+   lo que se ve.
+
+   El `play` que había al final se fue con el pie del panel: los dos CTA entran
+   juntos, en una sola fila, con el tiempo de `cta`.
 
    ── Nada de destellos, y nada de hero vacío ──
    El estado inicial lo sostiene `animation-fill-mode: both` (en index.css), no
@@ -48,7 +56,6 @@ const PIEZAS = {
   cta: { en: 600, y: 14 },
   nota: { en: 680, y: 10 },
   cifra: { en: 760, y: 16, escalonado: 70 },
-  play: { en: 980, y: 12 },
 }
 
 const DURACION = 900

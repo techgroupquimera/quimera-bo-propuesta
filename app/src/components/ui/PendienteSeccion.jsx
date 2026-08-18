@@ -1,3 +1,4 @@
+import { REVISION } from '../../lib/revision'
 import { Eyebrow } from './Kicker'
 import { Section } from './Section'
 
@@ -7,6 +8,8 @@ import { Section } from './Section'
 
    Hoy lo usa sólo /proyectos, a la que le falta «El caso Shiba». */
 export function PendienteSeccion({ origen, pendientes }) {
+  if (!REVISION) return null
+
   return (
     <Section>
       <Eyebrow className="text-pend">Todavía en {origen}</Eyebrow>

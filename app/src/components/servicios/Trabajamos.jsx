@@ -26,7 +26,7 @@ const { implementado: IMPL } = TRABAJAMOS
    distinto tamaño se leen como un descuido. */
 export function Trabajamos() {
   return (
-    <PanelVerde id={TRABAJAMOS.id} pie={<Implementado />}>
+    <PanelVerde id={TRABAJAMOS.id} sangre pie={<Implementado />}>
       {/* items-center: el reel es bastante más alto que el texto, así que el
           texto se centra contra él y el video ocupa el alto del panel — que es
           como lo dibuja el wireframe, con la columna derecha arrancando más

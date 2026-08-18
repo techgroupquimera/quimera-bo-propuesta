@@ -50,6 +50,25 @@
     U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
+/* Instrument Serif itálica: la usa el énfasis de <Rich> —el «a trabajar» del
+   hero y los que hay en los titulares de las seis páginas—. Sólo la itálica:
+   la redonda de esta familia no se usa en ninguna parte.
+
+   Es la tercera familia del sitio, y eso se pesa: son 21,6 KB más. Se justifica
+   porque el énfasis es la marca tipográfica de la propuesta —la palabra que
+   cambia de voz dentro del titular— y con Manrope Semibold en lima esa
+   distinción la hacían solo el peso y el color. */
+@font-face {
+  font-family: "Instrument Serif";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/instrument-serif-400-italic.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 /* Los sustitutos, ajustados para que el swap no mueva el layout.
    Mientras Manrope viaja, el texto se pinta con la fuente del sistema. Si esa
    fuente ocupa otro ancho y otra altura de línea, al llegar la real todo el
@@ -69,6 +88,25 @@
   ascent-override: 103.5%;
   descent-override: 29.5%;
   line-gap-override: 0%;
+}
+/* Instrument Serif es MUCHO más angosta que cualquier serif de sistema: medido
+   en canvas con una muestra del sitio, ocupa el 79% de lo que ocupa Georgia
+   itálica y el 87% de Times. Sin este ajuste, el énfasis del titular entra
+   ~21% más ancho durante el swap y le mueve el corte de línea a todo el h1.
+
+   Van sólo el size-adjust y no los overrides verticales de las otras dos: el
+   énfasis es una palabra EN LÍNEA dentro de un titular cuyo interlineado es un
+   múltiplo del cuerpo, así que las métricas verticales de la fuente no mueven
+   nada. El ancho sí.
+
+   El 79% está calzado contra Georgia, que es la primera de la lista y la que
+   está en Windows y macOS. Donde no esté, Times entra un poco chica: es el
+   mismo compromiso de una sola cifra por familia que ya tienen las otras dos. */
+@font-face {
+  font-family: "Instrument respaldo";
+  font-style: italic;
+  src: local("Georgia"), local("Times New Roman"), local("Times");
+  size-adjust: 79%;
 }
 @font-face {
   font-family: "Bebas respaldo";
@@ -118,6 +156,8 @@
      las métricas ya calzadas contra la real. */
   --font-sans: "Manrope", "Manrope respaldo", -apple-system, sans-serif;
   --font-display: "Bebas Neue", "Bebas respaldo", Impact, sans-serif;
+  /* Sólo existe en itálica: el único que la pide es el énfasis de <Rich>. */
+  --font-serif: "Instrument Serif", "Instrument respaldo", Georgia, serif;
   /* La mono del sistema. Era JetBrains Mono, una familia entera bajada para dos
      `code` sueltos: el del 404 y el de las citas textuales de <Rich>. A ese
      tamaño y en ese uso, la mono del sistema dice lo mismo y no cuesta un viaje
@@ -280,6 +320,46 @@
   }
 }
 
+/* ══════════ el ritmo vertical, y el escalón de móvil ══════════
+   --spacing-aire sale de 16vh, y en un teléfono eso no es la medida correcta.
+   En una pantalla de 844px de alto son ~135px arriba y 135 abajo de CADA
+   sección: 270px de negro entre dos bloques que en una columna de 390px miden
+   400. Lo que cambió al pasar a móvil no es el alto de la ventana —un teléfono
+   parado tiene más vh que un portátil— sino el ancho: con una columna angosta
+   el ojo recorre mucho menos antes de llegar al final de la sección, así que el
+   silencio que en escritorio ordena, acá separa de más.
+
+   Se pisa el token y no los componentes: todo el ritmo del sitio cuelga de él
+   —py-aire de <Section>, el aire/4 y aire/2 de <PanelVerde>, el aire*1.2 de
+   <Cierre> y el *.7 de la tira de marcas—, así que una línea mueve las ocho
+   páginas a la vez y ninguna queda con su propio criterio.
+
+   El corte va en 760px, entre el de una columna (560) y el del layout (900):
+   una tablet sigue con el ritmo de escritorio, que es el ancho para el que se
+   diseñó, y el teléfono baja al corto. */
+@media (max-width: 760px) {
+  :root {
+    --spacing-aire: clamp(56px, 9vh, 84px);
+  }
+}
+
+/* Las seis páginas largas corren con menos aire que el home: tienen entre seis
+   y nueve secciones y con el aire del home la lectura se corta en vez de
+   ordenarse. Estaba repetido como clase arbitraria en las seis —el mismo clamp
+   copiado— y por eso el escalón de móvil habría que copiarlo seis veces. Acá es
+   una clase con sus dos valores, y las páginas la nombran.
+
+   Va como clase suelta y no en @layer: la aplica un <div> que envuelve la
+   página, o sea un descendiente de :root, y para una custom property heredada
+   gana el ancestro más cercano — no hace falta pelear especificidad. */
+.aire-corto {
+  --spacing-aire: clamp(72px, 9.6vh, 146px);
+}
+@media (max-width: 760px) {
+  .aire-corto {
+    --spacing-aire: clamp(44px, 7vh, 66px);
+  }
+}
 @layer base {
   html {
     -webkit-text-size-adjust: 100%;
@@ -388,6 +468,61 @@
     }
   }
 
+  /* ══════════ la frase que se llena con el scroll ══════════
+     El manifiesto de /servicios («No usamos la inteligencia artificial para
+     impresionar…») entra palabra por palabra a medida que se scrollea, y no de
+     golpe al cruzar un umbral. Estaba pedido desde el principio y anotado como
+     pendiente en el componente: la frase iba en un solo nodo de texto justo
+     para no dejar <span> muertos hasta que el efecto existiera.
+
+     Va con `animation-timeline`, o sea SIN JavaScript. El progreso no lo
+     calcula un listener de scroll sino el propio motor, a partir de dónde está
+     el bloque en la pantalla. Un listener acá serían veintidós palabras
+     recalculando opacidad en el hilo principal en cada frame, y en un teléfono
+     eso se siente.
+
+     La regla entera vive dentro de @supports. Donde no haya scroll timelines
+     —Safari 16, Firefox 111, los objetivos viejos del build— la frase se ve
+     completa y quieta, que es el estado correcto: nada de esconder texto
+     esperando una animación que quizá no corra. Con `prefers-reduced-motion`,
+     igual.
+
+     El reparto: la palabra i arranca en su posición relativa por 62% del tramo
+     de entrada por 45%, y cada una tarda un 25% de ese tramo. Se pisan a
+     propósito —45 es menos que 100— así la frase se llena como una ola y no
+     palabra por palabra con pausas.
+
+     La última cierra al 70% del tramo y no al 100%: el tramo `entry` termina
+     cuando el bloque entra entero en pantalla, y si la animación durara hasta
+     ahí, quien cae con la frase ya visible —un ancla, un enlace directo— la
+     encontraría a medio encender. Cerrando antes, para cuando se la está
+     leyendo ya está entera.
+
+     De .16 a 1 y no de 0: lo que todavía no llegó tiene que leerse como texto
+     apagado, no como un hueco. Sólo opacidad, que es lo único que el
+     compositor anima sin volver a pintar. */
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .revela-scroll {
+        view-timeline-name: --revela;
+      }
+      .revela-scroll > .palabra {
+        --arranca: calc(var(--i) / var(--n) * 45%);
+        animation: revela-palabra linear both;
+        animation-timeline: --revela;
+        animation-range: entry var(--arranca) calc(var(--arranca) + 25%);
+      }
+    }
+  }
+
+  @keyframes revela-palabra {
+    from {
+      opacity: 0.16;
+    }
+    to {
+      opacity: 1;
+    }
+  }
   /* Superficie verde de la marca. La usan los dos paneles de sección («Cien
      mensajes», «No arranca con una propuesta») y el bloque de «No son
      promesas», así el verde se lee como UN material y no como tres fondos
@@ -570,6 +705,50 @@
   .mask-fade-y {
     -webkit-mask-image: linear-gradient(180deg, transparent, #000 13%, #000 87%, transparent);
     mask-image: linear-gradient(180deg, transparent, #000 13%, #000 87%, transparent);
+  }
+  /* El velo del video del hero. Son tres degradados apilados y no un tinte
+     plano: el video va a sangre, así que hay que fundirlo con la página por
+     cada lado donde toca contenido — a la izquierda contra la columna de
+     texto, arriba contra la barra de navegación, abajo contra la tira de
+     cifras. Un solo tinte parejo apagaría el video entero para resolver tres
+     bordes.
+
+     Vive acá y no en el marcado porque en móvil cambia entero: ahí el video
+     ocupa el ancho completo, no hay columna al costado y el degradado lateral
+     deja de tener sentido — lo que hace falta es tapar de abajo hacia arriba,
+     que es por donde sube la copy. */
+  .hero-velo {
+    background:
+      linear-gradient(
+        90deg,
+        var(--color-ink) 0%,
+        rgba(5, 6, 4, 0.9) 18%,
+        rgba(5, 6, 4, 0.34) 58%,
+        rgba(5, 6, 4, 0.12) 100%
+      ),
+      linear-gradient(to top, var(--color-ink) 0%, transparent 30%),
+      linear-gradient(to bottom, rgba(5, 6, 4, 0.75) 0%, transparent 24%);
+  }
+  @media (max-width: 900px) {
+    .hero-velo {
+      background:
+        linear-gradient(
+          to top,
+          var(--color-ink) 6%,
+          rgba(5, 6, 4, 0.72) 46%,
+          rgba(5, 6, 4, 0.5) 100%
+        ),
+        linear-gradient(to bottom, rgba(5, 6, 4, 0.6) 0%, transparent 30%);
+    }
+  }
+
+  /* La lámina de vidrio de las tarjetas con foto: el desenfoque tapa el pie
+     —donde va el texto— y se desvanece hacia arriba, así la foto queda nítida
+     en la mitad de arriba. Sin la máscara el corte del backdrop-filter es una
+     línea recta a media tarjeta y se ve como un error de recorte. */
+  .mask-vidrio {
+    -webkit-mask-image: linear-gradient(0deg, #000 58%, transparent);
+    mask-image: linear-gradient(0deg, #000 58%, transparent);
   }
   /* La tira de marcas se desvanece en los dos extremos en vez de cortarse */
   .mask-fade-x {

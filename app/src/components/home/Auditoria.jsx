@@ -15,7 +15,7 @@ import { Rich } from '../ui/Rich'
    repetida dos veces. */
 export function Auditoria() {
   return (
-    <PanelVerde id={AUDITORIA.id}>
+    <PanelVerde id={AUDITORIA.id} sangre>
       {/* mismo ancho de reel que «Cien mensajes»: son los dos videos de la
           página y a distinto tamaño se leen como un descuido */}
       <div className="grid grid-cols-[minmax(260px,400px)_1fr] items-center gap-[clamp(2rem,5vw,5rem)] max-[900px]:grid-cols-1 max-[900px]:gap-y-[2.4rem]">
@@ -56,11 +56,31 @@ export function Auditoria() {
           fila propia sin pesar; así marca el paso sin robarle altura.
 
           El ancho de 30ch es lo que hace que las tres bajadas caigan en dos
-          líneas: sueltas quedaban 1, 1 y 2 y la fila se veía desprolija. */}
-      <Reveal className="mt-[clamp(2.8rem,5vw,4.2rem)] grid grid-cols-[repeat(auto-fit,minmax(190px,1fr))]">
+          líneas: sueltas quedaban 1, 1 y 2 y la fila se veía desprolija.
+
+          Todo centrado en su columna. Alineados a la izquierda funcionaban
+          cuando el panel era una caja: al pasar la sección a sangre la fila
+          creció ~130px y cada paso quedó pegado al borde izquierdo de una
+          celda bastante más ancha que su texto, con un hueco muerto a la
+          derecha de cada uno. El padding pasa a ser simétrico por lo mismo:
+          con pr sola, el centro de la celda no es el centro visible. */}
+      {/* Tres columnas fijas y no auto-fit: con minmax(190px,1fr) el ancho
+          decide cuántas entran, y entre ~600 y ~760px entraban dos — el tercer
+          paso caía solo en una fila con una celda vacía al lado. Centrado eso
+          se ve como un error; alineado a la izquierda pasaba más piola, que es
+          por lo que venía así. Debajo de 720px van los tres apilados. */}
+      <Reveal className="mt-[clamp(2.8rem,5vw,4.2rem)] grid grid-cols-3 max-[720px]:grid-cols-1">
         {AUDITORIA.pasos.map((paso) => (
-          <div key={paso.n} className="relative border-t border-hair pb-[1.6rem] pr-[1.4rem] pt-[1.6rem]">
-            <b className="pointer-events-none absolute left-0 top-0 z-[1] select-none stroke-lima-numero font-display text-[clamp(4rem,7vw,7.5rem)] font-normal leading-none">
+          <div
+            key={paso.n}
+            className="relative border-t border-hair px-[1.4rem] pb-[1.6rem] pt-[clamp(3.2rem,4vw,4rem)] text-center"
+          >
+            {/* el número arranca DEBAJO del hairline, no pegado a él: con
+                top-0 el calado nacía sobre la línea misma y a 120px de cuerpo
+                eso se lee como un número cortado por arriba. El padding de la
+                celda sube en la misma medida, así el título sigue cruzando el
+                número a media altura como estaba. */}
+            <b className="pointer-events-none absolute left-1/2 top-[clamp(1.9rem,2.4vw,2.4rem)] z-[1] -translate-x-1/2 select-none stroke-lima-numero font-display text-[clamp(4rem,7vw,7.5rem)] font-normal leading-none">
               {paso.n}
             </b>
 
@@ -68,7 +88,9 @@ export function Auditoria() {
               <h4 className="mb-[.5rem] font-display text-[1.15rem] font-normal uppercase tracking-[.05em]">
                 {paso.titulo}
               </h4>
-              <p className="max-w-[30ch] text-[.87rem] leading-[1.55] text-muted">{paso.texto}</p>
+              <p className="mx-auto max-w-[30ch] text-[.87rem] leading-[1.55] text-muted">
+                {paso.texto}
+              </p>
             </div>
           </div>
         ))}

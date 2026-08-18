@@ -20,7 +20,7 @@ import { Rich } from '../ui/Rich'
    distinto tamaño se leen como un descuido. */
 export function Base() {
   return (
-    <PanelVerde id={BASE.id}>
+    <PanelVerde id={BASE.id} sangre>
       <div className="grid grid-cols-[minmax(260px,400px)_minmax(0,1fr)] items-center gap-[clamp(2rem,5vw,5rem)] max-[900px]:grid-cols-1 max-[900px]:gap-y-[2.6rem]">
         <Reveal className="max-[900px]:mx-auto max-[900px]:max-w-85">
           <Reel reel={BASE.reel} />

@@ -23,7 +23,7 @@ const MIGRADAS = ['unidades', 'presencia', 'trayectoria', 'johnny', 'autoridad',
 
 export default function Nosotros() {
   return (
-    <div className="[--spacing-aire:clamp(72px,9.6vh,146px)]">
+    <div className="aire-corto">
       <HeroIndice
         hero={HERO}
         migradas={MIGRADAS}

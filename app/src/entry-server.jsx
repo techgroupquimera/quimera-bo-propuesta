@@ -2,10 +2,15 @@ import { StaticRouter } from 'react-router-dom'
 import { prerender } from 'react-dom/static'
 import { Rutas } from './rutas'
 
-/* Se re-exporta para que el script de pre-render lea la lista de rutas de un
-   solo lugar —rutas.jsx— en vez de mantener una copia. El script corre en Node
-   pelado y no puede importar JSX; este archivo, en cambio, pasa por Vite. */
+/* Se re-exporta lo que el script de pre-render necesita leer del contenido: la
+   lista de rutas, el título y la descripción de cada una, y los datos del sitio
+   (dominio, imagen para compartir). El script corre en Node pelado y no puede
+   importar JSX ni resolver los alias de Vite; este archivo, en cambio, pasa por
+   Vite, así que es el puente. Sin esto habría que mantener una copia del copy y
+   del dominio adentro del script. */
 export { RUTAS_ESTATICAS } from './rutas'
+export { META_RUTAS } from './content/meta'
+export { FOOTER, SITIO } from './content/site'
 
 /* La entrada del build. No corre nunca en el navegador: la usa
    scripts/prerender.mjs para escribir el HTML de cada ruta.

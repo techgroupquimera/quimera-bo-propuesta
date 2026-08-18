@@ -55,7 +55,9 @@ export function TopBar() {
       {/* la pill: solo los enlaces */}
       <nav
         className={cx(
-          'flex items-center gap-[clamp(1.1rem,1.9vw,1.9rem)] rounded-full border px-[1.6rem] py-[.78rem]',
+          /* `relative` sin overflow: el panel del desplegable sale de la pill y
+             tiene que poder pintarse afuera. */
+          'relative flex items-center gap-[clamp(1.1rem,1.9vw,1.9rem)] rounded-full border px-[1.6rem] py-[.78rem]',
           'backdrop-blur-[20px] backdrop-saturate-[1.3] transition-[background,border-color] duration-400',
           'max-[1050px]:hidden',
           pegada
@@ -64,20 +66,77 @@ export function TopBar() {
         )}
       >
         {NAV.map((item) => (
-          <NavLink
-            key={item.href}
-            to={item.href}
-            className={({ isActive }) =>
-              cx(
-                'relative whitespace-nowrap text-[.83rem] font-normal transition-colors duration-250',
-                isActive
-                  ? 'text-paper after:absolute after:inset-x-0 after:-bottom-[7px] after:h-px after:bg-lima'
-                  : 'text-[#a4ae9b] hover:text-paper',
-              )
-            }
-          >
-            {item.label}
-          </NavLink>
+          /* El grupo envuelve al enlace y al panel: el desplegable se abre con
+             :hover y con :focus-within del grupo entero, o sea sin una línea de
+             JavaScript y sin estado. Con teclado pasa lo mismo que con el mouse:
+             al tabular hasta «Proyectos» el panel aparece, y al salir se va.
+
+             Cerrado va con `invisible` y no sólo con opacity-0: eso lo saca del
+             tabulador y del lector de pantalla. Es también lo que hace que
+             focus-within funcione — los enlaces de adentro no son enfocables
+             hasta que el padre lo abre. */
+          <div key={item.href} className="group relative">
+            <NavLink
+              to={item.href}
+              className={({ isActive }) =>
+                cx(
+                  'relative whitespace-nowrap text-[.83rem] font-normal transition-colors duration-250',
+                  isActive
+                    ? 'text-paper after:absolute after:inset-x-0 after:-bottom-[7px] after:h-px after:bg-lima'
+                    : 'text-[#a4ae9b] hover:text-paper',
+                )
+              }
+            >
+              {item.label}
+            </NavLink>
+
+            {item.sub && (
+              /* El `pt` va en el envoltorio y no en la tarjeta: es el puente. Sin
+                 él, entre el enlace y el panel queda una franja de 14px sin nada
+                 que hoverear, y el menú se cierra justo cuando el mouse va bajando
+                 hacia él. */
+              <div
+                className={cx(
+                  'absolute left-1/2 top-full z-10 -translate-x-1/2 pt-[14px]',
+                  'invisible translate-y-1 opacity-0',
+                  'transition-[opacity,transform,visibility] duration-250 ease-soft motion-reduce:transition-none',
+                  'group-hover:visible group-hover:translate-y-0 group-hover:opacity-100',
+                  'group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100',
+                )}
+              >
+                <div className="w-[19rem] rounded-[18px] border border-hair bg-[rgba(6,8,5,.94)] p-[.4rem] shadow-[0_24px_50px_-28px_rgba(0,0,0,.95)] backdrop-blur-[20px]">
+                  {item.sub.map((hijo) => (
+                    <NavLink
+                      key={hijo.href}
+                      to={hijo.href}
+                      className={({ isActive }) =>
+                        cx(
+                          'block rounded-[13px] px-[.9rem] py-[.7rem] transition-[background,color] duration-250 ease-soft',
+                          isActive ? 'bg-lima/10' : 'hover:bg-white/[.05]',
+                        )
+                      }
+                    >
+                      {({ isActive }) => (
+                        <>
+                          <span
+                            className={cx(
+                              'block text-[.86rem] font-normal',
+                              isActive ? 'text-lima' : 'text-paper',
+                            )}
+                          >
+                            {hijo.label}
+                          </span>
+                          <span className="mt-[.15rem] block text-[.75rem] leading-[1.4] text-muted-2">
+                            {hijo.texto}
+                          </span>
+                        </>
+                      )}
+                    </NavLink>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
         ))}
       </nav>
 

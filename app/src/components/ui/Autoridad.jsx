@@ -45,10 +45,13 @@ export function Autoridad({ autoridad }) {
           </Reveal>
 
           {/* La declaración hace de titular de la sección, pero se marca como
-              cita porque lo es: es el texto de la placa, palabra por palabra. */}
+              cita porque lo es: es el texto de la placa, palabra por palabra.
+              Y va en la itálica de las citas por lo mismo — el cuerpo ya era el
+              del original, así que sólo cambian la familia y el interletrado,
+              que la serif pide más suelto. */}
           <Reveal
             as="blockquote"
-            className="mt-[1.1rem] text-[clamp(1.35rem,2.5vw,2.1rem)] font-normal leading-[1.32] tracking-[-.02em] text-read-hi"
+            className="mt-[1.1rem] font-serif text-[clamp(1.35rem,2.5vw,2.1rem)] font-normal italic leading-[1.3] tracking-[-.01em] text-read-hi"
           >
             <Rich texto={autoridad.cita} />
           </Reveal>

@@ -1,10 +1,58 @@
 /* Contenido compartido por todas las páginas: navegación, marcas y footer.
    Nada de esto es diseño — si cambia el layout, este archivo no se toca. */
 
+/* ── El sitio, para lo que hay que nombrarlo con URL absoluta ──
+   Canonical, Open Graph, sitemap y datos estructurados no aceptan rutas
+   relativas: los tres tienen que decir el host. Vive acá, una vez, y de acá lo
+   lee el pre-render — así no queda el dominio escrito a mano en cuatro lugares
+   distintos que después se desincronizan.
+
+   ⚠ `origen` ES EL DATO A CONFIRMAR. Está puesto en el .bo porque es lo que
+   sugiere el pendiente de /contacto («definir correo en groupquimera.com.bo») y
+   porque separa este sitio del .com del grupo y del .com.pe de Perú. Si el
+   sitio va a otro host, se cambia esta línea y con eso se mueven las canonical
+   de las ocho páginas, el Open Graph y el sitemap.
+
+   Sin barra al final: las rutas ya empiezan con «/».
+   `imagenOg` va en JPG y no en webp: la comparte WhatsApp, que es por donde se
+   va a compartir esto, y ahí el webp todavía no es confiable. */
+export const SITIO = {
+  origen: 'https://groupquimera.com.bo',
+  nombre: 'Group Quimera',
+  imagenOg: '/assets/og.jpg',
+  imagenOgAlt: 'Johnny Ferrante de Group Quimera durante su disertación en el Foro FEM de CAMEBOL',
+  imagenOgAncho: 1200,
+  imagenOgAlto: 630,
+  locale: 'es_BO',
+}
+/* `sub` es opcional y hoy lo usa sólo Proyectos, que es la única que se
+   partió en dos. El padre sigue siendo un destino real —lleva a la entrada,
+   donde están las dos puertas grandes—, así que el desplegable es un atajo y
+   no la única forma de llegar: si el hover no existe o falla, el enlace
+   funciona igual.
+
+   Cada hijo lleva `texto` porque un menú de dos palabras sueltas no dice cuál
+   es cuál: «Tecnología» a secas se confunde con la página del stack, que está
+   dos lugares más a la izquierda en la misma barra. */
 export const NAV = [
   { label: 'Servicios', href: '/servicios' },
   { label: 'Tecnología', href: '/tecnologia' },
-  { label: 'Proyectos', href: '/proyectos' },
+  {
+    label: 'Proyectos',
+    href: '/proyectos',
+    sub: [
+      {
+        label: 'Tecnología',
+        href: '/proyectos/tecnologia',
+        texto: 'Sitios y agentes en producción',
+      },
+      {
+        label: 'Marketing',
+        href: '/proyectos/marketing',
+        texto: 'Marcas, contenido y campañas',
+      },
+    ],
+  },
   { label: 'Nosotros', href: '/nosotros' },
 ]
 
@@ -68,6 +116,13 @@ export const FOOTER = {
         { label: 'Servicios', href: '/servicios' },
         { label: 'Tecnología', href: '/tecnologia' },
         { label: 'Proyectos', href: '/proyectos' },
+        /* Las dos mitades de /proyectos entran acá y no en la barra de arriba: el
+           menú principal son cuatro destinos y sumarle dos anidados lo convierte
+           en un desplegable. Abajo, en cambio, el mapa del sitio tiene que
+           nombrar todo lo que existe o esas dos páginas no se descubren desde
+           ningún lado salvo entrando a la entrada. */
+        { label: '· Tecnología', href: '/proyectos/tecnologia' },
+        { label: '· Marketing', href: '/proyectos/marketing' },
         { label: 'Nosotros', href: '/nosotros' },
         { label: 'Contacto', href: '/contacto' },
       ],

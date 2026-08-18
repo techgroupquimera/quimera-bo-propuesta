@@ -1,42 +1,31 @@
-import { Acuerdo } from '../components/proyectos/Acuerdo'
-import { Agentes } from '../components/proyectos/Agentes'
-import { Campanas } from '../components/proyectos/Campanas'
-import { Contenido } from '../components/proyectos/Contenido'
-import { Destacado } from '../components/proyectos/Destacado'
-import { Marca } from '../components/proyectos/Marca'
-import { Sitios } from '../components/proyectos/Sitios'
+import { Accesos } from '../components/proyectos/Accesos'
 import { Cierre } from '../components/ui/Cierre'
 import { HeroIndice } from '../components/ui/HeroIndice'
 import { Marcas } from '../components/ui/Marcas'
 import { PendienteSeccion } from '../components/ui/PendienteSeccion'
 import { CIERRE, HERO } from '../content/proyectos'
 
-/* /proyectos · migrado por partes, de arriba hacia abajo.
-   Mismo ritmo apretado que /servicios y /tecnologia.
+/* /proyectos · la entrada.
 
-   MIGRADAS es la única perilla de la barra de índice del hero: se agrega el id
-   de cada sección cuando cae, y su tramo pasa de texto apagado a enlace. */
-const MIGRADAS = ['sitios', 'agentes', 'marca', 'contenido', 'anuncios', 'acuerdo']
+   La página era una sola con siete secciones y ~55 piezas: doce sitios, seis
+   agentes, ocho manuales de marca, seis reels, la tira de campañas y los
+   sistemas bajo acuerdo. Eran dos trabajos distintos bajo un mismo título —lo
+   que CORRE y lo que se PUBLICA— y quien entraba buscando uno tenía que
+   scrollear el otro entero.
 
-/* «El caso Shiba» va entre Sitios y Agentes en el original. Se migra después:
-   es el único bloque centrado y a sangre de la página, así que no comparte
-   nada con las secciones de grilla y conviene armarlo aparte. */
+   Ahora esta página sólo bifurca, y las secciones viven en /proyectos/tecnologia
+   y /proyectos/marketing. El titular se queda acá porque es el paraguas de las
+   dos: «No son promesas. Están funcionando».
+
+   «El caso Shiba» también se queda: es el único cliente con material en las
+   cinco categorías —manual, dos sitios, agente, reel y ocho piezas—, así que
+   cruza las dos páginas y no pertenece a ninguna. Sigue sin migrar, y por eso
+   por ahora es el marcador de pendiente y no la sección. */
 export default function Proyectos() {
   return (
-    <div className="[--spacing-aire:clamp(72px,9.6vh,146px)]">
-      <HeroIndice
-        hero={HERO}
-        migradas={MIGRADAS}
-        fondo={HERO.fondo.src}
-        opacidad={HERO.fondo.opacidad}
-      />
-      <Sitios />
-      <Agentes />
-      <Destacado />
-      <Marca />
-      <Contenido />
-      <Campanas />
-      <Acuerdo />
+    <div className="aire-corto">
+      <HeroIndice hero={HERO} fondo={HERO.fondo.src} opacidad={HERO.fondo.opacidad} />
+      <Accesos />
       <PendienteSeccion origen="proyectos6.html" pendientes={['El caso Shiba']} />
       {/* La misma tira del home, con la misma frase. En el original está en las
           dos páginas; acá cierra en vez de abrir. */}

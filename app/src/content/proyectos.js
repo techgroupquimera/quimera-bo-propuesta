@@ -18,18 +18,101 @@ export const HERO = {
   /* El fondo del hero. Es bg-bokeh-2 y no bg-bokeh, como en el original: son
      páginas distintas y el fondo es lo único que las diferencia de lejos. */
   fondo: { src: '/assets/bg-bokeh-2-lite.webp', opacidad: 0.4 },
-  /* La barra de índice del original. Es lo que hace navegable una página con
-     ocho secciones y ~55 piezas: entrás por donde te interesa en vez de
-     scrollear todo. El `id` es el de la sección de destino. */
+  /* Sin barra de índice: las siete secciones ya no viven acá. La entrada tiene
+     dos destinos y para dos destinos no hace falta un índice — hace falta que
+     se vean, que es lo que hacen las dos tarjetas de <Accesos>. */
+}
+
+/* ── Los dos destinos ──
+   La página se partió en dos porque las siete secciones eran dos trabajos
+   distintos con un mismo título: por un lado lo que CORRE (sitios, agentes,
+   sistemas bajo acuerdo), por el otro lo que se PUBLICA (identidades, piezas,
+   campañas). Quien entra buscando una de las dos cosas tenía que scrollear la
+   otra entera para llegar.
+
+   Los titulares y los textos de estas dos tarjetas son de las únicas cadenas
+   nuevas de la división: todo lo demás son las secciones tal cual estaban. Los
+   textos se armaron con las bajadas de las propias secciones que anuncian, y
+   la última frase de cada una es textual del hero y de la meta de la página
+   original («no hay mockups», «podemos mostrarte cualquiera en vivo»).
+
+   La imagen es una pieza real de cada rubro y no un ícono: CAMEBOL —el sitio
+   que abre la sección de sitios— y el manual de marca de Shiba Hogar. */
+export const ACCESOS = [
+  {
+    id: 'tecnologia',
+    href: '/proyectos/tecnologia',
+    kicker: 'Tecnología',
+    titulo: 'Lo que está *corriendo*.',
+    texto:
+      'Doce sitios en producción, agentes de IA atendiendo por empresas reales y los sistemas que corren bajo acuerdo. Podemos mostrarte cualquiera en vivo.',
+    imagen: '/assets/proyectos/camebol.webp',
+  },
+  {
+    id: 'marketing',
+    href: '/proyectos/marketing',
+    kicker: 'Marketing',
+    titulo: 'Lo que salió *al aire*.',
+    texto:
+      'Marcas construidas desde cero con su manual, piezas rodadas y editadas por el equipo, y campañas publicadas. No hay mockups.',
+    imagen: '/assets/proyectos/br-shiva.webp',
+  },
+]
+
+/* ── Los heroes de las dos páginas ──
+   Mismo fondo que la entrada a propósito: son la misma página abierta en dos,
+   no dos páginas de temas distintos. Lo que cambia es el índice, que ahora sí
+   lista sólo lo que hay debajo.
+
+   Las migas suman un tramo: Inicio › Proyectos › el rubro. El tramo del medio
+   es enlace, así que se puede volver a la entrada sin el botón del navegador. */
+export const HERO_TECNOLOGIA = {
+  migas: [
+    { label: 'Inicio', href: '/' },
+    { label: 'Proyectos', href: '/proyectos' },
+    { label: 'Tecnología' },
+  ],
+  kicker: 'Proyectos · Tecnología',
+  titulo: 'Sitios y agentes\n*en producción*.',
+  bajada:
+    'Están corriendo ahora mismo, con clientes usándolos todos los días. Podemos mostrarte cualquiera en vivo durante la reunión.',
+  fondo: { src: '/assets/bg-bokeh-2-lite.webp', opacidad: 0.4 },
   indice: [
     { id: 'sitios', label: 'Sitios' },
-    { id: 'shiba', label: 'El caso Shiba' },
     { id: 'agentes', label: 'Agentes de IA' },
+    { id: 'destacado', label: 'Caso destacado' },
+    { id: 'acuerdo', label: 'Bajo acuerdo' },
+  ],
+}
+
+export const HERO_MARKETING = {
+  migas: [
+    { label: 'Inicio', href: '/' },
+    { label: 'Proyectos', href: '/proyectos' },
+    { label: 'Marketing' },
+  ],
+  kicker: 'Proyectos · Marketing',
+  titulo: 'Marcas, contenido\ny *campañas*.',
+  bajada:
+    'Identidades con su manual, piezas rodadas por el equipo y campañas que salieron al aire. Todo publicado, no mockups.',
+  fondo: { src: '/assets/bg-bokeh-2-lite.webp', opacidad: 0.4 },
+  indice: [
     { id: 'marca', label: 'Marca' },
     { id: 'contenido', label: 'Contenido' },
     { id: 'anuncios', label: 'Campañas' },
-    { id: 'acuerdo', label: 'Bajo acuerdo' },
   ],
+}
+
+export const META_TECNOLOGIA = {
+  titulo: 'Proyectos · Tecnología · Group Quimera',
+  descripcion:
+    'Doce sitios en producción y agentes de IA atendiendo por empresas reales. Todo funcionando, no mockups.',
+}
+
+export const META_MARKETING = {
+  titulo: 'Proyectos · Marketing · Group Quimera',
+  descripcion:
+    'Marcas construidas desde cero, contenido rodado por el equipo y campañas al aire. Todo publicado, no mockups.',
 }
 
 /* Doce sitios en producción, textuales del original — no diez, como decía el

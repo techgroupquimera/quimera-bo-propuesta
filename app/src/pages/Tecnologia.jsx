@@ -15,7 +15,7 @@ import { CIERRE } from '../content/tecnologia'
    que recuperarla. */
 export default function Tecnologia() {
   return (
-    <div className="[--spacing-aire:clamp(72px,9.6vh,146px)]">
+    <div className="aire-corto">
       <Hero />
       <Stack />
       <Base />

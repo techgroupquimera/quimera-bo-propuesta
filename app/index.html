@@ -23,6 +23,16 @@
       href="/fonts/manrope-400-600.woff2"
       crossorigin
     />
+    <!-- Instrument Serif itálica: son dos palabras del titular del hero, pero
+         están DENTRO del h1, así que sin precargar el titular se recompone
+         cuando la fuente llega. Pesa 21,6 KB. -->
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="/fonts/instrument-serif-400-italic.woff2"
+      crossorigin
+    />
     <!-- Marca que hay JavaScript, antes de que se pinte nada. Lo usa la regla
          `[data-js] .reveal-oculto` de index.css: las secciones que entran con
          scroll salen VISIBLES en el HTML y sólo se esconden si de verdad va a

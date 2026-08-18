@@ -32,10 +32,19 @@ const UA =
 
    El rango se pide acotado a 400..600 a propósito: `wght@200..800` trae el eje
    entero y pesa bastante más por ejes que el sitio no usa. */
-const FAMILIAS = 'family=Bebas+Neue&family=Manrope:wght@400..600&display=swap'
+/* De Instrument Serif se baja SOLO la itálica (`ital@1`), que es la única que
+   usa el sitio: el énfasis de <Rich> —el «a trabajar» del hero y los que hay
+   repartidos en los titulares de las seis páginas— y nada más. La redonda de
+   esa familia no aparece en ninguna parte, y son otros 20 KB. */
+const FAMILIAS =
+  'family=Bebas+Neue&family=Instrument+Serif:ital@1&family=Manrope:wght@400..600&display=swap'
 
 /* nombre de archivo por familia — el que después declara el @font-face */
-const NOMBRE = { 'Bebas Neue': 'bebas-neue', Manrope: 'manrope' }
+const NOMBRE = {
+  'Bebas Neue': 'bebas-neue',
+  'Instrument Serif': 'instrument-serif',
+  Manrope: 'manrope',
+}
 
 const css = await fetch(`https://fonts.googleapis.com/css2?${FAMILIAS}`, {
   headers: { 'User-Agent': UA },
@@ -58,7 +67,11 @@ for (const bloque of bloques) {
   const url = bloque.match(/url\((https:[^)]+\.woff2)\)/)?.[1]
   if (!familia || !peso || !url || !NOMBRE[familia]) continue
 
-  const archivo = `${NOMBRE[familia]}-${peso.replace(/\s+/g, '-')}.woff2`
+  /* El estilo entra en el nombre porque de Instrument Serif se baja la
+     itálica y de las otras dos la redonda: sin esto no habría forma de saber,
+     al declarar el @font-face, cuál de los dos cortes trae cada archivo. */
+  const estilo = bloque.match(/font-style:\s*(\w+);/)?.[1]
+  const archivo = `${NOMBRE[familia]}-${peso.replace(/\s+/g, '-')}${estilo === 'italic' ? '-italic' : ''}.woff2`
   const bytes = Buffer.from(await fetch(url).then((r) => r.arrayBuffer()))
 
   await mkdir(DESTINO, { recursive: true })

@@ -91,26 +91,35 @@ export const SISTEMAS = {
   titulo: 'Dejá de *alquilar* tu tecnología.\nQue sea tuya.',
   bajada:
     'Un solo sistema, integrado, hecho a la medida de cómo trabaja tu empresa. Tu sistema, tus datos, tu infraestructura.',
+  /* Cada pieza lleva su foto de fondo. No son decorativas de relleno: son las
+     cuatro escenas de las que habla la sección —el proceso de ventas, la plata
+     y los números, la agenda que se llena sola, el dueño mirando su negocio—,
+     recortadas a 3:4 en scripts/optimizar-hero.mjs. Van con alt vacío porque
+     no aportan información que el título no diga. */
   piezas: [
     {
       icono: 'personas',
       titulo: 'Tu CRM',
+      imagen: '/assets/tarjeta-crm.webp',
       texto: 'Tus clientes y tu proceso de ventas ordenados, sin pagar por usuario.',
       destacada: true,
     },
     {
       icono: 'documento',
       titulo: 'Tu ERP',
+      imagen: '/assets/tarjeta-finanzas.webp',
       texto: 'Finanzas, inventario, equipo y facturación en un solo lugar.',
     },
     {
       icono: 'chat',
       titulo: 'Agentes que atienden',
+      imagen: '/assets/tarjeta-agenda.webp',
       texto: 'Responden en WhatsApp y en tu web a toda hora, con tu información.',
     },
     {
       icono: 'grafico',
       titulo: 'Datos que deciden',
+      imagen: '/assets/tarjeta-negocio.webp',
       texto: 'La foto completa del negocio en una pantalla, actualizada sola.',
     },
   ],
@@ -249,7 +258,9 @@ export const CIERRE = {
 }
 
 export const META = {
-  titulo: '[B] Group Quimera · Tecnología a medida para empresas · Santa Cruz, Bolivia',
+  /* El «[B]» que tenía adelante era la marca de la variante B del titular,
+     de cuando se probaban dos. Ahora esto sale en el <title> de verdad. */
+  titulo: 'Group Quimera · Tecnología a medida para empresas · Santa Cruz, Bolivia',
   descripcion:
     'Ponemos la IA a trabajar dentro de tu empresa: agentes que atienden y venden, procesos automáticos y la foto real del negocio en una pantalla. Santa Cruz, Bolivia.',
 }

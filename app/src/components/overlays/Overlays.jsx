@@ -1,4 +1,5 @@
 import { Suspense, lazy, useEffect, useState } from 'react'
+import { REVISION } from '../../lib/revision'
 import { useMedia } from './MediaContext'
 
 /* Los tres overlays del sitio, montados sólo cuando hacen falta.
@@ -35,6 +36,11 @@ export function Overlays() {
      `requestIdleCallback` no está en Safari; el `setTimeout` es el respaldo. */
   const [conPanel, setConPanel] = useState(false)
   useEffect(() => {
+    /* Con la capa de revisión apagada el chunk no se pide nunca: son el panel
+       más los ~7 KB de las notas, y sin botón que lo abra no hay nada que
+       precargar. Ver lib/revision.js. */
+    if (!REVISION) return
+
     const pedir = window.requestIdleCallback ?? ((f) => setTimeout(f, 900))
     const cancelar = window.cancelIdleCallback ?? clearTimeout
     const id = pedir(() => setConPanel(true))

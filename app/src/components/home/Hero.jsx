@@ -9,35 +9,39 @@ import { Button } from '../ui/Button'
 import { Rich } from '../ui/Rich'
 import { intro } from './introHero'
 
-/* Hero según el wireframe: el video deja de ir a sangre y pasa a ser un panel
-   contenido en la mitad derecha, separado del borde de pantalla por un margen
-   parejo. A la izquierda van badge, titular, bajada, CTA y la nota de plazas;
-   adentro del panel, las cuatro cifras y el play de la disertación.
+/* Hero como la propuesta original en HTML (../index.html, .hero): el video va
+   A SANGRE por la mitad derecha —sin caja, sin borde, sin esquinas— y se funde
+   con el negro de la página por los tres lados donde toca contenido. La copy se
+   apoya encima, en una columna del 58%, y las cuatro cifras cierran el hero en
+   una tira a lo ancho de la columna, con divisorias entre ellas.
 
-   El segundo CTA («Ver la disertación») vive ADENTRO del panel: es la acción
-   sobre el video, no una acción más de la columna de texto. Al estar dentro
-   del mismo nodo, en móvil baja con el panel sin duplicar marcado ni consultar
-   el ancho desde JS.
+   Entre medio existió una versión en panel: el video contenido en la mitad
+   derecha, con margen parejo contra el borde de pantalla y esquinas
+   redondeadas. Se descartó por una razón concreta: con el alto clavado por los
+   márgenes, el ancho pasaba a ser TODO el tamaño disponible, así que o el panel
+   llegaba al medio de la pantalla y quedaba casi cuadrado, o se veía vertical y
+   abría un hueco muerto de 400px contra la columna de texto. A sangre esa
+   disyuntiva no existe: el video no tiene borde contra el que medirse.
 
-   El borde izquierdo de la copy sigue siendo el de todo el sitio (.px-column).
-   El wireframe lo dibuja más pegado al margen, pero mover sólo el hero
-   reintroduce el problema de los tres bordes izquierdos distintos que se
-   arregló: si se quiere angostar, la perilla es --container-maxw y se mueve
-   todo junto. El panel, en cambio, sí se mide contra la pantalla. */
+   Los dos CTA vuelven a la misma fila. «Ver la disertación» era el pie del
+   panel —era la acción sobre el video, y el video era una caja—; sin caja es
+   una acción más de la columna, al lado de «Pedir diagnóstico».
 
-/* margen del panel contra el borde de pantalla, y de sus hijos contra el panel */
-const MARGEN = 'clamp(14px,1.6vw,30px)'
+   El borde izquierdo de la copy es el de todo el sitio. El wireframe lo dibuja
+   más pegado al margen, pero mover sólo el hero reintroduce el problema de los
+   tres bordes izquierdos distintos que se arregló: si se quiere angostar, la
+   perilla es --container-maxw y se mueve todo junto. */
 
-/* ── El panel de video, y por qué está armado así ──
+/* ── El video, y por qué está armado así ──
 
-   Antes era `<video autoPlay poster>`. Con `autoPlay` el navegador ignora
-   cualquier `preload` y se baja el clip entero —1,2 MB— peleando por el ancho
-   de banda con el CSS, la fuente y el propio poster.
+   El original en HTML usa `<video autoplay>`. Con `autoplay` el navegador
+   ignora cualquier `preload` y se baja el clip entero —1,2 MB— peleando por el
+   ancho de banda con el CSS, la fuente y el propio poster. Eso NO se copia.
 
    Sacar el `autoPlay` y montar el <video> más tarde parece la solución obvia, y
-   es peor: el panel es lo más grande de la primera pantalla, así que ES el
-   elemento LCP. Montar el video después significa pintar un elemento nuevo y
-   grande tarde, y el LCP pasa a contarse desde ahí. Medido: 2,7 s contra 1,3.
+   es peor: el video es lo más grande de la primera pantalla, así que ES el
+   elemento LCP. Montarlo después significa pintar un elemento nuevo y grande
+   tarde, y el LCP pasa a contarse desde ahí. Medido: 2,7 s contra 1,3.
 
    Lo que funciona es que el <video> esté desde el principio —el poster se pinta
    enseguida y ése es el LCP— con `preload="none"`, que le dice al navegador que
@@ -78,16 +82,16 @@ export function Hero() {
      y el poster ya cuenta la escena entera. Quien se queda hace alguno de esos
      cuatro gestos en el primer segundo sin darse cuenta, y ve el loop.
 
-     Además tiene que estar EN PANTALLA (en un teléfono el panel puede quedar a
+     Además tiene que estar EN PANTALLA (en un teléfono el video puede quedar a
      medias debajo del pliegue) y el navegador ocioso, para que la descarga no
      se meta entre el pintado y la hidratación.
 
      Si alguna condición no se cumple, no pasa nada malo: queda el poster, que
      es un fotograma del propio clip. */
-  const [panel, panelALaVista] = useInView({ threshold: 0, rootMargin: '0px' })
+  const [medios, mediosALaVista] = useInView({ threshold: 0, rootMargin: '0px' })
 
   useEffect(() => {
-    if (!panelALaVista || sinMovimiento || !convieneElLoop()) return
+    if (!mediosALaVista || sinMovimiento || !convieneElLoop()) return
 
     let id
     const pedir = window.requestIdleCallback ?? ((f) => setTimeout(f, 300))
@@ -113,89 +117,34 @@ export function Hero() {
       soltar()
       cancelar(id)
     }
-  }, [panelALaVista, sinMovimiento])
+  }, [mediosALaVista, sinMovimiento])
 
   return (
-    <header
-      id="top"
-      className="relative isolate flex min-h-svh flex-col px-column pb-[clamp(40px,9vh,110px)] pt-[clamp(136px,16vh,190px)]"
-    >
+    /* overflow-hidden por el halo: nace al 4% del borde derecho con 60px de
+       desenfoque, y sin recorte eso es una barra de scroll horizontal. */
+    <header id="top" className="relative isolate flex min-h-svh flex-col overflow-hidden">
       {/* Manchas desenfocadas al 22%: la versión `-lite` es un tercio del peso y
           a esta opacidad no hay forma de distinguirlas. Está sobre el pliegue,
           así que compite con el LCP. */}
       <div
         aria-hidden
-        className="absolute inset-0 z-[-1] bg-[url('/assets/bg-bokeh-lite.webp')] bg-cover bg-center opacity-[.22]"
+        className="absolute inset-0 z-[-3] bg-[url('/assets/bg-bokeh-lite.webp')] bg-cover bg-center opacity-[.22]"
       />
 
-      {/* columna de texto */}
-      <div className="relative flex flex-1 flex-col min-[900px]:max-w-[min(40%,620px)]">
-        <div
-          data-intro
-          style={intro('badge')}
-          className="inline-flex w-fit items-center gap-[.7rem] rounded-full border border-hair bg-white/5 py-[.42rem] pl-[.55rem] pr-4 text-[.76rem] text-[#ccd5c3] backdrop-blur-[10px]"
-        >
-          {/* el lockup completo (icono + CAMEBOL + dos líneas de bajada) a 18px
-              era una mancha: se usa solo el símbolo, y más grande.
-              width/height son los de display: sin ellos la píldora se ensancha
-              de golpe cuando llega el logo, y eso es un salto de layout sobre
-              el pliegue. */}
-          <img
-            src={HERO.badge.icono}
-            alt={HERO.badge.iconoAlt}
-            width={23}
-            height={23}
-            decoding="async"
-            className="h-[23px] w-auto"
-          />
-          <span>
-            <span className="font-semibold text-lima">{HERO.badge.destacado}</span> ·{' '}
-            {HERO.badge.texto}
-          </span>
-        </div>
-
-        <h1
-          data-intro
-          style={intro('titulo')}
-          className="mt-7 text-[clamp(2.25rem,3.9vw,3.9rem)] font-normal leading-[1.06] tracking-[-.03em]"
-        >
-          <Rich texto={HERO.titulo} />
-        </h1>
-
-        {/* La bajada y el CTA van juntos abajo: el mt-auto empuja el par al pie
-            de la columna, así el aire queda entre el titular y la bajada, que
-            es donde lo pone la referencia. */}
-        <div className="mt-auto pt-[clamp(2.5rem,8vh,5rem)]">
-          <p
-            data-intro
-            style={intro('bajada')}
-            className="max-w-[58ch] text-bajada font-normal text-read"
-          >
-            {HERO.bajada}
-          </p>
-
-          <div data-intro style={intro('cta')} className="mt-8">
-            <Button variante="primario" href={HERO.cta.href}>
-              {HERO.cta.label}
-            </Button>
-          </div>
-
-          <p
-            data-intro
-            style={intro('nota')}
-            className="mt-[1.4rem] flex items-center gap-[.6rem] font-sans text-eyebrow font-semibold uppercase tracking-[.16em] text-muted before:h-px before:w-5.5 before:bg-oliva before:content-['']"
-          >
-            {HERO.nota}
-          </p>
-        </div>
-      </div>
-
-      {/* panel de video · en móvil baja al flujo, con su propia proporción */}
+      {/* El halo lima detrás del video. No es una luz de la escena: es lo que
+          evita que el canto donde el video se funde con el negro se lea como
+          una línea recta. */}
       <div
-        ref={panel}
+        aria-hidden
+        className="pointer-events-none absolute right-[4%] top-[20%] z-[-2] aspect-square w-[min(46vw,620px)] rounded-full bg-[radial-gradient(circle,rgba(129,222,0,.17),transparent_62%)] blur-[60px]"
+      />
+
+      {/* el video · a sangre en la mitad derecha, a todo el ancho en móvil */}
+      <div
+        ref={medios}
         data-intro
-        style={{ '--margen': MARGEN, ...intro('panel') }}
-        className="relative mt-10 aspect-4/5 w-full overflow-hidden rounded-[clamp(14px,1.2vw,20px)] border border-hair min-[900px]:absolute min-[900px]:right-(--margen) min-[900px]:top-(--margen) min-[900px]:bottom-(--margen) min-[900px]:left-auto min-[900px]:mt-0 min-[900px]:aspect-auto min-[900px]:w-[clamp(320px,50vw,960px)]"
+        style={intro('panel')}
+        className="absolute inset-y-0 left-0 right-0 z-[-1] w-full min-[900px]:left-auto min-[900px]:w-[clamp(320px,46vw,780px)]"
       >
         {/* `preload="none"` es lo que sostiene todo esto: el elemento existe
             desde el primer pintado —así el poster es el LCP, temprano— pero el
@@ -215,69 +164,117 @@ export function Hero() {
           playsInline
           preload="none"
           aria-hidden
-          className="absolute inset-0 h-full w-full object-cover object-[52%_40%]"
+          className="h-full w-full object-cover object-[52%_40%]"
         />
 
-        {/* Dos capas: un tinte parejo, para que el panel no quede a brillo pleno
-            contra un sitio que es casi negro, y un velo arriba, que es donde
-            caen la pill de navegación y «Conversemos» cuando el fotograma se
-            aclara. Si se quiere el video más limpio, la perilla es el tinte. */}
-        <div
-          aria-hidden
-          className="absolute inset-0"
-          style={{
-            background:
-              'linear-gradient(rgba(5,6,4,.26),rgba(5,6,4,.26)),' +
-              'linear-gradient(to bottom,rgba(5,6,4,.72),transparent 22%)',
-          }}
-        />
+        {/* El velo: los degradados que funden el video con la página por la
+            izquierda (contra la columna de texto), por arriba (contra la barra
+            de navegación) y por abajo (contra la tira de cifras). Vive en
+            index.css porque cambia entero en móvil, donde el video ocupa todo
+            el ancho y el degradado lateral deja de tener sentido. */}
+        <div aria-hidden className="hero-velo absolute inset-0" />
+      </div>
 
-        {/* Pie del panel: las cifras arriba, el play abajo, los dos apoyados
-            sobre el velo. Las cifras van acá y no en una banda propia debajo
-            del hero porque ahí quedaban pegadas a la marquesina de marcas —
-            dos pruebas seguidas peleando por la misma atención. */}
-        {/* El velo va acá y no en el panel: medido en % del panel funcionaba en
-            escritorio (el bloque ocupa ~12% del alto) y se quedaba corto en
-            móvil (~30%, y el video seguía asomando detrás de las cifras).
-            Anclado al bloque cubre lo que tiene que cubrir a cualquier alto. */}
-        <div
-          className="absolute inset-x-0 bottom-0 px-(--margen) pb-(--margen) pt-20"
-          style={{
-            background:
-              'linear-gradient(to top,rgba(5,6,4,.94),rgba(5,6,4,.86) 55%,transparent)',
-          }}
-        >
-          <dl className="grid grid-cols-2 gap-x-4 gap-y-3 min-[520px]:grid-cols-4">
-            {HERO.cifras.map((cifra, i) => (
-              <div key={cifra.etiqueta} data-intro style={intro('cifra', i)}>
-                <dt className="font-display text-[clamp(1.2rem,1.55vw,1.75rem)] font-normal leading-none tracking-[.02em] text-lima">
-                  {cifra.valor}
-                </dt>
-                <dd className="mt-1 font-sans text-[.5rem] font-semibold uppercase leading-[1.4] tracking-[.14em] text-white/72">
-                  {cifra.etiqueta}
-                </dd>
-              </div>
-            ))}
-          </dl>
-
-          {/* Toda la fila es el disparador: el círculo solo no da área de click
-              cómoda y la etiqueta suelta no se lee como accionable. */}
-          <button
-            type="button"
+      {/* la copy · centrada en el alto que queda entre la barra y la tira */}
+      <div className="mx-auto flex w-full max-w-maxw flex-1 items-center px-g pb-[clamp(28px,4vh,44px)] pt-[clamp(146px,17vh,186px)]">
+        <div className="max-w-[min(58%,720px)] max-[900px]:max-w-full">
+          <div
             data-intro
-            style={intro('play')}
-            onClick={() => abrirVideo(VIDEO_DISERTACION)}
-            className="group mt-4 flex w-full cursor-pointer items-center gap-[.9rem] border-0 border-t border-t-white/15 bg-transparent px-0 pb-0 pt-4 text-left"
+            style={intro('badge')}
+            className="inline-flex w-fit items-center gap-[.7rem] rounded-full border border-hair bg-white/5 py-[.42rem] pl-[.55rem] pr-4 text-[.76rem] text-[#ccd5c3] backdrop-blur-[10px]"
           >
-            <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-linear-160 from-[#a6f22a] to-[#7ac400] text-[#0a1a00] shadow-[0_10px_30px_-6px_rgba(129,222,0,.5)] transition-transform duration-300 ease-soft group-hover:scale-[1.07]">
-              <Play className="h-4 w-4 translate-x-px" fill="currentColor" strokeWidth={0} />
+            {/* el lockup completo (icono + CAMEBOL + dos líneas de bajada) a 18px
+                era una mancha: se usa solo el símbolo, y más grande.
+                width/height son los de display: sin ellos la píldora se ensancha
+                de golpe cuando llega el logo, y eso es un salto de layout sobre
+                el pliegue. */}
+            <img
+              src={HERO.badge.icono}
+              alt={HERO.badge.iconoAlt}
+              width={23}
+              height={23}
+              decoding="async"
+              className="h-[23px] w-auto"
+            />
+            <span>
+              <span className="font-semibold text-lima">{HERO.badge.destacado}</span> ·{' '}
+              {HERO.badge.texto}
             </span>
-            <span className="text-[.92rem] font-medium tracking-[-.01em] text-paper transition-colors duration-250 group-hover:text-lima">
+          </div>
+
+          {/* El cuerpo es el del original. Se puede porque la columna volvió al
+              58%: al 40% de la versión en panel el titular había tenido que
+              bajar a 3.9vw o se partía en cinco líneas. */}
+          <h1
+            data-intro
+            style={intro('titulo')}
+            className="my-6 text-[clamp(2.6rem,5.4vw,5.1rem)] font-normal leading-[1.02] tracking-[-.035em]"
+          >
+            <Rich texto={HERO.titulo} />
+          </h1>
+
+          <p
+            data-intro
+            style={intro('bajada')}
+            className="max-w-[58ch] text-bajada font-normal text-read"
+          >
+            {HERO.bajada}
+          </p>
+
+          {/* Los dos en una fila. En móvil envuelven: a 430px no entran juntos. */}
+          <div data-intro style={intro('cta')} className="mt-8 flex flex-wrap items-center gap-3">
+            <Button variante="primario" href={HERO.cta.href}>
+              {HERO.cta.label}
+            </Button>
+
+            <Button onClick={() => abrirVideo(VIDEO_DISERTACION)}>
+              <Play
+                aria-hidden
+                className="h-[.95em] w-[.95em] shrink-0"
+                fill="currentColor"
+                strokeWidth={0}
+              />
               {HERO.ctaVideo.label}
-            </span>
-          </button>
+            </Button>
+          </div>
+
+          <p
+            data-intro
+            style={intro('nota')}
+            className="mt-[1.3rem] flex items-center gap-[.6rem] font-sans text-eyebrow font-semibold uppercase tracking-[.16em] text-muted before:h-px before:w-5.5 before:bg-oliva before:content-['']"
+          >
+            {HERO.nota}
+          </p>
         </div>
       </div>
+
+      {/* La tira de cifras cierra el hero: hairline arriba y divisorias entre
+          celdas, en la misma columna que el titular, así el primer número
+          arranca en su misma línea vertical.
+
+          Cuatro columnas arriba de 900px y dos abajo, fijas. El original usa
+          `auto-fit` con un mínimo de 150px y eso tiene un agujero: entre ~500 y
+          ~750px de ancho entran tres tracks, así que las cuatro cifras caen
+          3+1 y la última queda sola en una fila. Además las reglas de nth-child
+          que sacan la divisoria del borde están escritas para dos columnas, y
+          con tres apuntan a la celda equivocada. */}
+      <dl className="relative z-[2] mx-auto grid w-full max-w-maxw grid-cols-4 border-t border-hair px-g max-[900px]:grid-cols-2">
+        {HERO.cifras.map((cifra, i) => (
+          <div
+            key={cifra.etiqueta}
+            data-intro
+            style={intro('cifra', i)}
+            className="border-r border-hair bg-linear-to-t from-lima/[.045] to-transparent px-[clamp(1rem,2vw,1.5rem)] py-[1.15rem] first:pl-0 last:border-r-0 last:pr-0 max-[900px]:nth-[2n]:border-r-0 max-[900px]:nth-[2n]:pr-0 max-[900px]:nth-[2n+1]:pl-0"
+          >
+            <dt className="font-display text-[clamp(1.8rem,2.9vw,2.6rem)] font-normal leading-none text-lima">
+              {cifra.valor}
+            </dt>
+            <dd className="mt-[.3rem] font-sans text-[.56rem] font-semibold uppercase leading-[1.5] tracking-[.15em] text-muted">
+              {cifra.etiqueta}
+            </dd>
+          </div>
+        ))}
+      </dl>
     </header>
   )
 }

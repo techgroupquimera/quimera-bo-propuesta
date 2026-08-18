@@ -1,5 +1,5 @@
 import { ArrowUpRight } from 'lucide-react'
-import { useEffect } from 'react'
+import { Fragment, useEffect } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import { CTA_PRINCIPAL, FOOTER, NAV } from '../../content/site'
 import { useEscape } from '../../hooks/useEscape'
@@ -62,23 +62,59 @@ export function MenuMovil({ abierto, alCerrar }) {
         className="mx-auto flex h-full w-full max-w-maxw flex-col justify-center gap-[.2rem] px-g pb-[clamp(2rem,10vh,5rem)] pt-[clamp(92px,14vh,132px)]"
       >
         {NAV.map((item, i) => (
-          <NavLink
-            key={item.href}
-            to={item.href}
-            style={{ transitionDelay: abierto ? `${0.05 + i * 0.045}s` : '0s' }}
-            className={({ isActive }) =>
-              cx(
-                'flex items-baseline justify-between gap-4 border-b border-hair py-[clamp(.9rem,2.4vh,1.4rem)]',
-                'text-[clamp(1.7rem,7vw,2.6rem)] font-normal leading-[1.1] tracking-[-.02em]',
-                'transition-[opacity,transform,color] duration-450 ease-soft motion-reduce:transition-none',
-                abierto ? 'translate-y-0 opacity-100' : 'translate-y-3 opacity-0',
-                isActive ? 'text-lima' : 'text-paper',
-              )
-            }
-          >
-            {item.label}
-            <ArrowUpRight aria-hidden strokeWidth={1.5} className="h-[.7em] w-[.7em] text-muted-2" />
-          </NavLink>
+          <Fragment key={item.href}>
+            <NavLink
+              to={item.href}
+              style={{ transitionDelay: abierto ? `${0.05 + i * 0.045}s` : '0s' }}
+              className={({ isActive }) =>
+                cx(
+                  'flex items-baseline justify-between gap-4 py-[clamp(.9rem,2.4vh,1.4rem)]',
+                  /* el hijo de abajo trae su propia línea: dos seguidas se ven
+                     como un error de doble borde */
+                  !item.sub && 'border-b border-hair',
+                  'text-[clamp(1.7rem,7vw,2.6rem)] font-normal leading-[1.1] tracking-[-.02em]',
+                  'transition-[opacity,transform,color] duration-450 ease-soft motion-reduce:transition-none',
+                  abierto ? 'translate-y-0 opacity-100' : 'translate-y-3 opacity-0',
+                  isActive ? 'text-lima' : 'text-paper',
+                )
+              }
+            >
+              {item.label}
+              <ArrowUpRight aria-hidden strokeWidth={1.5} className="h-[.7em] w-[.7em] text-muted-2" />
+            </NavLink>
+
+            {/* Los hijos van desplegados y no detrás de un acordeón: son dos, y
+                un acordeón para dos destinos es un toque de más para esconder
+                lo mismo. Van a la mitad del cuerpo del padre y con una barra
+                lima al costado, que es lo que dice «esto cuelga de arriba» sin
+                tener que indentar y desalinear la columna. */}
+            {item.sub?.map((hijo, j) => (
+              <NavLink
+                key={hijo.href}
+                to={hijo.href}
+                style={{
+                  transitionDelay: abierto ? `${0.05 + (i + (j + 1) * 0.4) * 0.045}s` : '0s',
+                }}
+                className={({ isActive }) =>
+                  cx(
+                    'flex items-baseline justify-between gap-4 border-b border-hair',
+                    'border-l-2 border-l-lima/40 py-[clamp(.6rem,1.6vh,.95rem)] pl-[1rem]',
+                    'text-[clamp(1rem,3.6vw,1.35rem)] font-normal leading-[1.2] tracking-[-.01em]',
+                    'transition-[opacity,transform,color] duration-450 ease-soft motion-reduce:transition-none',
+                    abierto ? 'translate-y-0 opacity-100' : 'translate-y-3 opacity-0',
+                    isActive ? 'text-lima' : 'text-read-2',
+                  )
+                }
+              >
+                {hijo.label}
+                <ArrowUpRight
+                  aria-hidden
+                  strokeWidth={1.5}
+                  className="h-[.8em] w-[.8em] text-muted-2"
+                />
+              </NavLink>
+            ))}
+          </Fragment>
         ))}
 
         {/* El CTA también vive en la barra, pero repetirlo acá evita que haya

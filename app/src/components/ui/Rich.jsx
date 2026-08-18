@@ -7,7 +7,7 @@ import { Fragment } from 'react'
    como un `*` vacío seguido de `*x*`.
 
      **x**   negrita (hereda color)
-     *x*     énfasis: Manrope Semibold en lima
+     *x*     énfasis: Instrument Serif itálica en lima
      _x_     lima plano
      `x`     código monoespaciado
      \n      salto de línea
@@ -30,13 +30,21 @@ export function Rich({ texto, className }) {
         </b>
       )
 
-    /* El brandboard tiene dos tipografías: Bebas Neue y Manrope. El énfasis
-       era Instrument Serif itálica — una tercera que no está en el sistema.
-       Ahora es Manrope Semibold en lima: mismo texto, mismo ritmo, y el
-       contraste lo hacen el peso y el color. */
+    /* La itálica de Instrument Serif, como en la propuesta original (.it en
+       assets/quimera.css). Estuvo un tiempo en Manrope Semibold: el brandboard
+       tenía dos familias y esta era una tercera, así que el contraste lo hacían
+       el peso y el color. Volvió porque es la marca tipográfica de la
+       propuesta — la palabra que cambia de VOZ adentro del titular, no sólo de
+       color.
+
+       El interletrado de -.01em también es del original: la itálica trae su
+       propio ritmo y sin ese ajuste abre de más contra la Manrope que la rodea.
+
+       El peso 400 va explícito: el <em> hereda el del titular que lo contiene,
+       y la familia sólo se bajó en redonda. */
     if (parte.startsWith('*') && parte.endsWith('*'))
       return (
-        <em key={key} className="font-semibold not-italic text-lima">
+        <em key={key} className="font-serif font-normal italic tracking-[-.01em] text-lima">
           {parte.slice(1, -1)}
         </em>
       )

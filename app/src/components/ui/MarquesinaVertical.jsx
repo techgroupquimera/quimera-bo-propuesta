@@ -1,4 +1,5 @@
 import { cx } from '../../lib/cx'
+import { IconoMarca } from './IconoMarca'
 
 /* Columna de fichas en bucle. Mismo truco que la tira de marcas del home: UN
    solo track con el set duplicado, corrido medio track. Dos tracks animados por
@@ -15,10 +16,23 @@ import { cx } from '../../lib/cx'
 
    Sin movimiento no hay bucle que sostener: se apaga la animación y la copia se
    esconde, así el lector no oye la lista dos veces. */
+/* La ficha es logo arriba y nombre abajo. El logo no es adorno: la mitad de
+   estos nombres se reconocen antes por su marca que leídos —el hexágono de
+   Docker, la N de Next, el ⚡ de Supabase—, y la columna pasa a leerse de un
+   vistazo en vez de palabra por palabra.
+
+   `flex` y no `grid`: con dos hijos, el grid arma dos filas de igual alto y el
+   nombre de dos líneas («Servidor propio») empujaba el logo fuera del centro.
+
+   El logo va un punto más claro que el texto. Son marcas ajenas dentro de un
+   sitio que tiene un solo color: a brillo pleno le compiten al lima, y al mismo
+   tono que la etiqueta desaparecen. */
 const FICHA =
-  'grid shrink-0 place-items-center rounded-[clamp(12px,1vw,16px)] border border-hair ' +
-  'bg-white/[.04] px-3 text-center font-sans text-[.8rem] leading-tight text-read-2 ' +
-  'backdrop-blur-[2px]'
+  'flex shrink-0 flex-col items-center justify-center gap-[.4rem] rounded-[clamp(12px,1vw,16px)] ' +
+  'border border-hair bg-white/[.04] px-3 text-center font-sans text-[.8rem] leading-tight ' +
+  'text-read-2 backdrop-blur-[2px]'
+
+const LOGO = 'h-[clamp(15px,1.35vw,19px)] w-[clamp(15px,1.35vw,19px)] text-paper/72'
 
 export function MarquesinaVertical({ items, sentido = 'arriba', className }) {
   return (
@@ -36,7 +50,8 @@ export function MarquesinaVertical({ items, sentido = 'arriba', className }) {
         )}
       >
         {items.map((item) => (
-          <span key={item} className={cx(FICHA, 'h-[clamp(54px,5.4vh,76px)]')}>
+          <span key={item} className={cx(FICHA, 'h-[clamp(62px,6vh,84px)]')}>
+            <IconoMarca nombre={item} className={LOGO} />
             {item}
           </span>
         ))}
@@ -44,8 +59,9 @@ export function MarquesinaVertical({ items, sentido = 'arriba', className }) {
           <span
             key={`copia-${item}`}
             aria-hidden
-            className={cx(FICHA, 'h-[clamp(54px,5.4vh,76px)] motion-reduce:hidden')}
+            className={cx(FICHA, 'h-[clamp(62px,6vh,84px)] motion-reduce:hidden')}
           >
+            <IconoMarca nombre={item} className={LOGO} />
             {item}
           </span>
         ))}

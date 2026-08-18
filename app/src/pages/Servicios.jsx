@@ -17,7 +17,7 @@ import { CIERRE } from '../content/servicios'
    seguidas; el aire del home las dejaba sueltas. */
 export default function Servicios() {
   return (
-    <div className="[--spacing-aire:clamp(72px,9.6vh,146px)]">
+    <div className="aire-corto">
       <Hero />
       <Problema />
       <Construimos />
