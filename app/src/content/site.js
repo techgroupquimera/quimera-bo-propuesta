@@ -92,17 +92,18 @@ export const CTA_PRINCIPAL = { label: 'Conversemos', href: '/contacto' }
    honeypot que manda el componente y, si hiciera falta, el captcha que
    Web3Forms ofrece en su panel.
 
-   ⚠ FALTA LA CLAVE. Se saca en web3forms.com poniendo el correo al que tienen
-   que llegar los leads —hoy sería marketing@groupquimera.com— y llega por mail
-   en un minuto. Mientras esté vacía, el formulario valida y avisa que no está
-   configurado, pero no intenta enviar: una petición sin clave devuelve un error
-   del servidor y el visitante vería «no se pudo enviar» sin que sea su culpa.
+   La clave está atada, del lado de Web3Forms, al correo que recibe los leads:
+   cambiar el destino se hace en su panel, no acá. Si algún día llega vacía —una
+   copia del repo a medio configurar, por ejemplo— el formulario valida y avisa
+   que no está conectado, pero no intenta enviar: una petición sin clave
+   devuelve un error del servidor y el visitante vería «no se pudo enviar» sin
+   que sea su culpa.
 
    `asunto` y `remitente` son lo que se ve en la bandeja de quien recibe. Sin
    ellos el asunto es «New Submission from Web3Forms», que en una bandeja con
    cien correos no dice de qué sitio vino. */
 export const WEB3FORMS = {
-  clave: '',
+  clave: '483b2fcf-3e1a-4744-8bf3-231e639aa582',
   url: 'https://api.web3forms.com/submit',
   asunto: 'Nuevo lead del sitio · Group Quimera',
   remitente: 'groupquimera.com.bo',

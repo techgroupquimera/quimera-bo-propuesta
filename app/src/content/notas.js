@@ -18,7 +18,6 @@ export const NOTAS = {
         '**Correo ajeno:** usa `hola@quimera.com`, otro dominio.',
         '**Equipo ficticio:** /nosotros lista «Mateo Vargas — CEO», «Sofía Mendoza», «Diego Rojas», «Camila Quispe». No existen.',
         '**Leads sin dueño en producción:** el backend del sitio live envía a `cleverf200@gmail.com` desde `onboarding@resend.dev` y los logs no registran ni un lead enviado nunca.',
-        '**Falta la clave de Web3Forms:** el formulario de esta propuesta ya envía por ahí, sin backend, pero hasta que llegue la clave no manda nada. Se saca en web3forms.com con el correo que recibe los leads.',
       ],
     },
     {
