@@ -58,11 +58,15 @@ const TAREAS = [
      página. Los otros dos fondos de hero ya iban en su versión liviana; éste se
      había quedado con el archivo de 1080×1920. */
   { de: 'audiencia-hd.webp', a: 'audiencia-fondo.webp', ancho: 860, calidad: 62 },
-  /* El favicon. El original es el logo a 432×240 y 39 KB — para un cuadradito
-     de 16 px en una pestaña. Y no es inocente: el navegador lo pide con
-     prioridad ALTA, así que esos 39 KB salen del mismo ancho de banda que el
-     poster del hero. A 96 px de ancho sobra para cualquier pestaña. */
-  { de: 'logo-icono.png', a: 'favicon.webp', ancho: 96, calidad: 84 },
+  /* El favicon NO está acá: hoy es assets/favicon.svg, la quimera de la marca,
+     y el favicon.webp que le hace de respaldo salió de rasterizar ESE SVG, no
+     del logo alado que generaba este script. ffmpeg no lee SVG, así que si hay
+     que rehacerlo se abre el SVG en el navegador a 512px, se captura con fondo
+     transparente y se escala:
+
+       ffmpeg -i captura.png -vf scale=96:96:flags=lanczos -quality 88 \n         ../assets/favicon.webp
+
+     Es un trámite de una vez: el SVG es el que se ve en el 99% de los casos. */
   /* El logo lleva transparencia y tipografía chica («Marketing y Tech»): la
      calidad va alta y el escalado también en lanczos, que es el que menos
      deshilacha los remates a este tamaño. */

@@ -89,12 +89,14 @@ export const FORMULARIO = {
     falta: 'Completá nombre, email y el proceso que querés automatizar.',
     ok: 'Demo local: todavía no envía. En producción va al endpoint /leads del backend, que ya existe y funciona — falta apuntarlo a un correo de la empresa.',
   },
-  /* Tres de los cuatro canales ya tienen su destino real —los números y el
-     correo salieron del bloque corporativo del pie— así que vuelven a ser
-     enlaces: toda la fila es el destino, no sólo el título. El cuarto, la
-     agenda, sigue sin link y por eso sigue siendo texto con su marcador. Ésa
-     era la regla desde el principio: un enlace que no lleva a ningún lado es
-     peor que una fila de texto.
+  /* Los cuatro canales ya tienen su destino real: los dos números y el correo
+     salieron del bloque corporativo del pie, y la agenda es un Google Calendar.
+     Los cuatro son enlaces y toda la fila es el destino, no sólo el título.
+
+     Hasta acá iban como texto con un marcador ámbar, porque ninguno tenía a
+     dónde ir: un enlace que no lleva a ningún lado es peor que una fila de
+     texto. La única que queda sin enlace es la dirección, que no lleva a
+     ningún lado por definición.
 
      `texto` es lo que se muestra —con espacios y paréntesis, para que se lea— y
      `href` lo que se abre. En wa.me el número va sin «+», sin espacios y sin
@@ -125,10 +127,8 @@ export const FORMULARIO = {
       {
         icono: 'agenda',
         titulo: 'Agendar 30 minutos',
-        pend: {
-          texto: 'Falta el link de agenda real',
-          nota: 'En producción apunta a calendly.com, la home del servicio.',
-        },
+        href: 'https://calendar.app.google/7DnFaRvwcbYMipKu5',
+        externo: true,
       },
       {
         icono: 'lugar',

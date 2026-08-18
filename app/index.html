@@ -3,10 +3,22 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- 3,6 KB en vez de los 39 del logo entero. El favicon no es un detalle de
-         carga: el navegador lo pide con prioridad ALTA, o sea que compite
-         directamente con el poster del hero. -->
-    <link rel="icon" type="image/webp" href="/assets/favicon.webp" />
+    <!-- El favicon es la quimera de la marca, en SVG: 8 KB que se ven nítidos a
+         cualquier tamaño, del cuadradito de 16px de la pestaña al icono grande
+         de un marcador. Antes era el logo alado en línea fina, que a 16px se
+         deshacía en un rayón gris.
+
+         El webp queda de respaldo para los navegadores que no leen SVG en el
+         favicon (Safari 15 y anteriores) y es el MISMO dibujo, rasterizado del
+         propio SVG: si fueran dos marcas distintas, el sitio tendría dos
+         identidades según el navegador.
+
+         `alternate icon` y no dos `icon` a secas: es lo que hace que Chrome y
+         Firefox se queden con el SVG y bajen sólo ése. El favicon no es un
+         detalle de carga — el navegador lo pide con prioridad ALTA, o sea que
+         compite directamente con el poster del hero. -->
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+    <link rel="alternate icon" type="image/webp" href="/assets/favicon.webp" />
     <meta name="theme-color" content="#050604" />
     <title>Group Quimera · Tecnología a medida para empresas · Santa Cruz, Bolivia</title>
     <meta

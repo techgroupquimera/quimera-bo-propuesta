@@ -15,7 +15,6 @@ export const NOTAS = {
       desde: 1,
       items: [
         '**WhatsApp inventado:** producción apunta a `wa.me/59170000000`.',
-        '**Calendly vacío:** apunta a `calendly.com`, no a una agenda.',
         '**Correo ajeno:** usa `hola@quimera.com`, otro dominio.',
         '**Equipo ficticio:** /nosotros lista «Mateo Vargas — CEO», «Sofía Mendoza», «Diego Rojas», «Camila Quispe». No existen.',
         '**Leads sin dueño:** el backend envía a `cleverf200@gmail.com` desde `onboarding@resend.dev` y los logs no registran ni un lead enviado nunca.',
