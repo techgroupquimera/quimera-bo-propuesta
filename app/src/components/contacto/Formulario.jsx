@@ -126,31 +126,8 @@ export function Formulario() {
 
             <ul>
               {FORMULARIO.canales.lista.map((canal) => (
-                <li
-                  key={canal.titulo}
-                  className="flex items-center gap-[1rem] border-t border-hair py-[1.05rem] first:border-t-0 first:pt-0"
-                >
-                  <span className="grid h-[38px] w-[38px] shrink-0 place-items-center rounded-[11px] border border-hair-lima bg-lima/[.09]">
-                    <Icono nombre={canal.icono} className="h-[17px] w-[17px] text-lima" grosor={1.7} />
-                  </span>
-
-                  <span className="min-w-0">
-                    <span className="block text-[.97rem] font-medium tracking-[-.01em]">
-                      {canal.titulo}
-                    </span>
-
-                    {canal.texto && (
-                      <span className="mt-[.15rem] block text-[.8rem] text-muted">
-                        {canal.texto}
-                      </span>
-                    )}
-
-                    {canal.pend && (
-                      <span className="mt-[.3rem] block text-[.8rem]">
-                        <Pend nota={canal.pend.nota}>{canal.pend.texto}</Pend>
-                      </span>
-                    )}
-                  </span>
+                <li key={canal.titulo} className="border-t border-hair first:border-t-0">
+                  <Canal canal={canal} />
                 </li>
               ))}
             </ul>
@@ -168,5 +145,54 @@ export function Formulario() {
         </div>
       </div>
     </Section>
+  )
+}
+
+/* Una fila de «Escribinos directo».
+
+   Con `href` toda la fila es el enlace y no sólo el título: es una superficie
+   de 38px de alto con un solo destino, y pedirle a alguien que apunte a dos
+   palabras cuando puede tocar la fila entera no tiene sentido —el mismo
+   criterio que los paneles de <Unidades>—.
+
+   Sin `href` sale como <div>: es lo que pasa con la agenda, que todavía no
+   tiene link, y con la dirección, que no lleva a ningún lado por definición. */
+function Canal({ canal }) {
+  const Fila = canal.href ? "a" : "div"
+  const props = canal.href
+    ? {
+        href: canal.href,
+        ...(canal.externo ? { target: "_blank", rel: "noopener" } : null),
+      }
+    : {}
+
+  return (
+    <Fila
+      {...props}
+      className={cx(
+        "group flex items-center gap-[1rem] py-[1.05rem]",
+        canal.href && "transition-colors duration-250 ease-soft",
+      )}
+    >
+      <span className="grid h-[38px] w-[38px] shrink-0 place-items-center rounded-[11px] border border-hair-lima bg-lima/[.09] transition-[background,border-color] duration-250 ease-soft group-hover:bg-lima/[.16]">
+        <Icono nombre={canal.icono} className="h-[17px] w-[17px] text-lima" grosor={1.7} />
+      </span>
+
+      <span className="min-w-0">
+        <span className="block text-[.97rem] font-medium tracking-[-.01em] transition-colors duration-250 group-hover:text-lima">
+          {canal.titulo}
+        </span>
+
+        {canal.texto && (
+          <span className="mt-[.15rem] block text-[.8rem] text-muted">{canal.texto}</span>
+        )}
+
+        {canal.pend && (
+          <span className="mt-[.3rem] block text-[.8rem]">
+            <Pend nota={canal.pend.nota}>{canal.pend.texto}</Pend>
+          </span>
+        )}
+      </span>
+    </Fila>
   )
 }

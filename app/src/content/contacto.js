@@ -89,32 +89,38 @@ export const FORMULARIO = {
     falta: 'Completá nombre, email y el proceso que querés automatizar.',
     ok: 'Demo local: todavía no envía. En producción va al endpoint /leads del backend, que ya existe y funciona — falta apuntarlo a un correo de la empresa.',
   },
+  /* Tres de los cuatro canales ya tienen su destino real —los números y el
+     correo salieron del bloque corporativo del pie— así que vuelven a ser
+     enlaces: toda la fila es el destino, no sólo el título. El cuarto, la
+     agenda, sigue sin link y por eso sigue siendo texto con su marcador. Ésa
+     era la regla desde el principio: un enlace que no lleva a ningún lado es
+     peor que una fila de texto.
+
+     `texto` es lo que se muestra —con espacios y paréntesis, para que se lea— y
+     `href` lo que se abre. En wa.me el número va sin «+», sin espacios y sin
+     paréntesis: cualquier otra cosa y WhatsApp abre una conversación vacía. */
   canales: {
     titulo: 'Escribinos directo',
     lista: [
       {
         icono: 'chat',
         titulo: 'WhatsApp Bolivia',
-        pend: {
-          texto: 'Falta el número real',
-          nota: 'En producción hoy apunta a wa.me/59170000000, un número inventado.',
-        },
+        texto: '+591 77 314 890',
+        href: 'https://wa.me/59177314890',
+        externo: true,
       },
       {
         icono: 'chat',
         titulo: 'WhatsApp USA',
-        pend: {
-          texto: 'Falta el número de Tech Agents',
-          nota: 'El PDF de capacidades ofrece un WhatsApp USA (Tech Agents LLC). Falta el número.',
-        },
+        texto: '+1 (803) 916-0333',
+        href: 'https://wa.me/18039160333',
+        externo: true,
       },
       {
         icono: 'correo',
         titulo: 'Correo',
-        pend: {
-          texto: 'Definir correo en groupquimera.com.bo',
-          nota: 'Hoy el sitio usa hola@quimera.com, un dominio que no es de la empresa.',
-        },
+        texto: 'marketing@groupquimera.com',
+        href: 'mailto:marketing@groupquimera.com',
       },
       {
         icono: 'agenda',
