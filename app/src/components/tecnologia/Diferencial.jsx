@@ -28,16 +28,23 @@ export function Diferencial() {
         <Reveal className="relative overflow-hidden rounded-[clamp(16px,1.6vw,24px)] border border-hair">
           {/* La foto original es vertical (690×1200) y a tamaño natural estiraba
               la sección a 1421px, con la columna de texto flotando en el medio
-              de un vacío. Recortada a cuadrado —como la dibuja el wireframe—
-              además mejora: lo que se va es el primer plano oscuro de nucas y
-              una mesa con papeles, y queda la pantalla con la lámina y él.
-              El 36% es lo que centra el encuadre en el escenario. */}
+              de un vacío. Estuvo recortada a cuadrado —como la dibuja el
+              wireframe— y ahora va a 4:5, que es el mismo recorte que usa la
+              placa de <Autoridad> y por la misma razón: deja el panel
+              claramente vertical sin que se despegue del alto de la columna de
+              texto. A 690×1200 pelados el panel medía casi 1100px contra los
+              ~400 del texto; a 4:5 son 790.
+
+              El encuadre sube del 36% al 30%: el recorte más alto vuelve a
+              traer por abajo el primer plano oscuro de nucas y la mesa con
+              papeles que el cuadrado dejaba afuera, y subiendo el punto de
+              anclaje esa franja se va y queda la pantalla con la lámina y él. */}
           <img
             src={DIFERENCIAL.foto.src}
             alt={DIFERENCIAL.foto.alt}
             loading="lazy"
             decoding="async"
-            className="aspect-square w-full object-cover object-[center_36%]"
+            className="aspect-4/5 w-full object-cover object-[center_30%]"
           />
 
           {/* velo sólo en el tramo de abajo: sobre la foto a secas la etiqueta
