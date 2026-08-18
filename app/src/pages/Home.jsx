@@ -8,6 +8,7 @@ import { Autoridad } from '../components/ui/Autoridad'
 import { Bio } from '../components/ui/Bio'
 import { Cierre } from '../components/ui/Cierre'
 import { Marcas } from '../components/ui/Marcas'
+import { Unidades } from '../components/ui/Unidades'
 import { AUTORIDAD, BIO, CIERRE } from '../content/home'
 
 /* Arco:
@@ -33,6 +34,10 @@ export default function Home() {
       <Autoridad autoridad={AUTORIDAD} />
       <Bio bio={BIO} />
       <Auditoria />
+      {/* La misma sección de /nosotros, con el mismo copy. Cierra el argumento
+          antes del CTA y no después: lo último de la página tiene que ser el
+          paso a dar, no una fila de logos. */}
+      <Unidades />
       <Cierre cierre={CIERRE} />
     </>
   )

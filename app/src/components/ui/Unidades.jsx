@@ -2,13 +2,25 @@ import { ArrowUpRight } from 'lucide-react'
 import { UNIDADES } from '../../content/nosotros'
 import { cx } from '../../lib/cx'
 import { factorOptico } from '../../lib/optico'
-import { Kicker } from '../ui/Kicker'
-import { Pend } from '../ui/Pend'
-import { Reveal } from '../ui/Reveal'
-import { Rich } from '../ui/Rich'
-import { Section } from '../ui/Section'
+import { Kicker } from './Kicker'
+import { Pend } from './Pend'
+import { Reveal } from './Reveal'
+import { Rich } from './Rich'
+import { Section } from './Section'
 
-/* Wireframe: encabezado centrado y los paneles pegados uno al lado del otro, sin
+/* Lo comparten el home y /nosotros, con el MISMO copy — por eso vive en ui/ y
+   no en nosotros/, que es donde estaba cuando lo usaba una sola página. En
+   /nosotros presenta al grupo; en el home cierra el argumento justo antes del
+   CTA final: quien llegó hasta ahí ya escuchó la propuesta y lo último que ve
+   antes de que le pidan una reunión es que atrás hay cinco marcas y no una
+   persona con una laptop.
+
+   No toma el contenido por prop, a diferencia de <Autoridad> y <Bio>, que lo
+   comparten con copy distinto: acá las dos páginas dicen exactamente lo mismo,
+   y un prop que siempre recibe el mismo objeto es una indirección que no
+   decide nada.
+
+   Wireframe: encabezado centrado y los paneles pegados uno al lado del otro, sin
    aire entre ellos. En reposo cada panel muestra sólo su logo; al pasar el mouse
    aparecen la etiqueta, el nombre, la descripción y el enlace.
 
