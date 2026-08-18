@@ -109,38 +109,51 @@ export const FOOTER = {
   plaza: 'Santa Cruz de la Sierra · Bolivia',
 
   /* ── Los datos corporativos ──
-     Las dos sociedades, el correo y el teléfono, debajo del logo y la bajada.
-     No es sólo información de contacto: nombrar la S.R.L. boliviana y la LLC de
-     Miami es parte del argumento del sitio —«un grupo, no un proveedor suelto»—
-     y es lo que una empresa que va a firmar algo busca antes de escribir.
+     Las dos sociedades con su dirección y su teléfono, y el correo, debajo del
+     logo y la bajada. No es sólo información de contacto: nombrar a Quimera
+     Group en Santa Cruz y a TechAgents LLC en Miami es parte del argumento del
+     sitio —«un grupo, no un proveedor suelto»— y es lo que busca una empresa
+     antes de firmar algo.
 
-     ⚠ DOS DE ESTOS CAMPOS SON MARCADORES, NO DATOS: la razón social boliviana y
-     el teléfono. Van escritos como los mandó el cliente —«[NOMBRE LEGAL] S.R.L.»
-     y «+591 XXX XXX XX»— y no con algo que parezca real: un pie con una razón
-     social inventada es mucho peor que uno que muestra el hueco. Están anotados
-     en content/notas.js.
+     Los datos son los que mandó el cliente. Van tal cual, con dos ajustes de
+     forma y ninguno de fondo: la dirección de Miami vino en mayúsculas de
+     documento legal y acá va en caja normal, como el resto del pie; y el
+     teléfono boliviano se parte en grupos (77 314 890) porque un número de ocho
+     dígitos corrido no se lee ni se copia bien.
 
-     El correo sí es real y va enlazado. Ojo con esto: /contacto todavía ofrece
-     `hola@quimera.com`, que es de otro dominio y está marcado como pendiente
-     desde el principio. Ahora el sitio dice dos correos distintos en dos lugares
-     — hay que unificarlos. */
+     `href` va aparte del texto en los dos teléfonos: lo que se muestra lleva
+     espacios y paréntesis, y lo que marca el teléfono no puede llevar nada más
+     que el «+» y los dígitos.
+
+     La razón social boliviana es «Quimera Marketing SRL», que NO es el nombre
+     de la marca: el sitio se llama Group Quimera en todos lados y acá dice quién
+     firma, que es otra cosa. Va tal como la escribió el cliente, sin puntos.
+
+     ⚠ Lo que sigue sin cerrar, anotado en content/notas.js: el correo vino como
+     «puede ser marketing@groupquimera.com». Se usa ése, pero /contacto sigue
+     ofreciendo `hola@quimera.com` —otro dominio— así que el sitio dice dos
+     correos distintos hasta que se unifiquen. */
   corporativo: {
     titulo: 'Corporate',
     sedes: [
       {
         pais: 'Bolivia',
-        razon: '[NOMBRE LEGAL] S.R.L.',
-        plaza: 'Santa Cruz de la Sierra',
+        razon: 'Quimera Marketing SRL',
+        direccion: ['Santa Cruz de la Sierra'],
+        telefono: '+591 77 314 890',
+        telefonoHref: 'tel:+59177314890',
       },
       {
         pais: 'United States',
-        razon: 'Tech Agents LLC',
-        plaza: 'Miami · Florida',
+        razon: 'TechAgents LLC',
+        direccion: ['2 S Biscayne Boulevard, Suite 3200 #6835', 'Miami, FL 33131'],
+        telefono: '+1 (803) 916-0333',
+        telefonoHref: 'tel:+18039160333',
       },
     ],
-    correo: 'contacto@groupquimera.com',
-    telefono: '+591 XXX XXX XX',
+    correo: 'marketing@groupquimera.com',
   },
+
   columnas: [
     {
       titulo: 'Navegar',

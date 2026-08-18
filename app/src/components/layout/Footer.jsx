@@ -111,9 +111,9 @@ export function Footer() {
   )
 }
 
-/* Las dos sociedades, el correo y el teléfono, colgando de la columna de la
-   marca. Van acá y no en una columna propia: son el pie de la identidad —quién
-   firma— y no una lista de enlaces como las otras tres.
+/* Las dos sociedades —con su dirección y su teléfono— y el correo, colgando de
+   la columna de la marca. Van acá y no en una columna propia: son el pie de la
+   identidad —quién firma— y no una lista de enlaces como las otras tres.
 
    El encabezado repite el tratamiento de las columnas (versalita lima sobre
    hairline) en vez de la línea de guiones del boceto: el sitio ya tiene una
@@ -122,11 +122,12 @@ export function Footer() {
    La medida es la misma de la bajada (34ch), así que las tres piezas de la
    columna caen sobre el mismo eje.
 
-   El teléfono NO va enlazado y el correo sí: `+591 XXX XXX XX` es un marcador,
-   y un `tel:` a un número que no existe es un enlace roto de los que no avisan.
-   Cuando llegue el número real, se le agrega el `tel:`. */
+   Los dos teléfonos van enlazados con `tel:` y el correo con `mailto:`: son
+   datos reales. Mientras el teléfono fue un marcador («+591 XXX XXX XX») iba
+   como texto plano, porque un `tel:` a un número que no existe es un enlace
+   roto de los que no avisan. */
 function Corporativo() {
-  const { titulo, sedes, correo, telefono } = FOOTER.corporativo
+  const { titulo, sedes, correo } = FOOTER.corporativo
 
   return (
     <div className="mt-[clamp(1.9rem,3.4vh,2.6rem)] max-w-[34ch]">
@@ -144,7 +145,19 @@ function Corporativo() {
             </dt>
             <dd className="mt-[.4rem] text-[.9rem] leading-[1.5] text-read-2">
               {sede.razon}
-              <span className="block text-muted">{sede.plaza}</span>
+              {sede.direccion.map((linea) => (
+                <span key={linea} className="block text-muted">
+                  {linea}
+                </span>
+              ))}
+              {/* el número va en su propia línea y no pegado a la dirección:
+                  es lo único de la ficha en lo que se puede hacer clic */}
+              <a
+                href={sede.telefonoHref}
+                className="mt-[.3rem] block w-fit transition-colors duration-250 ease-soft hover:text-lima"
+              >
+                {sede.telefono}
+              </a>
             </dd>
           </div>
         ))}
@@ -157,7 +170,6 @@ function Corporativo() {
         >
           {correo}
         </a>
-        <span className="block text-muted">{telefono}</span>
       </p>
     </div>
   )

@@ -27,9 +27,8 @@ export const NOTAS = {
       items: [
         '**Métricas de Bolivia Fitness** — consultas/mes, pedidos sin humano, horas liberadas.',
         '**Precios** — al menos un «desde» para las tres modalidades.',
-        '**Razón social boliviana** — el pie dice `[NOMBRE LEGAL] S.R.L.`, tal como vino.',
-        '**Teléfono** — el pie dice `+591 XXX XXX XX`, tal como vino.',
-        '**Dos correos distintos:** el pie usa `contacto@groupquimera.com` y /contacto `hola@quimera.com`.',
+        '**Dos correos distintos:** el pie usa `marketing@groupquimera.com` —que vino como «puede ser»— y /contacto `hola@quimera.com`.',
+        '**El WhatsApp de /contacto** sigue inventado. ¿Es el mismo `+591 77314890` del pie?',
         '**Cifra de marcas:** el PDF dice 100+, el sitio dice +50 y +30, y hay 29 logos. Elegir una.',
         '**EIAN** — nombre y rol · **razón social** · **WhatsApp USA** · fotos reales de los 4 proyectos.',
       ],
